@@ -2,12 +2,46 @@
 \ProvidesPackage{cg-boxes}[2026/08/26 Boxes]
 \RequirePackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
+\RequirePackage{tikz}
+\usetikzlibrary{calc, positioning}
 
-\newcommand{\CGIndexCorner}{}
-\newcommand{\CGIndexBackground}{}
-\newcommand{\CGZoneHeader}[2]{}
-\newcommand{\CGSectorHeader}[2]{}
-\newcommand{\CGObsBox}[1]{}
-\newcommand{\DrawSummaryBlock}[3]{}
-\newcommand{\DrawSummaryBlockSingle}[2]{}
+\newlength{\cgsummaryboxsize}
+\setlength{\cgsummaryboxsize}{0.8cm}
+\newlength{\MarginWidth}
+\setlength{\MarginWidth}{15mm}
+
+\ExplSyntaxOn
+% --- GRADE SUMMARY BLOCKS ---
+\NewDocumentCommand{\DrawSummaryBlock}{ m m m }{
+    \begin{tikzpicture}[baseline=0pt]
+        \fill[#1] (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
+        \fill[#1!60!black] (0,0) -- (\cgsummaryboxsize,0) -- (\cgsummaryboxsize,\cgsummaryboxsize) -- cycle;
+        \node[text=white, font=\CGBaseFont\itshape\normalsize, anchor=center] at (0.35*\cgsummaryboxsize, 0.68*\cgsummaryboxsize) {#2};
+        \node[text=white, font=\CGBaseFont\itshape\small, anchor=center] at (0.68*\cgsummaryboxsize, 0.25*\cgsummaryboxsize) {#3};
+    \end{tikzpicture}\hspace{0.0pt}%
+}
+\NewDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
+    \begin{tikzpicture}[baseline=0pt]
+        \fill[#1!80!black] (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
+        \node[text=white, font=\CGBaseFont\itshape\normalsize, anchor=center] at (0.5*\cgsummaryboxsize, 0.5*\cgsummaryboxsize) {#2};
+    \end{tikzpicture}\hspace{0.0pt}%
+}
+
+% --- ZONE HEADER (Absolute Position) ---
+\NewDocumentCommand{\CGZoneHeader}{ m m }{
+    \begin{tikzpicture}[remember~picture, overlay]
+        \node[anchor=north~west, inner~sep=0pt] at (current~page.north~west) {
+            \includegraphics[width=\paperwidth, height=62.5mm]{#1}
+        };
+        \fill[guide_green!70]
+            ($ (current~page.north~west) + (0, -62.5mm + 8mm) $)
+            rectangle
+            ($ (current~page.north~west) + (\MarginWidth + 0.75\textwidth, -62.5mm - 8mm) $);
+        \node[anchor=west, text=white, inner~sep=0pt] at ($ (current~page.north~west) + (\MarginWidth, -62.5mm) $) {
+            \CGCoverFont\fontsize{26}{28}\selectfont #2
+        };
+    \end{tikzpicture}
+    \vspace*{45mm}
+}
+\ExplSyntaxOff
 \endinput
