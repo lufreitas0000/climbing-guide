@@ -1,0 +1,19 @@
+\documentclass[tikz,border=0pt]{standalone}
+% Load strictly the necessary orthogonal modules to avoid geometry conflicts
+\usepackage{cg-colors}
+\usepackage{cg-fonts}
+\usepackage{cg-boxes}
+
+\begin{document}
+\begin{tikzpicture}[inner sep=0pt, outer sep=0pt]
+\node at (0,0) {%
+    \DrawSummaryBlock{guide_cyan}{0}{0}%
+    \DrawSummaryBlock{guide_green}{0}{0}%
+    \DrawSummaryBlock{guide_yellow}{1}{3}%
+    \DrawSummaryBlock{guide_orange}{11}{9}%
+    \DrawSummaryBlock{guide_red}{2}{0}%
+    \DrawSummaryBlock{guide_purple}{0}{0}%
+    \DrawSummaryBlockSingle{guide_gray}{4}%
+};
+\end{tikzpicture}
+\end{document}

@@ -1,4 +1,4 @@
-.PHONY: all test production clean
+.PHONY: all test production clean check-fonts audit-logs
 
 TEX = lualatex
 FLAGS = --interaction=nonstopmode --halt-on-error
@@ -6,15 +6,17 @@ export TEXINPUTS := $(abspath src)//:
 
 all: test production
 
-test:
-	$(TEX) $(FLAGS) --output-directory=tests tests/test_suite.tex
-	$(TEX) $(FLAGS) --output-directory=tests tests/test_suite.tex
-	$(TEX) $(FLAGS) --output-directory=tests tests/test_visual.tex
-	$(TEX) $(FLAGS) --output-directory=tests tests/test_visual.tex
+check-fonts:
+	./scripts/check_fonts.sh
 
-production:
+test: check-fonts
+	$(TEX) $(FLAGS) --output-directory=tests tests/test_summary.tex
+	./scripts/parse_logs.sh tests/test_summary.log
+
+production: check-fonts
 	$(TEX) $(FLAGS) --output-directory=production production/serra_do_cuo.tex
 	$(TEX) $(FLAGS) --output-directory=production production/serra_do_cuo.tex
+	./scripts/parse_logs.sh production/serra_do_cuo.log
 
 clean:
 	find tests production -type f \( -name "*.aux" -o -name "*.log" -o -name "*.out" -o -name "*.toc" -o -name "*.fls" -o -name "*.fmt" -o -name "*.fot" -o -name "*.cb" -o -name "*.cb2" -o -name "*.lb" -o -name "*.synctex.gz" \) -exec rm -f {} +
