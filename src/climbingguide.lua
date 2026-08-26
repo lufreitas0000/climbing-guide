@@ -21,16 +21,11 @@ local function parse_grade(token)
     return 0
 end
 
-function M.eval_tex(g)
+function M.get_val(g)
     local g_low = string.lower(g)
-    if string.match(g_low, "proj") then 
-        tex.sprint("\\tl_set:Nn \\l_guide_current_grade_color_tl {guide_gray} \\int_gincr:N \\g_guide_gray_int")
-        return
-    end
+    if string.match(g_low, "proj") then return 999 end
 
-    -- 1. Strip Brazilian general grade (e.g., 5°, 6º)
     g_low = string.gsub(g_low, "%d+[°º]", " ")
-    -- 2. Strip parentheses and their contents (e.g., variants or artificial sections)
     local outside = string.gsub(g_low, "%(.-%)", " ")
     
     local max_val = 0
@@ -39,6 +34,15 @@ function M.eval_tex(g)
             local val = parse_grade(token)
             if val > max_val then max_val = val end
         end
+    end
+    return max_val
+end
+
+function M.eval_tex(g)
+    local max_val = M.get_val(g)
+    if max_val == 999 then 
+        tex.sprint("\\tl_set:Nn \\l_guide_current_grade_color_tl {guide_gray} \\int_gincr:N \\g_guide_gray_int")
+        return
     end
 
     local is_top = (math.abs((max_val % 1) - 0.5) < 0.01 or math.abs((max_val % 1) - 0.6) < 0.01)
@@ -58,6 +62,34 @@ function M.eval_tex(g)
 
     tex.sprint("\\tl_set:Nn \\l_guide_current_grade_color_tl {" .. color .. "} ")
     if base ~= "gray" then tex.sprint("\\int_gincr:N \\g_guide_" .. base .. top_str .. "_int ") end
+end
+
+-- Export functions for listing
+function M.print_alpha()
+    local sorted = {}
+    for _, v in ipairs(M.routes) do table.insert(sorted, v) end
+    table.sort(sorted, function(a, b) return string.lower(a.name) < string.lower(b.name) end)
+    tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
+    for _, v in ipairs(sorted) do
+        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})")
+    end
+    tex.sprint("\\end{itemize}")
+end
+
+function M.print_grade()
+    local sorted = {}
+    for _, v in ipairs(M.routes) do table.insert(sorted, v) end
+    table.sort(sorted, function(a, b)
+        local va = M.get_val(a.grade)
+        local vb = M.get_val(b.grade)
+        if math.abs(va - vb) < 0.001 then return string.lower(a.name) < string.lower(b.name) end
+        return va < vb
+    end)
+    tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
+    for _, v in ipairs(sorted) do
+        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})")
+    end
+    tex.sprint("\\end{itemize}")
 end
 
 return M
