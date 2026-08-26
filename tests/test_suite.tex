@@ -2,16 +2,23 @@
 \usepackage{climbingguide}
 
 \begin{document}
-\CGSectorHeader{brand_color}{Laboratório LUA: Max Free Grade}
+\CGSectorHeader{guide_yellow}{Generic Route Testing}
 
 \begin{multicols}{2}
-    % Should extract VIIb (color: guide_orange)
-    \CGRoute{Simples}{VIIb}{15m}{Livre}{Test}
-    % Should extract VIIb, ignoring E4 and A2 (color: guide_orange)
-    \CGRoute{Exposição e Artificial}{5° VIIb A2 E4}{100m}{Móvel}{Test}
-    % Should ignore the parenthetical (A0/VIIb) and extract Vsup (color: guide_green)
-    \CGRoute{Obrigatório Multipitch}{5° Vsup (A0/VIIb) E4}{100m}{Mista}{Test}
-    % Should map to guide_gray
-    \CGRoute{Projeto de Via}{Proj.}{20m}{Desconhecido}{Test}
+    \CGRoute{Via Muito Longa Para Teste}{VIIb}{15m}{Livre}{Fulano e Ciclano}
+    \CGRoute{Complexa Mista}{5° VIIb A2 E4}{100m}{Móvel}{Beltrano}
+    \CGRoute{Multi}{5° Vsup (A0/VIIb) E4}{100m}{Mista}{Alguém}
+    \CGRoute{Via Antiga}{Proj.}{20m}{Desconhecido}{Autor Anônimo}
 \end{multicols}
+
+\vspace{1cm}
+\CGTitleFont\Large Listagem Alfabética\par\vspace{2mm}
+\CGBaseFont\normalsize
+\CGPrintAlphaList
+
+\clearpage
+\CGTitleFont\Large Listagem por Dificuldade\par\vspace{2mm}
+\CGBaseFont\normalsize
+\CGPrintGradeList
+
 \end{document}
