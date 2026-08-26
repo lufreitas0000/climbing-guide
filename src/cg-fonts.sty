@@ -2,24 +2,9 @@
 \ProvidesPackage{cg-fonts}[2026/08/26 Fonts]
 \RequirePackage{fontspec}
 
-% Graceful loading: Will use defaults if fonts are missing during testing
-\IfFontExistsTF{Roboto Condensed}{
-    \newfontfamily\CGBaseFont{Roboto Condensed}[Ligatures=TeX, UprightFont={* Light}, BoldFont={* Regular}]
-}{
-    \newfontfamily\CGBaseFont{lmss} % Fallback
-}
-
-\IfFontExistsTF{Barlow Condensed}{
-    \newfontfamily\CGTitleFont{Barlow Condensed}[Ligatures=TeX, UprightFont={* Medium}, BoldFont={* Bold}]
-}{
-    \newfontfamily\CGTitleFont{lmss}[BoldFont={* bx}] % Fallback
-}
-
-\IfFontExistsTF{Bebas Neue}{
-    \newfontfamily\CGCoverFont{Bebas Neue}[Ligatures=TeX]
-}{
-    \newfontfamily\CGCoverFont{lmss} % Fallback
-}
+\newfontfamily\CGBaseFont{Roboto Condensed}[Ligatures=TeX, UprightFont={* Light}, BoldFont={* Regular}]
+\newfontfamily\CGTitleFont{Barlow Condensed}[Ligatures=TeX, UprightFont={* Medium}, BoldFont={* Bold}]
+\newfontfamily\CGCoverFont{Bebas Neue}[Ligatures=TeX]
 
 \renewcommand{\familydefault}{\sfdefault}
 \endinput

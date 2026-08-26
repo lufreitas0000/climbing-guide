@@ -5,13 +5,11 @@
 \directlua{cg = require("climbingguide")}
 
 \ExplSyntaxOn
-% State Variables
 \int_new:N \g_guide_route_int
 \int_new:N \g_guide_sector_int
 \tl_new:N \g_guide_current_sector_name_tl
 \tl_new:N \l_guide_current_grade_color_tl
 
-% Color Matrix Counters
 \int_new:N \g_guide_cyan_top_int \int_new:N \g_guide_cyan_bot_int
 \int_new:N \g_guide_green_top_int \int_new:N \g_guide_green_bot_int
 \int_new:N \g_guide_yellow_top_int \int_new:N \g_guide_yellow_bot_int
@@ -20,7 +18,6 @@
 \int_new:N \g_guide_purple_top_int \int_new:N \g_guide_purple_bot_int
 \int_new:N \g_guide_gray_int
 
-% Save Summary Cache
 \cs_new:Npn \guide_save_sector_summary: {
     \int_compare:nNnT { \g_guide_sector_int } > { 0 } {
         \iow_now:Nx \@auxout {
@@ -38,13 +35,11 @@
 }
 \AtEndDocument{ \guide_save_sector_summary: }
 
-% Automated Sector Header
 \NewDocumentCommand{\CGSectorHeader}{ m m }{
     \guide_save_sector_summary:
     \int_gincr:N \g_guide_sector_int
     \tl_gset:Nn \g_guide_current_sector_name_tl {#2}
     
-    % Zero counters
     \int_gzero:N \g_guide_cyan_top_int \int_gzero:N \g_guide_cyan_bot_int
     \int_gzero:N \g_guide_green_top_int \int_gzero:N \g_guide_green_bot_int
     \int_gzero:N \g_guide_yellow_top_int \int_gzero:N \g_guide_yellow_bot_int
@@ -68,10 +63,10 @@
     \vspace{1em}
 }
 
-% Route Command (Automated Formatting)
-\NewDocumentCommand{\CGRoute}{ m m m m m m }{
+% Re-engineered to require only 5 arguments. Color and Index are fully automated.
+\NewDocumentCommand{\CGRoute}{ m m m m m }{
     \int_gincr:N \g_guide_route_int
-    \tl_set:Nx \l_guide_clean_grade_tl { \str_replace_all:nnn {#4} {°} {} }
+    \tl_set:Nx \l_guide_clean_grade_tl { \str_replace_all:nnn {#2} {°} {} }
     \directlua{cg.eval_tex("\luaescapestring{\unexpanded{\l_guide_clean_grade_tl}}")}
     
     \noindent
@@ -84,9 +79,9 @@
     \end{minipage}%
     \begin{minipage}[t]{0.88\linewidth}
         \vspace{0pt}\raggedright
-        {\CGTitleFont\large #3}~
-        {\CGBaseFont\itshape\normalsize #4} \textcolor{guide_gray}{|} {\CGBaseFont\normalsize #5}\par
-        {\CGBaseFont\itshape\small #6}
+        {\CGTitleFont\large #1}~
+        {\CGBaseFont\itshape\normalsize #2} \textcolor{guide_gray}{|} {\CGBaseFont\normalsize #3}\par
+        {\CGBaseFont\itshape\small #4}
     \end{minipage}\par\vspace{4mm}
 }
 \ExplSyntaxOff

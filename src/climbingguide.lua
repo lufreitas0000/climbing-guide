@@ -1,4 +1,6 @@
 local M = {}
+M.routes = {}
+
 local romans = {"xii", "viii", "vii", "iii", "xi", "ix", "vi", "iv", "ii", "x", "v", "i"}
 local roman_map = { xii=12, xi=11, x=10, ix=9, viii=8, vii=7, vi=6, v=5, iv=4, iii=3, ii=2, i=1 }
 
@@ -26,9 +28,12 @@ function M.eval_tex(g)
         return
     end
 
-    local max_val = 0
-    local outside = string.gsub(g_low, "%(.-%)", " ") -- Ignore text inside parenthesis
+    -- 1. Strip Brazilian general grade (e.g., 5°, 6º)
+    g_low = string.gsub(g_low, "%d+[°º]", " ")
+    -- 2. Strip parentheses and their contents (e.g., variants or artificial sections)
+    local outside = string.gsub(g_low, "%(.-%)", " ")
     
+    local max_val = 0
     for token in string.gmatch(outside, "[a-z0-9]+") do
         if not string.match(token, "^[eda]%d+") then
             local val = parse_grade(token)

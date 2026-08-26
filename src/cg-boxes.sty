@@ -11,7 +11,43 @@
 \setlength{\MarginWidth}{15mm}
 
 \ExplSyntaxOn
-% --- GRADE SUMMARY BLOCKS ---
+\NewDocumentCommand{\CGObsBox}{ m }{
+    \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp~corners]
+        \CGBaseFont\normalsize\color{text_body} #1
+    \end{tcolorbox}
+}
+
+\NewDocumentCommand{\CGIndexCorner}{}{
+    \begin{tikzpicture}[remember~picture, overlay]
+        \fill[brand_color] ($ (current~page.north~west) + (0, 0) $) rectangle ($ (current~page.north~west) + (11.25mm, -22mm) $);
+        \node[anchor=south~west, inner~sep=0pt, text=black] at ($ (current~page.north~west) + (\MarginWidth, -22mm) $) {
+            \CGTitleFont\fontsize{32}{36}\selectfont Índice
+        };
+    \end{tikzpicture}
+}
+
+\NewDocumentCommand{\CGIndexBackground}{}{
+    \begin{tikzpicture}[remember~picture, overlay]
+        \fill[bg_beige] ($ (current~page.north~west) + (11.25mm, -22mm) $) rectangle ($ (current~page.north~west) + (11.25mm + 0.55\textwidth, -180mm) $);
+    \end{tikzpicture}
+}
+
+\NewDocumentCommand{\CGZoneHeader}{ m m }{
+    \begin{tikzpicture}[remember~picture, overlay]
+        \clip (current~page.north~west) rectangle ($ (current~page.north~east) + (0, -62.5mm) $);
+        \node[anchor=north, inner~sep=0pt] at ($ (current~page.north) + (0, 0) $) {
+            \includegraphics[width=\paperwidth]{#1}
+        };
+    \end{tikzpicture}
+    \begin{tikzpicture}[remember~picture, overlay]
+        \fill[brand_color] ($ (current~page.north~west) + (0, -62.5mm + 8mm) $) rectangle ($ (current~page.north~west) + (\MarginWidth + 0.75\textwidth, -62.5mm - 8mm) $);
+        \node[anchor=west, text=white, inner~sep=0pt] at ($ (current~page.north~west) + (\MarginWidth, -62.5mm) $) {
+            \CGCoverFont\fontsize{26}{28}\selectfont #2
+        };
+    \end{tikzpicture}
+    \vspace*{45mm}
+}
+
 \NewDocumentCommand{\DrawSummaryBlock}{ m m m }{
     \begin{tikzpicture}[baseline=0pt]
         \fill[#1] (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
@@ -20,28 +56,12 @@
         \node[text=white, font=\CGBaseFont\itshape\small, anchor=center] at (0.68*\cgsummaryboxsize, 0.25*\cgsummaryboxsize) {#3};
     \end{tikzpicture}\hspace{0.0pt}%
 }
+
 \NewDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
     \begin{tikzpicture}[baseline=0pt]
         \fill[#1!80!black] (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
         \node[text=white, font=\CGBaseFont\itshape\normalsize, anchor=center] at (0.5*\cgsummaryboxsize, 0.5*\cgsummaryboxsize) {#2};
     \end{tikzpicture}\hspace{0.0pt}%
-}
-
-% --- ZONE HEADER (Absolute Position) ---
-\NewDocumentCommand{\CGZoneHeader}{ m m }{
-    \begin{tikzpicture}[remember~picture, overlay]
-        \node[anchor=north~west, inner~sep=0pt] at (current~page.north~west) {
-            \includegraphics[width=\paperwidth, height=62.5mm]{#1}
-        };
-        \fill[guide_green!70]
-            ($ (current~page.north~west) + (0, -62.5mm + 8mm) $)
-            rectangle
-            ($ (current~page.north~west) + (\MarginWidth + 0.75\textwidth, -62.5mm - 8mm) $);
-        \node[anchor=west, text=white, inner~sep=0pt] at ($ (current~page.north~west) + (\MarginWidth, -62.5mm) $) {
-            \CGCoverFont\fontsize{26}{28}\selectfont #2
-        };
-    \end{tikzpicture}
-    \vspace*{45mm}
 }
 \ExplSyntaxOff
 \endinput
