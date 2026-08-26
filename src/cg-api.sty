@@ -2,7 +2,10 @@
 \ProvidesPackage{cg-api}[2026/08/26 API]
 \RequirePackage{xparse}
 
-\directlua{cg = require("climbingguide")}
+\directlua{
+    package.path = package.path .. ";./src/?.lua;../src/?.lua"
+    cg = require("climbingguide")
+}
 
 \ExplSyntaxOn
 \int_new:N \g_guide_route_int
@@ -35,6 +38,21 @@
 }
 \AtEndDocument{ \guide_save_sector_summary: }
 
+\NewDocumentCommand{\CGTextSingleColumn}{ m m }{
+    \tl_if_empty:nF {#1} { {\CGTitleFont\LARGE\color{brand_color} #1}\par\vspace{2pt} }
+    {\CGBaseFont\normalsize #2}\par\vspace{4mm}
+}
+
+\NewDocumentCommand{\CGDoubleTextSection}{ m m m m }{
+    \begin{multicols}{2}
+        \tl_if_empty:nF {#1} { {\CGTitleFont\LARGE\color{brand_color} #1}\par\vspace{2pt} }
+        {\CGBaseFont\normalsize #2}\par
+        \columnbreak
+        \tl_if_empty:nF {#3} { {\CGTitleFont\LARGE\color{brand_color} #3}\par\vspace{2pt} }
+        {\CGBaseFont\normalsize #4}\par
+    \end{multicols}
+}
+
 \NewDocumentCommand{\CGSectorHeader}{ m m }{
     \guide_save_sector_summary:
     \int_gincr:N \g_guide_sector_int
@@ -63,7 +81,6 @@
     \vspace{1em}
 }
 
-% Re-engineered to require only 5 arguments. Color and Index are fully automated.
 \NewDocumentCommand{\CGRoute}{ m m m m m }{
     \int_gincr:N \g_guide_route_int
     \tl_set:Nx \l_guide_clean_grade_tl { \str_replace_all:nnn {#2} {°} {} }
@@ -84,21 +101,5 @@
         {\CGItalicFont\small #4}
     \end{minipage}\par\vspace{4mm}
 }
-% --- SEMANTIC TEXT LAYOUTS ---
-\NewDocumentCommand{\CGTextSingleColumn}{ m m }{ 
-    \tl_if_empty:nF {#1} { {\CGTitleFont\LARGE\color{brand_color} #1}\par\vspace{2pt} } 
-    {\CGBaseFont\normalsize #2}\par\vspace{4mm} 
-} 
-
-\NewDocumentCommand{\CGDoubleTextSection}{ m m m m }{ 
-    \begin{multicols}{2} 
-        \tl_if_empty:nF {#1} { {\CGTitleFont\LARGE\color{brand_color} #1}\par\vspace{2pt} } 
-        {\CGBaseFont\normalsize #2}\par 
-        \columnbreak 
-        \tl_if_empty:nF {#3} { {\CGTitleFont\LARGE\color{brand_color} #3}\par\vspace{2pt} } 
-        {\CGBaseFont\normalsize #4}\par 
-    \end{multicols} 
-} 
-
 \ExplSyntaxOff
 \endinput

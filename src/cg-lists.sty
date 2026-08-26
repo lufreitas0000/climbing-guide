@@ -3,7 +3,10 @@
 \RequirePackage{multicol}
 \RequirePackage{enumitem}
 
-\directlua{cg = require("climbingguide")}
+\directlua{
+    package.path = package.path .. ";./src/?.lua;../src/?.lua"
+    cg = require("climbingguide")
+}
 
 \NewDocumentCommand{\CGPrintAlphaList}{}{
     \begin{multicols}{2}

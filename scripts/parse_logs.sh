@@ -3,16 +3,10 @@ LOG_FILE=$1
 BASENAME=$(basename "$LOG_FILE" .log)
 DEBUG_FILE="$(dirname "$LOG_FILE")/debug_${BASENAME}.log"
 
-# Initialize empty debug file
 > "$DEBUG_FILE"
 
-# Extract Fatal Errors
 grep -iE "(! |Fatal error)" "$LOG_FILE" >> "$DEBUG_FILE"
-
-# Extract Warnings
 grep -iE "(Warning:)" "$LOG_FILE" >> "$DEBUG_FILE"
-
-# Extract Overfull boxes exceeding 5.0pt tolerance
 grep -oP "Overfull \\\\hbox \(\K[0-9.]+(?=pt too wide)" "$LOG_FILE" | awk '$1 > 5.0 {print "Overfull \\hbox: " $1 "pt"}' >> "$DEBUG_FILE"
 
 if [ -s "$DEBUG_FILE" ]; then
