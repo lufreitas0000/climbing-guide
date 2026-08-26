@@ -21,21 +21,53 @@ local function parse_grade(token)
     return 0
 end
 
-function M.get_val(g)
-    local g_low = string.lower(g)
-    if string.match(g_low, "proj") then return 999 end
+local function calc_free_grade(text)
+    local g1, g2 = string.match(text, "([%w]+)%s*/%s*([%w]+)")
+    if g1 and g2 then
+        local v1 = parse_grade(g1)
+        local v2 = parse_grade(g2)
+        if v1 > 0 and v2 > 0 then return (v1 + v2) / 2.0 end
+    end
 
-    g_low = string.gsub(g_low, "%d+[°º]", " ")
-    local outside = string.gsub(g_low, "%(.-%)", " ")
-    
-    local max_val = 0
-    for token in string.gmatch(outside, "[a-z0-9]+") do
+    local max_f = 0
+    for token in string.gmatch(text, "[a-z0-9]+") do
         if not string.match(token, "^[eda]%d+") then
             local val = parse_grade(token)
-            if val > max_val then max_val = val end
+            if val > max_f then max_f = val end
         end
     end
-    return max_val
+    return max_f
+end
+
+function M.get_val(g)
+    local g_low = string.lower(g)
+    if string.match(g_low, "proj") or string.match(g_low, "^%s*%%%?%s*$") or string.match(g_low, "^%?+$") then return 999 end
+
+    -- STRICT GRAMMAR VALIDATION
+    local tmp_plus = string.gsub(g_low, "a%d+%+", "")
+    if string.match(tmp_plus, "%+") then error("Invalid format: '+' only allowed in artificial grades (" .. g .. ")") end
+    
+    if string.match(g_low, "%d+[°ºo][ivx%d]") then error("Invalid format: Missing space after general grade (" .. g .. ")") end
+    if string.match(g_low, "[ivx%d]%s+[abc]%f[%W]") or string.match(g_low, "[ivx%d]%s+sup%f[%W]") then error("Invalid format: Space not allowed between base grade and suffix (" .. g .. ")") end
+
+    -- SANITIZATION
+    g_low = string.gsub(g_low, "%d+[°ºo]", " ")
+    local outside = string.gsub(g_low, "%(.-%)", " ")
+
+    -- 1. Evaluate Free Climbing
+    local val_out = calc_free_grade(outside)
+    if val_out > 0 then return val_out end
+
+    -- 2. Evaluate Artificial
+    local max_art = 0
+    for num, plus in string.gmatch(g_low, "a(%d+)(%+?)") do
+        local val = 20.0 + tonumber(num)
+        if plus == "+" then val = val + 0.5 end
+        if val > max_art then max_art = val end
+    end
+    if max_art > 0 then return max_art end
+
+    return 999
 end
 
 function M.eval_tex(g)
@@ -54,7 +86,7 @@ function M.eval_tex(g)
     elseif max_val >= 6 and max_val < 7 then color, base = "guide_yellow", "yellow"
     elseif max_val >= 7 and max_val < 8 then color, base = "guide_orange", "orange"
     elseif max_val >= 8 and max_val < 9 then color, base = "guide_red", "red"
-    elseif max_val >= 9 then color, base = "guide_purple", "purple"
+    elseif max_val >= 9 and max_val < 20 then color, base = "guide_purple", "purple"
     end
 
     if base ~= "gray" and not is_top then color = color .. "!60!black" end
@@ -64,15 +96,13 @@ function M.eval_tex(g)
     if base ~= "gray" then tex.sprint("\\int_gincr:N \\g_guide_" .. base .. top_str .. "_int ") end
 end
 
--- Export functions for listing
+-- Print Functions (Lists)
 function M.print_alpha()
     local sorted = {}
     for _, v in ipairs(M.routes) do table.insert(sorted, v) end
     table.sort(sorted, function(a, b) return string.lower(a.name) < string.lower(b.name) end)
     tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
-    for _, v in ipairs(sorted) do
-        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})")
-    end
+    for _, v in ipairs(sorted) do tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})") end
     tex.sprint("\\end{itemize}")
 end
 
@@ -86,9 +116,7 @@ function M.print_grade()
         return va < vb
     end)
     tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
-    for _, v in ipairs(sorted) do
-        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})")
-    end
+    for _, v in ipairs(sorted) do tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})") end
     tex.sprint("\\end{itemize}")
 end
 
