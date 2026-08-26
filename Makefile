@@ -66,6 +66,3 @@ production: init-dirs check-fonts test-lua
 	@mv production/aux/serra_do_cuo.log production/log/
 	@./scripts/parse_logs.sh production/log/serra_do_cuo.log
 
-clean:
-	@echo "Cleaning auxiliary build artifacts..."
-	@rm -rf tests/aux/* production/aux/*
