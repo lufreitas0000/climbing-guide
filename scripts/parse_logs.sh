@@ -1,19 +1,26 @@
 #!/usr/bin/env bash
 LOG_FILE=$1
+BASENAME=$(basename "$LOG_FILE")
+DEBUG_FILE="$(dirname "$LOG_FILE")/debug_test_${BASENAME}"
 
-# 1. Hard fail on Fatal Errors
-if grep -iE "(! |Fatal error)" "$LOG_FILE"; then
-    echo "[FATAL] Typesetting errors detected in $LOG_FILE. Halting."
+# Clear previous debug log
+> "$DEBUG_FILE"
+
+# Extract Fatal Errors
+grep -iE "(! |Fatal error)" "$LOG_FILE" >> "$DEBUG_FILE"
+
+# Extract Warnings
+grep -iE "(Warning:)" "$LOG_FILE" >> "$DEBUG_FILE"
+
+# Extract Overfull boxes exceeding 5.0pt tolerance
+grep -oP "Overfull \\\\hbox \(\K[0-9.]+(?=pt too wide)" "$LOG_FILE" | awk '$1 > 5.0 {print "Overfull \\hbox: " $1 "pt"}' >> "$DEBUG_FILE"
+
+# Check if debug log is empty
+if [ -s "$DEBUG_FILE" ]; then
+    echo "[FATAL] Errors/Warnings found. Check $DEBUG_FILE for concise details."
     exit 1
+else
+    echo "[OK] $LOG_FILE passed flawless audit."
+    rm -f "$DEBUG_FILE"
+    exit 0
 fi
-
-# 2. Tolerance checking for Overfull \hbox (> 5.0pt)
-OVERFULL_FAILS=$(grep -oP "Overfull \\\\hbox \(\K[0-9.]+(?=pt too wide)" "$LOG_FILE" | awk '$1 > 5.0 {print $1}')
-if [ -n "$OVERFULL_FAILS" ]; then
-    echo "[FATAL] Overfull \hbox exceeding 5.0pt tolerance detected in $LOG_FILE. Halting."
-    echo "Failing values: $OVERFULL_FAILS"
-    exit 1
-fi
-
-echo "[OK] $LOG_FILE passed strict audit."
-exit 0
