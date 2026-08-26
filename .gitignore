@@ -1,0 +1,18 @@
+# LaTeX compilation artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+*.synctex.gz
+
+# Compiled documents
+*.pdf
+
+# Exported databases and lists
+export/
