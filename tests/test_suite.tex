@@ -2,12 +2,16 @@
 \usepackage{climbingguide}
 
 \begin{document}
-\CGSectorHeader{guide_yellow}{Laboratório LUA Regex}
+\CGSectorHeader{brand_color}{Laboratório LUA: Max Free Grade}
 
 \begin{multicols}{2}
-    \CGRoute{guide_gray}{}{Simples}{VIIb}{15m}{Livre puro}
-    \CGRoute{guide_gray}{}{Exposição e Artificial}{5° VIIb A2 E4}{100m}{Avaliador deve extrair VIIb}
-    \CGRoute{guide_gray}{}{Obrigatório}{5° Vsup (A0/VIIb)}{100m}{Avaliador deve ignorar os parênteses e extrair Vsup}
-    \CGRoute{guide_gray}{}{Projeto}{Proj.}{20m}{Deve ir para o sumário cinza}
+    % Should extract VIIb (color: guide_orange)
+    \CGRoute{Simples}{VIIb}{15m}{Livre}{Test}
+    % Should extract VIIb, ignoring E4 and A2 (color: guide_orange)
+    \CGRoute{Exposição e Artificial}{5° VIIb A2 E4}{100m}{Móvel}{Test}
+    % Should ignore the parenthetical (A0/VIIb) and extract Vsup (color: guide_green)
+    \CGRoute{Obrigatório Multipitch}{5° Vsup (A0/VIIb) E4}{100m}{Mista}{Test}
+    % Should map to guide_gray
+    \CGRoute{Projeto de Via}{Proj.}{20m}{Desconhecido}{Test}
 \end{multicols}
 \end{document}

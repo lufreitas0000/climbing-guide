@@ -3,30 +3,59 @@
 
 \begin{document}
 
+% -------------------
+% INDEX PAGE REPLICA
+% -------------------
+\CGIndexCorner
+\CGIndexBackground
+
+\vspace*{2mm}
+{\setlength{\leftskip}{8mm}
+\CGBaseFont\normalsize
+\textbf{ATENÇÃO!} \dotfill 10 \\
+Ética local \dotfill 11 \\
+Como usar o guia \dotfill 12 \\
+
+\textbf{Zona Boqueirão} \dotfill 30 \\
+\hspace*{1em}Mocozado \dotfill 33 \\
+\hspace*{1em}Mocozinho \dotfill 34 \\
+\hspace*{1em}Mocó \dotfill 36 \par
+}
+
+\clearpage
+
+% -------------------
+% ZONE COVER REPLICA
+% -------------------
 \CGZoneHeader{example-image-a}{ZONA BOQUEIRÃO}
 
 \begin{multicols}{2}
     {\CGTitleFont\LARGE\color{brand_color} Setores}\par\vspace{1pt}
     {\CGBaseFont\normalsize Mocozado, Mocozinho e Mocó.}\par\vspace{6pt}
-    A Zona Boqueirão é composta por três setores de escalada distintos.
-    
+    A Zona Boqueirão é composta por três setores distintos. A caminhada leva 20 minutos.
     \columnbreak
 
     {\CGTitleFont\LARGE\color{brand_color} Betas da zona}\par\vspace{1pt}
-    O horário mais recomendado para escalar nesta zona é à tarde.
+    O horário mais recomendado é à tarde. O uso de repelente é indispensável.\par\vspace{6pt}
+    
+    \CGObsBox{\textbf{\color{brand_color}OBS.} É comum encontrar vespas nas fendas das vias. Elas não apresentam comportamento agressivo.}
 \end{multicols}
 
 \clearpage
 
-% NOTE: This command now automatically tracks the routes below it and generates the Grade Summary blocks on the second compilation!
+% -------------------
+% SECTOR HEADER REPLICA
+% -------------------
 \CGSectorHeader{sector_yellow}{MOCOZINHO}
 
 \begin{multicols}{2}
-    \CGRoute{guide_gray}{}{CAFÉ SEM TABACO}{6sup}{15m (5+2)}{Allan Carlos e Vinicin}
-    \CGRoute{guide_gray}{}{EQUILÍBRIO MALUCO}{7c}{15m (4+2)}{Allan Carlos e Vinicin}
-    \CGRoute{guide_gray}{}{A BUSCA CONTINUA}{7a}{15m (5+2)}{Allan Carlos e Vinicin}
-    \CGRoute{guide_gray}{}{NÃO SUFOQUE O ARTISTA}{5sup}{15m (4+2)}{Allan Carlos e Vinicin}
-    \CGRoute{guide_gray}{}{AÇÃO E REAÇÃO}{5sup}{15m (4+2)}{Allan Carlos e Vinicin}
+    Diferente do Mocó, o setor Mocozinho é mais acessível. A base é confortável e possui vias muito convidativas.
+    \columnbreak
+
+    % Auto-indexed and auto-colored routes
+    \CGRoute{CAFÉ SEM TABACO}{6sup}{15m}{5+2}{Allan Carlos}
+    \CGRoute{EQUILÍBRIO MALUCO}{7c}{15m}{4+2}{Vinicin}
+    \CGRoute{NÃO SUFOQUE O ARTISTA}{5sup}{15m}{4+2}{Allan Carlos}
 \end{multicols}
 
 \end{document}
