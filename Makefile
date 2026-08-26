@@ -1,10 +1,13 @@
-.PHONY: all test production clean check-fonts test-lua audit-logs
+.PHONY: all test production clean check-fonts test-lua test-fonts test-summary test-suite test-visual test-miniguide init-dirs
 
 TEX = lualatex
 FLAGS = --interaction=nonstopmode --halt-on-error
 export TEXINPUTS := $(abspath src)//:
 
 all: test production
+
+init-dirs:
+	@mkdir -p tests/aux tests/pdf tests/log production/aux production/pdf production/log
 
 check-fonts:
 	@echo "Auditing system fonts..."
@@ -14,36 +17,55 @@ test-lua:
 	@echo "Executing Lua mathematical logic..."
 	@lua tests/test_lua.lua
 
-test: check-fonts test-lua
+test-fonts: init-dirs check-fonts
 	@echo "Compiling test_fonts.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests tests/test_fonts.tex > /dev/null
-	@./scripts/parse_logs.sh tests/test_fonts.log
-	
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_fonts.tex > /dev/null
+	@mv tests/aux/test_fonts.pdf tests/pdf/
+	@mv tests/aux/test_fonts.log tests/log/
+	@./scripts/parse_logs.sh tests/log/test_fonts.log
+
+test-summary: init-dirs check-fonts
 	@echo "Compiling test_summary.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests tests/test_summary.tex > /dev/null
-	@./scripts/parse_logs.sh tests/test_summary.log
-	
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_summary.tex > /dev/null
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_summary.tex > /dev/null
+	@mv tests/aux/test_summary.pdf tests/pdf/
+	@mv tests/aux/test_summary.log tests/log/
+	@./scripts/parse_logs.sh tests/log/test_summary.log
+
+test-suite: init-dirs check-fonts
 	@echo "Compiling test_suite.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests tests/test_suite.tex > /dev/null
-	@$(TEX) $(FLAGS) --output-directory=tests tests/test_suite.tex > /dev/null
-	@./scripts/parse_logs.sh tests/test_suite.log
-	
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_suite.tex > /dev/null
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_suite.tex > /dev/null
+	@mv tests/aux/test_suite.pdf tests/pdf/
+	@mv tests/aux/test_suite.log tests/log/
+	@./scripts/parse_logs.sh tests/log/test_suite.log
+
+test-visual: init-dirs check-fonts
 	@echo "Compiling test_visual.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests tests/test_visual.tex > /dev/null
-	@$(TEX) $(FLAGS) --output-directory=tests tests/test_visual.tex > /dev/null
-	@./scripts/parse_logs.sh tests/test_visual.log
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_visual.tex > /dev/null
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_visual.tex > /dev/null
+	@mv tests/aux/test_visual.pdf tests/pdf/
+	@mv tests/aux/test_visual.log tests/log/
+	@./scripts/parse_logs.sh tests/log/test_visual.log
+
+test-miniguide: init-dirs check-fonts
 	@echo "Compiling test_miniguide.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests tests/test_miniguide.tex > /dev/null
-	@$(TEX) $(FLAGS) --output-directory=tests tests/test_miniguide.tex > /dev/null
-	@./scripts/parse_logs.sh tests/test_miniguide.log
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_miniguide.tex > /dev/null
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_miniguide.tex > /dev/null
+	@mv tests/aux/test_miniguide.pdf tests/pdf/
+	@mv tests/aux/test_miniguide.log tests/log/
+	@./scripts/parse_logs.sh tests/log/test_miniguide.log
 
+test: test-lua test-fonts test-summary test-suite test-visual test-miniguide
 
-production: check-fonts test-lua
+production: init-dirs check-fonts test-lua
 	@echo "Compiling serra_do_cuo.tex..."
-	@$(TEX) $(FLAGS) --output-directory=production production/serra_do_cuo.tex > /dev/null
-	@$(TEX) $(FLAGS) --output-directory=production production/serra_do_cuo.tex > /dev/null
-	@./scripts/parse_logs.sh production/serra_do_cuo.log
+	@$(TEX) $(FLAGS) --output-directory=production/aux production/serra_do_cuo.tex > /dev/null
+	@$(TEX) $(FLAGS) --output-directory=production/aux production/serra_do_cuo.tex > /dev/null
+	@mv production/aux/serra_do_cuo.pdf production/pdf/
+	@mv production/aux/serra_do_cuo.log production/log/
+	@./scripts/parse_logs.sh production/log/serra_do_cuo.log
 
 clean:
-	@find tests production -type f \( -name "*.aux" -o -name "*.log" -o -name "*.out" -o -name "*.toc" -o -name "*.fls" -o -name "*.fmt" -o -name "*.fot" -o -name "*.cb" -o -name "*.cb2" -o -name "*.lb" -o -name "*.synctex.gz" \) -exec rm -f {} +
-	@echo "Cleaned build artifacts."
+	@echo "Cleaning auxiliary build artifacts..."
+	@rm -rf tests/aux/* production/aux/*
