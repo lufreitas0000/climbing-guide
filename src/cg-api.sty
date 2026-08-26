@@ -3,8 +3,23 @@
 \RequirePackage{xparse}
 
 \directlua{
-    package.path = package.path .. ";./src/?.lua;../src/?.lua"
-    cg = require("climbingguide")
+  local function add_path(p)
+    if p and p ~= "" then
+      package.path = p .. "/?.lua;" .. p .. "/?/init.lua;" .. package.path
+    end
+  end
+
+  local kpse_path = kpse.find_file("climbingguide.lua", "lua") or kpse.find_file("climbingguide.sty", "tex")
+  if kpse_path then
+    local dir = kpse_path:match("^(.-)[^/\\]+$")
+    if dir then add_path(dir) end
+  end
+
+  add_path("./src")
+  add_path("../src")
+  add_path(".")
+
+  require("climbingguide")
 }
 
 \ExplSyntaxOn
@@ -57,7 +72,7 @@
     \guide_save_sector_summary:
     \int_gincr:N \g_guide_sector_int
     \tl_gset:Nn \g_guide_current_sector_name_tl {#2}
-    
+
     \int_gzero:N \g_guide_cyan_top_int \int_gzero:N \g_guide_cyan_bot_int
     \int_gzero:N \g_guide_green_top_int \int_gzero:N \g_guide_green_bot_int
     \int_gzero:N \g_guide_yellow_top_int \int_gzero:N \g_guide_yellow_bot_int
@@ -85,7 +100,7 @@
     \int_gincr:N \g_guide_route_int
     \tl_set:Nx \l_guide_clean_grade_tl { \str_replace_all:nnn {#2} {°} {} }
     \directlua{cg.eval_tex("\luaescapestring{\unexpanded{\l_guide_clean_grade_tl}}")}
-    
+
     \noindent
     \begin{minipage}[t]{0.12\linewidth}
         \vspace{0pt}
