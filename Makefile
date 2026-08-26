@@ -9,6 +9,8 @@ all: test production
 test:
 	$(TEX) $(FLAGS) --output-directory=tests tests/test_suite.tex
 	$(TEX) $(FLAGS) --output-directory=tests tests/test_suite.tex
+	$(TEX) $(FLAGS) --output-directory=tests tests/test_visual.tex
+	$(TEX) $(FLAGS) --output-directory=tests tests/test_visual.tex
 
 production:
 	$(TEX) $(FLAGS) --output-directory=production production/serra_do_cuo.tex
