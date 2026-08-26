@@ -52,15 +52,15 @@
     \begin{tikzpicture}[baseline=0pt]
         \fill[#1] (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
         \fill[#1!60!black] (0,0) -- (\cgsummaryboxsize,0) -- (\cgsummaryboxsize,\cgsummaryboxsize) -- cycle;
-        \node[text=white, font=\CGBaseFont\itshape\normalsize, anchor=center] at (0.35*\cgsummaryboxsize, 0.68*\cgsummaryboxsize) {#2};
-        \node[text=white, font=\CGBaseFont\itshape\small, anchor=center] at (0.68*\cgsummaryboxsize, 0.25*\cgsummaryboxsize) {#3};
+        \node[text=white, font=\CGItalicFont\normalsize, anchor=center] at (0.35*\cgsummaryboxsize, 0.68*\cgsummaryboxsize) {#2};
+        \node[text=white, font=\CGItalicFont\small, anchor=center] at (0.68*\cgsummaryboxsize, 0.25*\cgsummaryboxsize) {#3};
     \end{tikzpicture}\hspace{0.0pt}%
 }
 
 \NewDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
     \begin{tikzpicture}[baseline=0pt]
         \fill[#1!80!black] (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
-        \node[text=white, font=\CGBaseFont\itshape\normalsize, anchor=center] at (0.5*\cgsummaryboxsize, 0.5*\cgsummaryboxsize) {#2};
+        \node[text=white, font=\CGItalicFont\normalsize, anchor=center] at (0.5*\cgsummaryboxsize, 0.5*\cgsummaryboxsize) {#2};
     \end{tikzpicture}\hspace{0.0pt}%
 }
 \ExplSyntaxOff
