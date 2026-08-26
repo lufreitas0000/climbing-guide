@@ -32,6 +32,11 @@ test: check-fonts test-lua
 	@$(TEX) $(FLAGS) --output-directory=tests tests/test_visual.tex > /dev/null
 	@$(TEX) $(FLAGS) --output-directory=tests tests/test_visual.tex > /dev/null
 	@./scripts/parse_logs.sh tests/test_visual.log
+	@echo "Compiling test_miniguide.tex..."
+	@$(TEX) $(FLAGS) --output-directory=tests tests/test_miniguide.tex > /dev/null
+	@$(TEX) $(FLAGS) --output-directory=tests tests/test_miniguide.tex > /dev/null
+	@./scripts/parse_logs.sh tests/test_miniguide.log
+
 
 production: check-fonts test-lua
 	@echo "Compiling serra_do_cuo.tex..."

@@ -84,5 +84,21 @@
         {\CGItalicFont\small #4}
     \end{minipage}\par\vspace{4mm}
 }
+% --- SEMANTIC TEXT LAYOUTS ---
+\NewDocumentCommand{\CGTextSingleColumn}{ m m }{ 
+    \tl_if_empty:nF {#1} { {\CGTitleFont\LARGE\color{brand_color} #1}\par\vspace{2pt} } 
+    {\CGBaseFont\normalsize #2}\par\vspace{4mm} 
+} 
+
+\NewDocumentCommand{\CGDoubleTextSection}{ m m m m }{ 
+    \begin{multicols}{2} 
+        \tl_if_empty:nF {#1} { {\CGTitleFont\LARGE\color{brand_color} #1}\par\vspace{2pt} } 
+        {\CGBaseFont\normalsize #2}\par 
+        \columnbreak 
+        \tl_if_empty:nF {#3} { {\CGTitleFont\LARGE\color{brand_color} #3}\par\vspace{2pt} } 
+        {\CGBaseFont\normalsize #4}\par 
+    \end{multicols} 
+} 
+
 \ExplSyntaxOff
 \endinput
