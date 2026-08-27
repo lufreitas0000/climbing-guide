@@ -3,6 +3,7 @@
 TEX = lualatex
 FLAGS = --interaction=nonstopmode --halt-on-error
 export TEXINPUTS := $(abspath src)//:
+export LUAINPUTS := $(abspath src)//:
 
 all: test production
 
@@ -66,3 +67,6 @@ production: init-dirs check-fonts test-lua
 	@mv production/aux/serra_do_cuo.log production/log/
 	@./scripts/parse_logs.sh production/log/serra_do_cuo.log
 
+clean:
+	@echo "Cleaning auxiliary build artifacts..."
+	@rm -rf tests/aux/* production/aux/*
