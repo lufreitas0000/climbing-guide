@@ -40,6 +40,7 @@ test-suite: init-dirs check-fonts
 	@mv tests/aux/test_suite.pdf tests/pdf/
 	@mv tests/aux/test_suite.log tests/log/
 	@./scripts/parse_logs.sh tests/log/test_suite.log
+	@./scripts/validate_exports.sh
 
 test-visual: init-dirs check-fonts
 	@echo "Compiling test_visual.tex..."

@@ -36,6 +36,7 @@
 \AtEndDocument{ 
     \guide_save_sector_summary: 
     \directlua{cg.export_json("export/database.json")}
+    \directlua{cg.export_text_lists("export/")}
 }
 
 \NewDocumentCommand{\CGEvalGrade}{ m m }{

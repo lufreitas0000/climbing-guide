@@ -6,6 +6,7 @@ M.current_sector = ""
 local Sorter = require("route_sorter")
 local JSON = require("export_json")
 local Sanitizer = require("sanitize_tex")
+local TXT = require("export_txt")
 
 local romans = {"xii", "viii", "vii", "iii", "xi", "ix", "vi", "iv", "ii", "x", "v", "i"}
 local roman_map = { xii=12, xi=11, x=10, ix=9, viii=8, vii=7, vi=6, v=5, iv=4, iii=3, ii=2, i=1 }
@@ -14,7 +15,6 @@ function M.set_zone(z) M.current_zone = z end
 function M.set_sector(s) M.current_sector = s end
 
 function M.register_route(id, name, grade, length, gear, setter)
-    -- Sanitize data at the boundary so in-memory state remains pure text
     table.insert(M.routes, {
         zone = Sanitizer.strip_tex_macros(M.current_zone),
         sector = Sanitizer.strip_tex_macros(M.current_sector),
@@ -29,6 +29,10 @@ end
 
 function M.export_json(filepath)
     JSON.export(filepath, M.routes)
+end
+
+function M.export_text_lists(output_dir)
+    TXT.export(output_dir, M.routes, M.get_val)
 end
 
 local function get_suffix(suf)
@@ -93,7 +97,6 @@ function M.get_val(g)
 end
 
 function M.eval_tex(g)
-    -- eval_tex expects raw TeX string directly from \CGRoute, preserving TeX evaluation logic
     local max_val = M.get_val(Sanitizer.strip_tex_macros(g))
     if max_val == 999 then 
         tex.sprint("\\CGEvalGrade{guide_gray}{gray}")
