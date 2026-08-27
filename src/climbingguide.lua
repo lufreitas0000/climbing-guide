@@ -116,7 +116,7 @@ end
 function M.eval_tex(g)
     local max_val = M.get_val(g)
     if max_val == 999 then 
-        tex.sprint("\\tl_set:Nn \\l_guide_current_grade_color_tl {guide_gray} \\int_gincr:N \\g_guide_gray_int")
+        tex.sprint("\\CGEvalGrade{guide_gray}{gray}")
         return
     end
 
@@ -135,8 +135,11 @@ function M.eval_tex(g)
     if base ~= "gray" and not is_top then color = color .. "!60!black" end
     local top_str = is_top and "_top" or "_bot"
 
-    tex.sprint("\\tl_set:Nn \\l_guide_current_grade_color_tl {" .. color .. "} ")
-    if base ~= "gray" then tex.sprint("\\int_gincr:N \\g_guide_" .. base .. top_str .. "_int ") end
+    if base ~= "gray" then 
+        tex.sprint("\\CGEvalGrade{" .. color .. "}{" .. base .. top_str .. "}")
+    else
+        tex.sprint("\\CGEvalGrade{" .. color .. "}{}")
+    end
 end
 
 function M.print_alpha()

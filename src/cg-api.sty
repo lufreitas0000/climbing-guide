@@ -38,6 +38,12 @@
     \directlua{cg.export_json("export/database.json")}
 }
 
+% Bridge Macro: Safely transfers variables from Lua to expl3 assignments
+\NewDocumentCommand{\CGEvalGrade}{ m m }{
+    \tl_set:Nn \l_guide_current_grade_color_tl {#1}
+    \tl_if_empty:nF {#2} { \int_gincr:c {g_guide_#2_int} }
+}
+
 \NewDocumentCommand{\CGTextSingleColumn}{ m m }{
     \tl_if_empty:nF {#1} { {\CGTitleFont\LARGE\color{brand_color} #1}\par\vspace{2pt} }
     {\CGBaseFont\normalsize #2}\par\vspace{4mm}
