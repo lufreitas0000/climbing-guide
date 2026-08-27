@@ -3,6 +3,8 @@ M.routes = {}
 M.current_zone = ""
 M.current_sector = ""
 
+local Sorter = require("route_sorter")
+
 local romans = {"xii", "viii", "vii", "iii", "xi", "ix", "vi", "iv", "ii", "x", "v", "i"}
 local roman_map = { xii=12, xi=11, x=10, ix=9, viii=8, vii=7, vi=6, v=5, iv=4, iii=3, ii=2, i=1 }
 
@@ -143,25 +145,20 @@ function M.eval_tex(g)
 end
 
 function M.print_alpha()
-    local sorted = {}
-    for _, v in ipairs(M.routes) do table.insert(sorted, v) end
-    table.sort(sorted, function(a, b) return string.lower(a.name) < string.lower(b.name) end)
+    local sorted = Sorter.sort_by_alpha(M.routes)
     tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
-    for _, v in ipairs(sorted) do tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})") end
+    for _, v in ipairs(sorted) do 
+        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})") 
+    end
     tex.sprint("\\end{itemize}")
 end
 
 function M.print_grade()
-    local sorted = {}
-    for _, v in ipairs(M.routes) do table.insert(sorted, v) end
-    table.sort(sorted, function(a, b)
-        local va = M.get_val(a.grade)
-        local vb = M.get_val(b.grade)
-        if math.abs(va - vb) < 0.001 then return string.lower(a.name) < string.lower(b.name) end
-        return va < vb
-    end)
+    local sorted = Sorter.sort_by_grade(M.routes, M.get_val)
     tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
-    for _, v in ipairs(sorted) do tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})") end
+    for _, v in ipairs(sorted) do 
+        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})") 
+    end
     tex.sprint("\\end{itemize}")
 end
 
