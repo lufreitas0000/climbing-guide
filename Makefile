@@ -1,14 +1,14 @@
-.PHONY: all test production clean check-fonts test-lua test-fonts test-summary test-suite test-visual test-miniguide init-dirs
+.PHONY: all test production clean check-fonts test-lua test-fonts test-summary test-suite test-visual test-miniguide init-dirs docs
 
 TEX = lualatex
 FLAGS = --interaction=nonstopmode --halt-on-error
 export TEXINPUTS := $(abspath src)//:
 export LUAINPUTS := $(abspath src)//:
 
-all: test production
+all: test docs
 
 init-dirs:
-	@mkdir -p tests/aux tests/pdf tests/log production/aux production/pdf production/log export
+	@mkdir -p tests/aux tests/pdf tests/log production/aux production/pdf production/log export doc/export
 
 check-fonts:
 	@echo "Auditing system fonts..."
@@ -74,16 +74,6 @@ clean:
 
 docs: init-dirs check-fonts
 	@echo "Compiling doc/cg-documentation.tex..."
-	@$(TEX) $(FLAGS) --output-directory=production/aux doc/cg-documentation.tex > /dev/null
-	@$(TEX) $(FLAGS) --output-directory=production/aux doc/cg-documentation.tex > /dev/null
-	@mv production/aux/cg-documentation.pdf production/pdf/
-	@mv production/aux/cg-documentation.log production/log/
-	@./scripts/parse_logs.sh production/log/cg-documentation.log
-
-docs: init-dirs check-fonts
-	@echo "Compiling doc/cg-documentation.tex..."
-	@$(TEX) $(FLAGS) --output-directory=production/aux doc/cg-documentation.tex > /dev/null
-	@$(TEX) $(FLAGS) --output-directory=production/aux doc/cg-documentation.tex > /dev/null
-	@mv production/aux/cg-documentation.pdf production/pdf/
-	@mv production/aux/cg-documentation.log production/log/
-	@./scripts/parse_logs.sh production/log/cg-documentation.log
+	@$(TEX) $(FLAGS) --output-directory=doc/export doc/cg-documentation.tex > /dev/null
+	@$(TEX) $(FLAGS) --output-directory=doc/export doc/cg-documentation.tex > /dev/null
+	@./scripts/parse_logs.sh doc/export/cg-documentation.log
