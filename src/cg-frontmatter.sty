@@ -3,11 +3,11 @@
 \RequirePackage{tocloft}
 
 % TOC Customization (Native TeX)
-\renewcommand{\cfttoctitlefont}{\CGTitleFont\fontsize{32}{36}\selectfont}
-\renewcommand{\cftpartfont}{\CGTitleFont\large}
-\renewcommand{\cftsecfont}{\CGBaseFont\normalsize}
-\renewcommand{\cftpartpagefont}{\CGBaseFont\normalsize}
-\renewcommand{\cftsecpagefont}{\CGBaseFont\normalsize}
+\renewcommand{\cfttoctitlefont}{\CGTitleFont\fontsize{32}{36}\selectfont\color{brand_color}}
+\renewcommand{\cftpartfont}{\CGTitleFont\large\color{text_body}}
+\renewcommand{\cftsecfont}{\CGBaseFont\normalsize\color{text_body}}
+\renewcommand{\cftpartpagefont}{\CGBaseFont\normalsize\color{text_body}}
+\renewcommand{\cftsecpagefont}{\CGBaseFont\normalsize\color{text_body}}
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
 \setlength{\cftbeforepartskip}{10pt}
 \setlength{\cftbeforesecskip}{2pt}
@@ -29,6 +29,21 @@
     \begin{tikzpicture}[remember~picture, overlay]
         \fill[#2] (current~page.north~west) rectangle ($ (current~page.south~west) !#1! (current~page.south~east) $);
         \fill[#3] ($ (current~page.north~west) !#1! (current~page.north~east) $) rectangle (current~page.south~east);
+    \end{tikzpicture}
+}
+
+\NewDocumentCommand{\CGIndexCorner}{}{
+    \begin{tikzpicture}[remember~picture, overlay]
+        \fill[brand_color] ($ (current~page.north~west) + (0, 0) $) rectangle ($ (current~page.north~west) + (11.25mm, -22mm) $);
+        \node[anchor=south~west, inner~sep=0pt, text=black] at ($ (current~page.north~west) + (\MarginWidth, -22mm) $) {
+            \CGTitleFont\fontsize{32}{36}\selectfont Índice
+        };
+    \end{tikzpicture}
+}
+
+\NewDocumentCommand{\CGIndexBackground}{}{
+    \begin{tikzpicture}[remember~picture, overlay]
+        \fill[bg_beige] ($ (current~page.north~west) + (11.25mm, -22mm) $) rectangle ($ (current~page.north~west) + (11.25mm + 0.55\textwidth, -180mm) $);
     \end{tikzpicture}
 }
 
