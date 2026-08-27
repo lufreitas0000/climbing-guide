@@ -1,0 +1,21 @@
+\documentclass[11pt]{article}
+\usepackage{climbingguide}
+\usepackage{hyperref}
+
+\begin{document}
+
+\CGSidebarTitle{Climbing Guide Engine}
+\CGTextSingleColumn{Version 1.0.0}{Documentação oficial da API e macros estruturais.}
+
+\vspace{1em}
+\tableofcontents
+\clearpage
+
+\section{Introdução}
+O \texttt{climbingguide} é um motor híbrido (TeX/Lua) desenhado para separar completamente a lógica matemática e topológica da camada de apresentação visual.
+
+\section{Macros de Front Matter}
+Utilize \texttt{\textbackslash CGSplitBackground\{0.5\}\{bg\_beige\}\{brand\_color\}} para criar fundos divididos para índices e notas de atenção.
+Utilize \texttt{\textbackslash CGSidebarTitle\{Título\}} para cabeçalhos com o bloco de destaque.
+
+\end{document}

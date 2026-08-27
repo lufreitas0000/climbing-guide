@@ -74,6 +74,7 @@
     \int_gincr:N \g_guide_sector_int
     \tl_gset:Nn \g_guide_current_sector_name_tl {#2}
     \directlua{cg.set_sector("\luaescapestring{\unexpanded{#2}}")}
+    \addcontentsline{toc}{section}{#2} % Native TOC Integration
     
     \int_gzero:N \g_guide_cyan_top_int \int_gzero:N \g_guide_cyan_bot_int
     \int_gzero:N \g_guide_green_top_int \int_gzero:N \g_guide_green_bot_int

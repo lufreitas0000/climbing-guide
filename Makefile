@@ -71,3 +71,11 @@ production: init-dirs check-fonts test-lua
 clean:
 	@echo "Cleaning auxiliary build artifacts..."
 	@rm -rf production/aux/*
+
+docs: init-dirs check-fonts
+	@echo "Compiling doc/cg-documentation.tex..."
+	@$(TEX) $(FLAGS) --output-directory=production/aux doc/cg-documentation.tex > /dev/null
+	@$(TEX) $(FLAGS) --output-directory=production/aux doc/cg-documentation.tex > /dev/null
+	@mv production/aux/cg-documentation.pdf production/pdf/
+	@mv production/aux/cg-documentation.log production/log/
+	@./scripts/parse_logs.sh production/log/cg-documentation.log
