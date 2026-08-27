@@ -32,3 +32,10 @@ The Brazilian grading system utilizes non-linear, alphanumeric modifiers (e.g., 
 
 ### 5.5 Compiler Security and I/O Permissions
 The LuaTeX engine adheres to local TeX Live security configurations (governed by the `openout_any` parameter), which restrict arbitrary write operations. To comply with these I/O permissions without modifying local `texmf.cnf` security policies, the continuous integration pipeline (`Makefile`) explicitly orchestrates the directory topology, validating and scaffolding the local `export/` target path prior to runtime execution.
+
+## 6. Implementation Roadmap and Historical Log
+
+### 6.1. Decoupling of Sorting Algorithms (Pure Lua)
+*   **Rationale**: The initial architecture violated the Single Responsibility Principle by embedding mathematical ranking and alphabetical sorting directly within the TeX engine formatting functions (`M.print_alpha` and `M.print_grade`). Furthermore, internal array sorting mutated state, complicating isolated unit testing.
+*   **Implementation**: Extracted sorting mechanisms into an isolated, pure functional module (`src/route_sorter.lua`). Implemented Strict Weak Ordering with deterministic tertiary fallbacks (Grade $\rightarrow$ Sector $\rightarrow$ Name $\rightarrow$ ID). Injected the evaluation function (`M.get_val`) as a dependency to prevent cyclic module coupling.
+*   **Ordering Logic**: This topological restructuring was executed as Step 1 to guarantee that all subsequent I/O and sanitization pipelines (Steps 2-4) act upon mathematically stable, predictable, and immutable data structures.
