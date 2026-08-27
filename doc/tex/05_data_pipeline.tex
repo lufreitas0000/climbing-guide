@@ -1,0 +1,26 @@
+\clearpage
+\section{Data Pipeline \& CI/CD Verification}
+
+The engine implements a continuous data extraction pipeline during \LaTeX\ compilation.
+
+\subsection{Compilation Lifecycle Flow}
+\begin{enumerate}
+    \item \textbf{AST Capture}: \texttt{\textbackslash CGZoneHeader} and \texttt{\textbackslash CGSectorHeader} update topological state in Lua runtime memory.
+    \item \textbf{Lexical Sanitization}: \texttt{\textbackslash CGRoute} passes raw arguments through \texttt{sanitize\_tex.lua} to store pure UTF-8 strings in \texttt{M.routes}.
+    \item \textbf{Two-Pass Sector Summaries}: At sector transitions, \texttt{\textbackslash guide\_save\_sector\_summary:} writes sector tally definitions to the \texttt{.aux} file.
+    \item \textbf{Document Termination Hook}: At \texttt{\textbackslash AtEndDocument}, \texttt{cg-api.sty} triggers automatic disk serialization (\texttt{database.json} and text lists).
+\end{enumerate}
+
+\subsection{Plain Text Output Schema}
+The plain text lists (\texttt{list\_alpha.txt} and \texttt{list\_grade.txt}) adhere to a single-line, fixed-separator format with exactly 7 pipe delimiters:
+
+\vspace{0.5em}
+\noindent
+\resizebox{\linewidth}{!}{\texttt{[ID] | [Name] | [Grade] | [Length] | [Gear] | [Setter] | [Sector] | [Zone]}}
+
+\subsection{CI/CD Automated Test Vectors}
+\begin{itemize}
+    \item \texttt{make test-lua}: Runs \texttt{tests/test\_lua.lua} for mathematical and JSON purity.
+    \item \texttt{make test-suite}: Compiles test suites and invokes \texttt{scripts/validate\_exports.sh}.
+    \item \texttt{make docs}: Compiles this technical documentation manual into \texttt{doc/export/cg-documentation.pdf}.
+\end{itemize}

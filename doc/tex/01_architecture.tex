@@ -1,29 +1,34 @@
 \section{System Architecture}
 
-The climbing guide engine enforces a strict separation between presentation (managed by \LaTeX) and business/mathematical logic (managed by pure Lua modules). No manual positioning or fine-tuning is permitted in production files.
+The engine enforces an absolute decoupling between the presentation layer (\LaTeX) and the data/logic layer (Lua). Production source files remain purely declarative databases with zero manual spacing, hardcoded breaks, or visual overrides.
+
+\subsection{Core Design Principles}
+\begin{itemize}
+    \item \textbf{Single Responsibility Principle}: Separate modules handle font loading, geometry boundaries, TikZ overlays, sorting algorithms, lexical sanitization, and serialization.
+    \item \textbf{Immutability \& Pure Functions}: Algorithmic operations never mutate global state; they clone inputs and return new structures.
+    \item \textbf{Zero TeX Leakage}: TeX control sequences embedded in route parameters are sanitized before entering in-memory state.
+\end{itemize}
 
 \subsection{Module Responsibility Matrix}
 
 \noindent
-\begin{tabularx}{\textwidth}{@{}llX@{}}
+{\small
+\begin{tabularx}{\linewidth}{@{}llX@{}}
 \toprule
-\textbf{Directory} & \textbf{File} & \textbf{Functional Scope} \\
+\textbf{Module / Script} & \textbf{Type} & \textbf{Functional Scope} \\
 \midrule
-\texttt{src/} & \texttt{climbingguide.lua} & In-memory AST state manager and TeX bridge orchestrator. \\
-\texttt{src/} & \texttt{route\_sorter.lua} & Pure sorting algorithms enforcing Strict Weak Ordering. \\
-\texttt{src/} & \texttt{sanitize\_tex.lua} & Lexical AST reducer and bracket-depth nesting validator. \\
-\texttt{src/} & \texttt{export\_json.lua} & RFC-8259 compliant Unicode hex-serializer for control chars. \\
-\texttt{src/} & \texttt{export\_txt.lua} & Fixed pipe-delimited schema builder with automatic N/A padding. \\
-\texttt{src/} & \texttt{cg-colors.sty} & Color scale matrix and subsector palette definitions. \\
-\texttt{src/} & \texttt{cg-fonts.sty} & Binary font abstraction layer using \texttt{fontspec}. \\
-\texttt{src/} & \texttt{cg-geometry.sty} & Page dimensions, margins, and dynamic running headers. \\
-\texttt{src/} & \texttt{cg-boxes.sty} & Structural TikZ positioning and summary block macros. \\
-\texttt{src/} & \texttt{cg-api.sty} & Frontend user macros and \LaTeX3 counter interfaces. \\
-\texttt{src/} & \texttt{cg-lists.sty} & Multi-column list wrappers for alpha and grade indices. \\
-\texttt{src/} & \texttt{cg-frontmatter.sty} & Asymmetric layout wrappers and native ToC formatting. \\
-\midrule
-\texttt{scripts/} & \texttt{check\_fonts.sh} & System font verification script scanning \texttt{fonts.in}. \\
-\texttt{scripts/} & \texttt{parse\_logs.sh} & Log auditor asserting zero errors and Overfull $\le$ 5pt. \\
-\texttt{scripts/} & \texttt{validate\_exports.sh} & Integration script asserting exact 7 pipe separators. \\
+\texttt{climbingguide.lua} & Lua Orchestrator & In-memory AST state manager and TeX bridge. \\
+\texttt{route\_sorter.lua} & Pure Lua Utility & Sorting routines enforcing Strict Weak Ordering. \\
+\texttt{sanitize\_tex.lua} & Pure Lua Utility & Lexical parser stripping macros and checking brace depth. \\
+\texttt{export\_json.lua} & Pure/IO Lua Utility & RFC-8259 Unicode control character hex-serializer. \\
+\texttt{export\_txt.lua} & Pure/IO Lua Utility & Fixed-delimiter schema writer with \texttt{N/A} padding. \\
+\texttt{cg-colors.sty} & \LaTeX\ Package & Difficulty color matrix and subsector palettes. \\
+\texttt{cg-fonts.sty} & \LaTeX\ Package & Binary font family loader using \texttt{fontspec}. \\
+\texttt{cg-geometry.sty} & \LaTeX\ Package & Page bounds ($150\text{mm} \times 210\text{mm}$) and running headers. \\
+\texttt{cg-boxes.sty} & \LaTeX\ Package & TikZ positioning, callouts, and sector summary blocks. \\
+\texttt{cg-api.sty} & \LaTeX3 Package & Frontend user macros, route counters, and I/O triggers. \\
+\texttt{cg-lists.sty} & \LaTeX\ Package & Multi-column alphabetical and difficulty listings. \\
+\texttt{cg-frontmatter.sty} & \LaTeX3 Package & Full-bleed asymmetric layouts and native ToC styling. \\
 \bottomrule
 \end{tabularx}
+}

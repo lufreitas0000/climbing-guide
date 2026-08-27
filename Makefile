@@ -2,13 +2,13 @@
 
 TEX = lualatex
 FLAGS = --interaction=nonstopmode --halt-on-error
-export TEXINPUTS := $(abspath src)//:
+export TEXINPUTS := $(abspath src)//:$(abspath doc)//:
 export LUAINPUTS := $(abspath src)//:
 
 all: test docs
 
 init-dirs:
-	@mkdir -p tests/aux tests/pdf tests/log production/aux production/pdf production/log export doc/export
+	@mkdir -p tests/aux tests/pdf tests/log production/aux production/pdf production/log export doc/export doc/tex
 
 check-fonts:
 	@echo "Auditing system fonts..."
@@ -70,7 +70,7 @@ production: init-dirs check-fonts test-lua
 
 clean:
 	@echo "Cleaning auxiliary build artifacts..."
-	@rm -rf production/aux/*
+	@rm -rf production/aux/* doc/export/*
 
 docs: init-dirs check-fonts
 	@echo "Compiling doc/cg-documentation.tex..."

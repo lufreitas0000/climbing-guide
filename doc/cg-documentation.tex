@@ -1,5 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage{climbingguide}
+\usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
@@ -9,15 +10,16 @@
 \begin{document}
 
 \CGSidebarTitle{Climbing Guide Engine}
-\CGTextSingleColumn{Official Technical Documentation}{Comprehensive reference manual detailing all architecture layers, data structures, external/internal Lua functions, and TeX presentation macros.}
+\CGTextSingleColumn{Technical Documentation \& API Reference}{A comprehensive reference manual detailing the hybrid LuaLaTeX typesetting system, mathematical grading logic, pure Lua utilities, TeX presentation macros, and automated export pipelines.}
 
 \vspace{0.5em}
 \tableofcontents
 \clearpage
 
-\input{tex/01_architecture}
-\input{tex/02_tex_api}
-\input{tex/03_lua_engine}
-\input{tex/04_data_pipeline}
+\input{01_architecture}
+\input{02_visual_styling}
+\input{03_tex_api}
+\input{04_lua_engine}
+\input{05_data_pipeline}
 
 \end{document}
