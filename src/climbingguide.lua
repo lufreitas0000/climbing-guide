@@ -4,6 +4,7 @@ M.current_zone = ""
 M.current_sector = ""
 
 local Sorter = require("route_sorter")
+local JSON = require("export_json")
 
 local romans = {"xii", "viii", "vii", "iii", "xi", "ix", "vi", "iv", "ii", "x", "v", "i"}
 local roman_map = { xii=12, xi=11, x=10, ix=9, viii=8, vii=7, vi=6, v=5, iv=4, iii=3, ii=2, i=1 }
@@ -24,34 +25,8 @@ function M.register_route(id, name, grade, length, gear, setter)
     })
 end
 
-local function escape_json(str)
-    if type(str) ~= "string" then return "" end
-    str = string.gsub(str, "\\", "\\\\")
-    str = string.gsub(str, '"', '\\"')
-    str = string.gsub(str, "\n", "\\n")
-    str = string.gsub(str, "\r", "\\r")
-    str = string.gsub(str, "\t", "\\t")
-    return str
-end
-
 function M.export_json(filepath)
-    local f = io.open(filepath, "w")
-    if not f then return end
-    f:write("[\n")
-    for i, r in ipairs(M.routes) do
-        f:write('  {\n')
-        f:write('    "zone": "' .. escape_json(r.zone) .. '",\n')
-        f:write('    "sector": "' .. escape_json(r.sector) .. '",\n')
-        f:write('    "id": ' .. tostring(r.id) .. ',\n')
-        f:write('    "name": "' .. escape_json(r.name) .. '",\n')
-        f:write('    "grade": "' .. escape_json(r.grade) .. '",\n')
-        f:write('    "length": "' .. escape_json(r.length) .. '",\n')
-        f:write('    "gear": "' .. escape_json(r.gear) .. '",\n')
-        f:write('    "setter": "' .. escape_json(r.setter) .. '"\n')
-        if i < #M.routes then f:write('  },\n') else f:write('  }\n') end
-    end
-    f:write("]\n")
-    f:close()
+    JSON.export(filepath, M.routes)
 end
 
 local function get_suffix(suf)
