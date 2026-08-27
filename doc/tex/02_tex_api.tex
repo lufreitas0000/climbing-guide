@@ -1,0 +1,60 @@
+\section{\LaTeX\ Presentation API}
+
+All user-facing macros are defined via \LaTeX3 (\texttt{expl3}) to ensure robust argument parsing.
+
+\subsection{Core Front-Matter \& Layout Macros}
+
+\begin{itemize}
+    \item \textbf{\texttt{\textbackslash CGSetHeaderText\{<header\_text:tl>\}}}
+    \begin{itemize}
+        \item \textbf{Arguments}: 1 (Token list containing custom running header text).
+        \item \textbf{Output}: None (Mutates internal global header string).
+        \item \textbf{Description}: Overrides the default running header text rendered by \texttt{fancyhdr}.
+    \end{itemize}
+
+    \item \textbf{\texttt{\textbackslash CGSidebarTitle\{<title\_text:tl>\}}}
+    \begin{itemize}
+        \item \textbf{Arguments}: 1 (Section title string).
+        \item \textbf{Output}: Renders a vertical red accent block coupled with a bold title.
+        \item \textbf{Description}: Used across introductory pages for stylistic section headers.
+    \end{itemize}
+
+    \item \textbf{\texttt{\textbackslash CGSplitBackground[<fraction:fp>]\{<left\_color:tl>\}\{<right\_color:tl>\}}}
+    \begin{itemize}
+        \item \textbf{Arguments}: 1 optional (split ratio, default \texttt{0.5}), 2 mandatory (background colors).
+        \item \textbf{Output}: Paints the background of the current page using two vertical color blocks via TikZ overlay.
+        \item \textbf{Description}: Powers asymmetric full-bleed multi-color pages like indices and warnings.
+    \end{itemize}
+
+    \item \textbf{\texttt{\textbackslash CGCoverPage\{<image\_path:str>\}\{<title:tl>\}\{<subtitle:tl>\}}}
+    \begin{itemize}
+        \item \textbf{Arguments}: 3 (Image filename, cover title, subtitle).
+        \item \textbf{Output}: Full-page absolute positioned cover with clipped background photo.
+        \item \textbf{Description}: Automatically triggers a \texttt{\textbackslash clearpage} upon completion.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Topological Structure Macros}
+
+\begin{itemize}
+    \item \textbf{\texttt{\textbackslash CGZoneHeader\{<image\_path:str>\}\{<zone\_name:tl>\}}}
+    \begin{itemize}
+        \item \textbf{Arguments}: 2 (Zone background image, Zone name).
+        \item \textbf{Output}: Renders clipped banner graphic, zone title overlay, and fires a native \texttt{\textbackslash addcontentsline\{toc\}\{part\}\{\#2\}} entry.
+        \item \textbf{Description}: Sets active zone context in the Lua backend via \texttt{cg.set\_zone()}.
+    \end{itemize}
+
+    \item \textbf{\texttt{\textbackslash CGSectorHeader\{<color\_name:tl>\}\{<sector\_name:tl>\}}}
+    \begin{itemize}
+        \item \textbf{Arguments}: 2 (Theme color, Sector name).
+        \item \textbf{Output}: Renders sector header with vertical accent bar, summary blocks, and fires a native \texttt{\textbackslash addcontentsline\{toc\}\{section\}\{\#2\}} entry.
+        \item \textbf{Description}: Increments sector counters and saves sector summary state to aux file.
+    \end{itemize}
+
+    \item \textbf{\texttt{\textbackslash CGRoute\{<name:tl>\}\{<grade:tl>\}\{<length:tl>\}\{<gear:tl>\}\{<setter:tl>\}[<obs:tl>]}}}
+    \begin{itemize}
+        \item \textbf{Arguments}: 5 mandatory, 1 optional.
+        \item \textbf{Output}: Formatted route block with colored grade indicator box, scaled route name, grade details, length, gear, setter, and optional observation box (\texttt{\textbackslash CGObsBox}).
+        \item \textbf{Description}: Registers route into Lua memory after passing through the lexical sanitization pipeline.
+    \end{itemize}
+\end{itemize}
