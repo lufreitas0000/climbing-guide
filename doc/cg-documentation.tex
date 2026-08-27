@@ -1,141 +1,23 @@
 \documentclass[11pt]{article}
 \usepackage{climbingguide}
 \usepackage{booktabs}
+\usepackage{tabularx}
 \usepackage{hyperref}
 
-\CGSetHeaderText{CLIMBING~GUIDE~ENGINE \hspace{1.5em} V1.0.0 \hspace{1.5em} SPECIFICATION}
+\CGSetHeaderText{CLIMBING~GUIDE~ENGINE \hspace{1.5em} V1.0.0 \hspace{1.5em} DOCUMENTATION}
 
 \begin{document}
 
 \CGSidebarTitle{Climbing Guide Engine}
-\CGTextSingleColumn{Architecture \& API Specification}{Comprehensive developer documentation and visual macro reference for the LuaLaTeX Climbing Guidebook typesetting system.}
+\CGTextSingleColumn{Official Technical Documentation}{Comprehensive reference manual detailing all architecture layers, data structures, external/internal Lua functions, and TeX presentation macros.}
 
 \vspace{0.5em}
 \tableofcontents
 \clearpage
 
-\section{System Architecture}
-
-The system is strictly partitioned into decoupled, orthogonal layers adhering to SOLID principles:
-
-\begin{itemize}
-    \item \textbf{\texttt{src/}}: Core presentation macros (\LaTeX) and business logic (pure Lua modules).
-    \item \textbf{\texttt{tests/}}: Isolated TDD test suites verifying Lua mathematics, font resolution, and visual geometry without compiling production targets.
-    \item \textbf{\texttt{scripts/}}: POSIX CI/CD automation tools for font cache auditing, log filtering, and fixed-delimiter schema validation.
-    \item \textbf{\texttt{doc/}}: Technical architecture logs, continuous integration specs, and rendered engine manuals.
-\end{itemize}
-
-\subsection{Module Responsibility Matrix}
-
-\noindent\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llp{7.5cm}@{}}
-\toprule
-\textbf{Directory} & \textbf{File} & \textbf{Functional Scope} \\
-\midrule
-\texttt{src/} & \texttt{climbingguide.lua} & In-memory AST state manager and TeX bridge. \\
-\texttt{src/} & \texttt{route\_sorter.lua} & Pure sorting algorithms (Strict Weak Ordering). \\
-\texttt{src/} & \texttt{sanitize\_tex.lua} & Lexical AST reducer and bracket-depth validator. \\
-\texttt{src/} & \texttt{export\_json.lua} & RFC-8259 compliant Unicode hex-serializer. \\
-\texttt{src/} & \texttt{export\_txt.lua} & Fixed pipe-delimited schema builder with N/A pads. \\
-\texttt{src/} & \texttt{cg-colors.sty} & Color scale matrix and sector palette definitions. \\
-\texttt{src/} & \texttt{cg-fonts.sty} & Font family abstraction and binary font loading. \\
-\texttt{src/} & \texttt{cg-geometry.sty} & Page dimensions, margins, and running headers. \\
-\texttt{src/} & \texttt{cg-boxes.sty} & Structural TikZ positioning and summary icons. \\
-\texttt{src/} & \texttt{cg-api.sty} & Route counter management and TeX entry points. \\
-\texttt{src/} & \texttt{cg-lists.sty} & Multi-column listing macros for difficulty/alpha. \\
-\texttt{src/} & \texttt{cg-frontmatter.sty} & Asymmetric layout wrappers and native TOC styling. \\
-\midrule
-\texttt{scripts/} & \texttt{check\_fonts.sh} & System OpenType/TrueType binary font verifier. \\
-\texttt{scripts/} & \texttt{parse\_logs.sh} & Log parser asserting zero errors and Overfull $\le$ 5pt. \\
-\texttt{scripts/} & \texttt{validate\_exports.sh} & Algorithm validating exactly 7 pipe delimiters per line. \\
-\texttt{scripts/} & \texttt{fonts.in} & Declarative font dependency manifest. \\
-\bottomrule
-\end{tabular*}
-
-\clearpage
-\section{Colors and Visual Palettes}
-
-The engine categorizes climbing routes according to the Brazilian grading system using a standardized difficulty color scale.
-
-\subsection{Grade Color Scale Matrix}
-
-\noindent\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}llll@{}}
-\toprule
-\textbf{Color Name} & \textbf{HEX Code} & \textbf{Sample} & \textbf{Grade Range} \\
-\midrule
-\texttt{guide\_cyan}   & \texttt{\#00AEEF} & \textcolor{guide_cyan}{\rule{20mm}{3mm}} & 1st to 4th Sup ($< 5.0$) \\
-\texttt{guide\_green}  & \texttt{\#009640} & \textcolor{guide_green}{\rule{20mm}{3mm}} & 5th to 5th Sup ($[5.0, 6.0)$) \\
-\texttt{guide\_yellow} & \texttt{\#F29400} & \textcolor{guide_yellow}{\rule{20mm}{3mm}} & 6th to 6th Sup ($[6.0, 7.0)$) \\
-\texttt{guide\_orange} & \texttt{\#F05A28} & \textcolor{guide_orange}{\rule{20mm}{3mm}} & 7th A to 7th C ($[7.0, 8.0)$) \\
-\texttt{guide\_red}    & \texttt{\#BE1E2D} & \textcolor{guide_red}{\rule{20mm}{3mm}} & 8th A to 8th C ($[8.0, 9.0)$) \\
-\texttt{guide\_purple} & \texttt{\#92278F} & \textcolor{guide_purple}{\rule{20mm}{3mm}} & 9th A to 12th C ($[9.0, 20.0)$) \\
-\texttt{guide\_gray}   & \texttt{\#3A3A3C} & \textcolor{guide_gray}{\rule{20mm}{3mm}} & Projects / Unrated ($999.0$) \\
-\texttt{brand\_color}  & \texttt{\#BE1E2D} & \textcolor{brand_color}{\rule{20mm}{3mm}} & Structural Theme Color \\
-\texttt{bg\_beige}     & \texttt{\#EFECE6} & \textcolor{bg_beige}{\rule{20mm}{3mm}} & Front Matter Background Bleed \\
-\bottomrule
-\end{tabular*}
-
-\section{Typography}
-
-Binary fonts are mapped using \texttt{fontspec} without system-level coupling:
-
-\begin{itemize}
-    \item \textbf{\texttt{\textbackslash CGTitleFont}}: Barlow Condensed (Titles, route names, indices).
-    \item \textbf{\texttt{\textbackslash CGCoverFont}}: Bebas Neue (Full-bleed cover and zone headers).
-    \item \textbf{\texttt{\textbackslash CGBaseFont}}: Default Sans-Serif / Latin Modern Sans (Body and tabular text).
-    \item \textbf{\texttt{\textbackslash CGItalicFont}}: Default Sans-Serif Slanted (Grades, gear, route setters).
-\end{itemize}
-
-\clearpage
-\section{Rendered Component Reference}
-
-Below are the live visual outputs of the core \LaTeX\ presentation components.
-
-\subsection{Sidebar Titles and Text Blocks}
-The \texttt{\textbackslash CGSidebarTitle} and \texttt{\textbackslash CGTextSingleColumn} macros establish page headers:
-
-\CGSidebarTitle{Sample Header}
-\CGTextSingleColumn{Section Title}{This is a sample single-column narrative block used across the front matter.}
-
-\subsection{Observation Box}
-The \texttt{\textbackslash CGObsBox} macro creates full-width beige callout blocks:
-
-\CGObsBox{\textbf{\textcolor{brand_color}{NOTE:}} Always inspect rock anchors and verify rappel rings before descending.}
-
-\subsection{Dynamic Sector Summary Blocks}
-The \texttt{\textbackslash DrawSummaryBlock} macro generates two-tier visual tally blocks (top-tier/bottom-tier count), while \texttt{\textbackslash DrawSummaryBlockSingle} tallies unrated routes:
-
-\vspace{0.5em}
-\noindent
-\DrawSummaryBlock{guide_cyan}{2}{1}%
-\DrawSummaryBlock{guide_green}{4}{0}%
-\DrawSummaryBlock{guide_yellow}{7}{3}%
-\DrawSummaryBlock{guide_orange}{5}{2}%
-\DrawSummaryBlock{guide_red}{1}{1}%
-\DrawSummaryBlock{guide_purple}{0}{0}%
-\DrawSummaryBlockSingle{guide_gray}{2}
-\vspace{1em}
-
-\subsection{Route Presentation Macro}
-The \texttt{\textbackslash CGRoute} macro automatically calculates grade difficulty, tracks global state, and formats layout boxes:
-
-\vspace{0.5em}
-\CGRoute{VIA DOS SONHOS}{7a}{25m}{6+2}{Allan Carlos}[Requires 60m dynamic rope and 10 quickdraws.]
-\CGRoute{CAMINHO DO SOL}{5sup}{15m}{4+2}{Vinicin}
-\CGRoute{PROJETO X}{Proj.}{30m}{Mista}{Messias}
-
-\clearpage
-\section{Data Pipeline and Export Hook}
-
-During document compilation, the \LaTeX\ engine records route data into Lua memory. At document termination (\texttt{\textbackslash AtEndDocument}), the pipeline executes:
-
-\begin{enumerate}
-    \item \textbf{Lexical Sanitization}: Strips TeX commands (\texttt{\textbackslash textbf}, \texttt{\textbackslash color}, \texttt{\textbackslash newline}, \texttt{\~{}}) via \texttt{sanitize\_tex.lua}, storing pure UTF-8 strings.
-    \item \textbf{Pure Sorting}: Applies Strict Weak Ordering via \texttt{route\_sorter.lua} (Grade $\rightarrow$ Sector $\rightarrow$ Name $\rightarrow$ ID).
-    \item \textbf{JSON Export}: Encodes data into \texttt{export/database.json} with Unicode control characters (\texttt{U+0000} to \texttt{U+001F}) escaped per RFC 8259 via \texttt{export\_json.lua}.
-    \item \textbf{Plain Text Export}: Encodes sorted data into \texttt{export/list\_alpha.txt} and \texttt{export/list\_grade.txt} using the strict schema:
-    \begin{quote}
-    \texttt{[ID] | [Name] | [Grade] | [Length] | [Gear] | [Setter] | [Sector] | [Zone]}
-    \end{quote}
-\end{enumerate}
+\input{tex/01_architecture}
+\input{tex/02_tex_api}
+\input{tex/03_lua_engine}
+\input{tex/04_data_pipeline}
 
 \end{document}
