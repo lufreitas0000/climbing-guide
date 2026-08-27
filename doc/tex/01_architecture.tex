@@ -1,0 +1,29 @@
+\section{System Architecture}
+
+The climbing guide engine enforces a strict separation between presentation (managed by \LaTeX) and business/mathematical logic (managed by pure Lua modules). No manual positioning or fine-tuning is permitted in production files.
+
+\subsection{Module Responsibility Matrix}
+
+\noindent
+\begin{tabularx}{\textwidth}{@{}llX@{}}
+\toprule
+\textbf{Directory} & \textbf{File} & \textbf{Functional Scope} \\
+\midrule
+\texttt{src/} & \texttt{climbingguide.lua} & In-memory AST state manager and TeX bridge orchestrator. \\
+\texttt{src/} & \texttt{route\_sorter.lua} & Pure sorting algorithms enforcing Strict Weak Ordering. \\
+\texttt{src/} & \texttt{sanitize\_tex.lua} & Lexical AST reducer and bracket-depth nesting validator. \\
+\texttt{src/} & \texttt{export\_json.lua} & RFC-8259 compliant Unicode hex-serializer for control chars. \\
+\texttt{src/} & \texttt{export\_txt.lua} & Fixed pipe-delimited schema builder with automatic N/A padding. \\
+\texttt{src/} & \texttt{cg-colors.sty} & Color scale matrix and subsector palette definitions. \\
+\texttt{src/} & \texttt{cg-fonts.sty} & Binary font abstraction layer using \texttt{fontspec}. \\
+\texttt{src/} & \texttt{cg-geometry.sty} & Page dimensions, margins, and dynamic running headers. \\
+\texttt{src/} & \texttt{cg-boxes.sty} & Structural TikZ positioning and summary block macros. \\
+\texttt{src/} & \texttt{cg-api.sty} & Frontend user macros and \LaTeX3 counter interfaces. \\
+\texttt{src/} & \texttt{cg-lists.sty} & Multi-column list wrappers for alpha and grade indices. \\
+\texttt{src/} & \texttt{cg-frontmatter.sty} & Asymmetric layout wrappers and native ToC formatting. \\
+\midrule
+\texttt{scripts/} & \texttt{check\_fonts.sh} & System font verification script scanning \texttt{fonts.in}. \\
+\texttt{scripts/} & \texttt{parse\_logs.sh} & Log auditor asserting zero errors and Overfull $\le$ 5pt. \\
+\texttt{scripts/} & \texttt{validate\_exports.sh} & Integration script asserting exact 7 pipe separators. \\
+\bottomrule
+\end{tabularx}
