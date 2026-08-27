@@ -38,7 +38,6 @@
     \directlua{cg.export_json("export/database.json")}
 }
 
-% Bridge Macro: Safely transfers variables from Lua to expl3 assignments
 \NewDocumentCommand{\CGEvalGrade}{ m m }{
     \tl_set:Nn \l_guide_current_grade_color_tl {#1}
     \tl_if_empty:nF {#2} { \int_gincr:c {g_guide_#2_int} }
@@ -75,10 +74,10 @@
     \vspace{2em}\noindent
     \begin{tcolorbox}[enhanced, boxrule=0pt, frame~hidden, interior~hidden, borderline~west={3mm}{0pt}{#1}, left=4mm, right=0mm, top=0mm, bottom=0mm, sharp~corners]
         {\CGTitleFont\large\color{#1} SETOR}\\[2pt]
-        \begin{minipage}[t]{0.45\textwidth}
+        \begin{minipage}[b]{0.45\textwidth}
             \CGTitleFont\fontsize{24}{28}\selectfont #2
         \end{minipage}%
-        \begin{minipage}[t]{0.55\textwidth}
+        \begin{minipage}[b]{0.55\textwidth}
             \raggedleft
             \cs_if_exist:cT { GuideSectorSummary \int_use:N \g_guide_sector_int } {
                 \use:c { GuideSectorSummary \int_use:N \g_guide_sector_int }
@@ -88,24 +87,29 @@
     \vspace{1em}
 }
 
-\NewDocumentCommand{\CGRoute}{ m m m m m }{
+\NewDocumentCommand{\CGRoute}{ m m m m m o }{
     \int_gincr:N \g_guide_route_int
     \directlua{cg.register_route("\int_use:N \g_guide_route_int", "\luaescapestring{\unexpanded{#1}}", "\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}", "\luaescapestring{\unexpanded{#4}}", "\luaescapestring{\unexpanded{#5}}")}
     \directlua{cg.eval_tex("\luaescapestring{\unexpanded{#2}}")}
     
     \noindent
-    \begin{minipage}[t]{0.12\linewidth}
+    \begin{minipage}[t]{0.10\linewidth}
         \vspace{0pt}
         \begin{tikzpicture}[baseline=(current~bounding~box.north)]
             \fill[\l_guide_current_grade_color_tl] (0,0) rectangle (6mm, -6mm);
-            \node[text=white, font=\CGBaseFont\bfseries\Large, anchor=center] at (3mm, -3mm) {\int_use:N \g_guide_route_int};
+            \node[text=white, font=\CGBaseFont\bfseries\large, anchor=center] at (3mm, -3mm) {\int_use:N \g_guide_route_int};
         \end{tikzpicture}
     \end{minipage}%
-    \begin{minipage}[t]{0.88\linewidth}
+    \begin{minipage}[t]{0.90\linewidth}
         \vspace{0pt}\raggedright
-        {\CGTitleFont\large #1}~
-        {\CGItalicFont\normalsize #2} \textcolor{guide_gray}{|} {\CGBaseFont\normalsize #3}\par
-        {\CGItalicFont\small #4}
+        {\CGTitleFont\bfseries\large #1}~
+        {\CGItalicFont\normalsize #2} \textcolor{guide_gray}{|} {\CGItalicFont\normalsize #3}
+        \tl_if_empty:nF {#4} { {\CGItalicFont\normalsize (#4)} }\par
+        {\CGItalicFont\small #5}
+        \IfValueT{#6}{
+            \par\vspace{2pt}
+            {\CGItalicFont\small\color{brand_color} Obs:~} {\CGItalicFont\small\color{text_body} #6}
+        }
     \end{minipage}\par\vspace{4mm}
 }
 \ExplSyntaxOff

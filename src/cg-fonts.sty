@@ -2,12 +2,12 @@
 \ProvidesPackage{cg-fonts}[2026/08/26 Fonts]
 \RequirePackage{fontspec}
 
-\newfontfamily\CGBaseFont{Roboto Condensed}[Ligatures=TeX, UprightFont={* Light}, BoldFont={* Regular}]
 \newfontfamily\CGTitleFont{Barlow Condensed}[Ligatures=TeX, UprightFont={* Regular}, BoldFont={* Bold}]
 \newfontfamily\CGCoverFont{Bebas Neue}[Ligatures=TeX]
 
-% Dedicated Italic Font (Native Latin Modern Sans used as stable cross-platform fallback)
-\newcommand{\CGItalicFont}{\fontfamily{lmss}\itshape\selectfont}
+% Standard Sans-Serif for high readability and contrast against Condensed Titles
+\newcommand{\CGBaseFont}{\sffamily\selectfont}
+\newcommand{\CGItalicFont}{\sffamily\itshape\selectfont}
 
 \renewcommand{\familydefault}{\sfdefault}
 \endinput
