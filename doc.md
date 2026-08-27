@@ -44,3 +44,8 @@ The LuaTeX engine adheres to local TeX Live security configurations (governed by
 *   **Rationale**: The initial `escape_json` implementation only covered basic structural escapes, failing to comply with RFC 8259 which mandates escaping all characters in the U+0000 to U+001F range. Furthermore, keeping serialization logic inside `climbingguide.lua` violated the Single Responsibility Principle.
 *   **Implementation**: Created `src/export_json.lua`, a pure utility module. Upgraded the escaping algorithm utilizing Lua's `string.gsub` to capture the `[\0-\31]` byte range and dynamically format it into strict `\u00XX` hexadecimal representations.
 *   **Ordering Logic**: Implemented as Step 2 to ensure that once the TeX parsing and text extraction (Step 3) occurs, the resulting strings can be safely serialized without risking control character corruption in the final export payloads.
+
+### 6.3. Lexical Sanitization Pipeline
+*   **Rationale**: LaTeX macros embedded within route parameters corrupted the JSON and plain text exports. Stripping these directly inside `climbingguide.lua` would violate the Single Responsibility Principle. 
+*   **Implementation**: Created `src/sanitize_tex.lua`. Implemented a byte-level bracket depth counter to strictly prohibit macro nesting. Applied sequential Lua `string.gsub` pattern matching to eradicate color macros, extract text payloads from formatting macros (`\textbf`, `\textit`, `\emph`), and translate structural spacings into standard UTF-8 spaces.
+*   **Ordering Logic**: Implemented as Step 3 and hooked into `M.register_route` to guarantee that all subsequent I/O layers (JSON and Plain Text exports) read from an inherently pure, TeX-free in-memory data structure.
