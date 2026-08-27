@@ -1,0 +1,39 @@
+\clearpage
+\section{Lua Backend Engine}
+
+The backend is built as modular, pure Lua utilities orchestrating mathematical evaluation, array sorting, string sanitization, and I/O serialization.
+
+\subsection{Module: \texttt{climbingguide.lua} (Orchestrator)}
+{\small
+\begin{itemize}
+    \item \texttt{M.set\_zone(z: string)}: Updates internal active zone string \texttt{M.current\_zone}.
+    \item \texttt{M.set\_sector(s: string)}: Updates internal active sector string \texttt{M.current\_sector}.
+    \item \texttt{M.register\_route(id, name, grade, length, gear, setter)}: Sanitizes parameters via \texttt{Sanitizer.strip\_tex\_macros} and pushes route objects into \texttt{M.routes}.
+    \item \texttt{M.get\_val(g: string) $\to$ number (pure)}: Mathematical grade evaluator mapping Brazilian grades to rational numbers for Strict Weak Ordering ($Proj \to 999.0$, $sup \to +0.5$, $A4 \to 24.0$).
+    \item \texttt{M.eval\_tex(g: string)}: Evaluates grade and prints \texttt{\textbackslash CGEvalGrade} macro into TeX input stream.
+    \item \texttt{M.print\_alpha()} \& \texttt{M.print\_grade()}: Consumes sorted tables and streams formatted \LaTeX\ \texttt{itemize} lists.
+\end{itemize}
+}
+
+\subsection{Module: \texttt{route\_sorter.lua} (Pure Utility)}
+{\small
+\begin{itemize}
+    \item \texttt{Sorter.sort\_by\_alpha(routes: table) $\to$ table (pure)}: Returns new table ordered by Name $\to$ Sector $\to$ ID. Immutable.
+    \item \texttt{Sorter.sort\_by\_grade(routes: table, eval\_func: function) $\to$ table (pure)}: Returns new table ordered by Grade Value $\to$ Sector $\to$ Name $\to$ ID.
+\end{itemize}
+}
+
+\subsection{Module: \texttt{sanitize\_tex.lua} (Pure Utility)}
+{\small
+\begin{itemize}
+    \item \texttt{Sanitizer.strip\_tex\_macros(str: string) $\to$ string (pure)}: Validates brace depth (throws error on nesting $>1$), strips color macros, extracts formatting payloads, and translates linebreaks into spaces.
+\end{itemize}
+}
+
+\subsection{Module: \texttt{export\_json.lua} \& \texttt{export\_txt.lua} (Pure / IO)}
+{\small
+\begin{itemize}
+    \item \texttt{Serializer.escape\_string(str: string) $\to$ string (pure)}: Universal hex-escapes control characters (\texttt{U+0000} to \texttt{U+001F}) per RFC 8259.
+    \item \texttt{TXT.export(output\_dir: string, routes: table, eval\_func: function) $\to$ boolean}: Generates text catalogs with \texttt{N/A} padded fields.
+\end{itemize}
+}

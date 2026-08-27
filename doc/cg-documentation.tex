@@ -1,0 +1,25 @@
+\documentclass[11pt]{article}
+\usepackage{climbingguide}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+
+\CGSetHeaderText{CLIMBING~GUIDE~ENGINE \hspace{1.5em} V1.0.0 \hspace{1.5em} DOCUMENTATION}
+
+\begin{document}
+
+\CGSidebarTitle{Climbing Guide Engine}
+\CGTextSingleColumn{Technical Documentation \& API Reference}{A comprehensive reference manual detailing the hybrid LuaLaTeX typesetting system, mathematical grading logic, pure Lua utilities, TeX presentation macros, and automated export pipelines.}
+
+\vspace{0.5em}
+\tableofcontents
+\clearpage
+
+\input{01_architecture}
+\input{02_visual_styling}
+\input{03_tex_api}
+\input{04_lua_engine}
+\input{05_data_pipeline}
+
+\end{document}
