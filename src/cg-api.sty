@@ -43,6 +43,16 @@
     \tl_if_empty:nF {#2} { \int_gincr:c {g_guide_#2_int} }
 }
 
+% Macro: Adjusts vertical spacing and font size exclusively for optional route text
+\NewDocumentCommand{\CGObservationText}{ m }{
+    \par\vspace{1pt}
+    {
+        \setlength{\baselineskip}{10pt}
+        \CGItalicFont\footnotesize
+        \textcolor{brand_color}{Obs:~}\textcolor{text_body}{#1}\par
+    }
+}
+
 \NewDocumentCommand{\CGTextSingleColumn}{ m m }{
     \tl_if_empty:nF {#1} { {\CGTitleFont\LARGE\color{brand_color} #1}\par\vspace{2pt} }
     {\CGBaseFont\normalsize #2}\par\vspace{4mm}
@@ -112,10 +122,7 @@
         \fi
         \usebox0\par
         {\CGItalicFont\small #5}
-        \IfValueT{#6}{
-            \par\vspace{1pt}
-            {\CGItalicFont\small\color{brand_color} Obs:~} {\CGItalicFont\small\color{text_body} #6}
-        }
+        \IfValueT{#6}{ \CGObservationText{#6} }
     \end{minipage}\par\vspace{3mm}
 }
 \ExplSyntaxOff
