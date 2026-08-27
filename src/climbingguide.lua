@@ -1,8 +1,56 @@
 local M = {}
 M.routes = {}
+M.current_zone = ""
+M.current_sector = ""
 
 local romans = {"xii", "viii", "vii", "iii", "xi", "ix", "vi", "iv", "ii", "x", "v", "i"}
 local roman_map = { xii=12, xi=11, x=10, ix=9, viii=8, vii=7, vi=6, v=5, iv=4, iii=3, ii=2, i=1 }
+
+function M.set_zone(z) M.current_zone = z end
+function M.set_sector(s) M.current_sector = s end
+
+function M.register_route(id, name, grade, length, gear, setter)
+    table.insert(M.routes, {
+        zone = M.current_zone,
+        sector = M.current_sector,
+        id = tonumber(id) or 0,
+        name = name,
+        grade = grade,
+        length = length,
+        gear = gear,
+        setter = setter
+    })
+end
+
+local function escape_json(str)
+    if type(str) ~= "string" then return "" end
+    str = string.gsub(str, "\\", "\\\\")
+    str = string.gsub(str, '"', '\\"')
+    str = string.gsub(str, "\n", "\\n")
+    str = string.gsub(str, "\r", "\\r")
+    str = string.gsub(str, "\t", "\\t")
+    return str
+end
+
+function M.export_json(filepath)
+    local f = io.open(filepath, "w")
+    if not f then return end
+    f:write("[\n")
+    for i, r in ipairs(M.routes) do
+        f:write('  {\n')
+        f:write('    "zone": "' .. escape_json(r.zone) .. '",\n')
+        f:write('    "sector": "' .. escape_json(r.sector) .. '",\n')
+        f:write('    "id": ' .. tostring(r.id) .. ',\n')
+        f:write('    "name": "' .. escape_json(r.name) .. '",\n')
+        f:write('    "grade": "' .. escape_json(r.grade) .. '",\n')
+        f:write('    "length": "' .. escape_json(r.length) .. '",\n')
+        f:write('    "gear": "' .. escape_json(r.gear) .. '",\n')
+        f:write('    "setter": "' .. escape_json(r.setter) .. '"\n')
+        if i < #M.routes then f:write('  },\n') else f:write('  }\n') end
+    end
+    f:write("]\n")
+    f:close()
+end
 
 local function get_suffix(suf)
     if suf == "a" then return 0.1 elseif suf == "b" then return 0.4 elseif suf == "c" then return 0.6 elseif suf == "sup" then return 0.5 end
@@ -43,22 +91,17 @@ function M.get_val(g)
     local g_low = string.lower(g)
     if string.match(g_low, "proj") or string.match(g_low, "^%s*%%%?%s*$") or string.match(g_low, "^%?+$") then return 999 end
 
-    -- STRICT GRAMMAR VALIDATION
     local tmp_plus = string.gsub(g_low, "a%d+%+", "")
     if string.match(tmp_plus, "%+") then error("Invalid format: '+' only allowed in artificial grades (" .. g .. ")") end
-    
     if string.match(g_low, "%d+[°ºo]?[ivx]+") then error("Invalid format: Missing space after general grade (" .. g .. ")") end
     if string.match(g_low, "[ivx%d]%s+[abc]%f[%W]") or string.match(g_low, "[ivx%d]%s+sup%f[%W]") then error("Invalid format: Space not allowed between base grade and suffix (" .. g .. ")") end
 
-    -- SANITIZATION
     g_low = string.gsub(g_low, "%d+[°ºo]", " ")
     local outside = string.gsub(g_low, "%(.-%)", " ")
 
-    -- 1. Evaluate Free Climbing
     local val_out = calc_free_grade(outside)
     if val_out > 0 then return val_out end
 
-    -- 2. Evaluate Artificial
     local max_art = 0
     for num, plus in string.gmatch(g_low, "a(%d+)(%+?)") do
         local val = 20.0 + tonumber(num)
@@ -96,7 +139,6 @@ function M.eval_tex(g)
     if base ~= "gray" then tex.sprint("\\int_gincr:N \\g_guide_" .. base .. top_str .. "_int ") end
 end
 
--- Print Functions (Lists)
 function M.print_alpha()
     local sorted = {}
     for _, v in ipairs(M.routes) do table.insert(sorted, v) end

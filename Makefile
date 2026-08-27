@@ -8,7 +8,7 @@ export LUAINPUTS := $(abspath src)//:
 all: test production
 
 init-dirs:
-	@mkdir -p tests/aux tests/pdf tests/log production/aux production/pdf production/log
+	@mkdir -p tests/aux tests/pdf tests/log production/aux production/pdf production/log export
 
 check-fonts:
 	@echo "Auditing system fonts..."
@@ -69,4 +69,4 @@ production: init-dirs check-fonts test-lua
 
 clean:
 	@echo "Cleaning auxiliary build artifacts..."
-	@rm -rf tests/aux/* production/aux/*
+	@rm -rf production/aux/*

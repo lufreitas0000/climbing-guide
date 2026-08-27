@@ -33,7 +33,10 @@
         }
     }
 }
-\AtEndDocument{ \guide_save_sector_summary: }
+\AtEndDocument{ 
+    \guide_save_sector_summary: 
+    \directlua{cg.export_json("export/database.json")}
+}
 
 \NewDocumentCommand{\CGTextSingleColumn}{ m m }{
     \tl_if_empty:nF {#1} { {\CGTitleFont\LARGE\color{brand_color} #1}\par\vspace{2pt} }
@@ -54,6 +57,7 @@
     \guide_save_sector_summary:
     \int_gincr:N \g_guide_sector_int
     \tl_gset:Nn \g_guide_current_sector_name_tl {#2}
+    \directlua{cg.set_sector("\luaescapestring{\unexpanded{#2}}")}
     
     \int_gzero:N \g_guide_cyan_top_int \int_gzero:N \g_guide_cyan_bot_int
     \int_gzero:N \g_guide_green_top_int \int_gzero:N \g_guide_green_bot_int
@@ -80,8 +84,8 @@
 
 \NewDocumentCommand{\CGRoute}{ m m m m m }{
     \int_gincr:N \g_guide_route_int
-    \tl_set:Nx \l_guide_clean_grade_tl { \str_replace_all:nnn {#2} {°} {} }
-    \directlua{cg.eval_tex("\luaescapestring{\unexpanded{\l_guide_clean_grade_tl}}")}
+    \directlua{cg.register_route("\int_use:N \g_guide_route_int", "\luaescapestring{\unexpanded{#1}}", "\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}", "\luaescapestring{\unexpanded{#4}}", "\luaescapestring{\unexpanded{#5}}")}
+    \directlua{cg.eval_tex("\luaescapestring{\unexpanded{#2}}")}
     
     \noindent
     \begin{minipage}[t]{0.12\linewidth}

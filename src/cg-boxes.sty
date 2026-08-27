@@ -33,6 +33,7 @@
 }
 
 \NewDocumentCommand{\CGZoneHeader}{ m m }{
+    \directlua{cg.set_zone("\luaescapestring{\unexpanded{#2}}")}
     \begin{tikzpicture}[remember~picture, overlay]
         \clip (current~page.north~west) rectangle ($ (current~page.north~east) + (0, -62.5mm) $);
         \node[anchor=north, inner~sep=0pt] at ($ (current~page.north) + (0, 0) $) {
@@ -63,7 +64,7 @@
         \node[text=white, font=\CGItalicFont\normalsize, anchor=center] at (0.5*\cgsummaryboxsize, 0.5*\cgsummaryboxsize) {#2};
     \end{tikzpicture}\hspace{0.0pt}%
 }
-% --- FULL BLEED COVER ---
+
 \NewDocumentCommand{\CGCoverPage}{ m m m }{ 
     \begin{tikzpicture}[remember~picture, overlay] 
         \clip (current~page.north~west) rectangle (current~page.south~east); 
@@ -83,7 +84,6 @@
     \clearpage 
 } 
 
-% --- TOPO IMAGE ---
 \NewDocumentCommand{\CGTopoImage}{ m }{ 
     \vspace{2mm}\noindent 
     \includegraphics[width=\textwidth]{#1} 
