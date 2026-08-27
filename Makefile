@@ -17,6 +17,7 @@ check-fonts:
 test-lua:
 	@echo "Executing Lua mathematical logic..."
 	@lua tests/test_lua.lua
+	@lua tests/test_sanitizer.lua
 
 test-fonts: init-dirs check-fonts
 	@echo "Compiling test_fonts.tex..."
