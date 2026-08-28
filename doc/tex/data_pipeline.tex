@@ -23,7 +23,8 @@ The plain text lists (\texttt{list\_alpha.txt} and \texttt{list\_grade.txt}) adh
 \subsection{CI/CD Automated Test Vectors}
 \begin{sloppypar}
 \begin{itemize}
-    \item \texttt{make test-lua}: Runs \texttt{tests/test\_lua.lua} for mathematical and JSON purity.
+    \item \texttt{make test-lua}: Runs \texttt{tests/test\_lua.lua} and \texttt{tests/test\_sanitizer.lua} for mathematical, JSON, and sanitization purity.
+    \item \texttt{make test-zone-stats}: Verifies standalone compilation of dynamic in-memory TikZ bar charts.
     \item \texttt{make test-suite}: Compiles test suites and invokes \mbox{\texttt{scripts/validate\_exports.sh}}.
     \item \texttt{make docs}: Compiles this technical documentation manual into \mbox{\texttt{doc/export/cg-documentation.pdf}}.
 \end{itemize}

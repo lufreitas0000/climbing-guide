@@ -1,0 +1,64 @@
+\clearpage
+\section{\LaTeX\ Presentation API \& State Pipeline}
+
+The architecture strictly segregates state tracking (\texttt{cg-api.sty}) from visual rendering macros (\texttt{cg-macros.sty}).
+
+\subsection{State Tracking Pipeline (\texttt{cg-api.sty})}
+\texttt{cg-api.sty} manages document lifecycle hooks without outputting layout elements:
+\begin{itemize}
+    \item \textbf{Counter Management}: Tracks active route index (\texttt{\textbackslash g\_guide\_route\_int}) and sector index (\texttt{\textbackslash g\_guide\_sector\_int}).
+    \item \textbf{Auxiliary Serialization}: \texttt{\textbackslash guide\_save\_sector\_summary:} writes sector tallies to the \texttt{.aux} file at sector transitions for two-pass rendering.
+    \item \textbf{Termination Hooks}: Executes JSON and plain text exports at \texttt{\textbackslash AtEndDocument}.
+\end{itemize}
+
+\subsection{Presentation Macros (\texttt{cg-macros.sty})}
+\begin{sloppypar}
+{\small
+\begin{itemize}
+    \item \textbf{\texttt{\textbackslash CGSectorHeader\{<color:tl>\}\{<sector\_name:tl>\}}}
+    \begin{itemize}
+        \item \textbf{Type}: \texttt{\{tl\}\{tl\}} (Color identifier, Sector name).
+        \item \textbf{Output}: Renders western-bordered sector header with summary blocks and updates Lua context.
+    \end{itemize}
+
+    \item \textbf{\texttt{\textbackslash CGRoute\{<name>\}\{<grade>\}\{<len>\}\{<gear>\}\{<setter>\}[<obs>]}}
+    \begin{itemize}
+        \item \textbf{Type}: \texttt{\{tl\}\{tl\}\{tl\}\{tl\}\{tl\}[tl]} (5 mandatory arguments, 1 optional observation).
+        \item \textbf{Output}: Formatted route block with grade color badge, auto-scaled title width, and observation text.
+    \end{itemize}
+
+    \item \textbf{\texttt{\textbackslash CGZoneStats\{<zone\_name:tl>\}}}
+    \begin{itemize}
+        \item \textbf{Type}: \texttt{\{tl\}} (Zone identifier).
+        \item \textbf{Output}: Queries in-memory route database and streams a native TikZ grade distribution bar chart.
+    \end{itemize}
+
+    \item \textbf{\texttt{\textbackslash CGTextSingleColumn\{<title:tl>\}\{<body:tl>\}}}
+    \begin{itemize}
+        \item \textbf{Type}: \texttt{\{tl\}\{tl\}} (Section title, narrative body).
+        \item \textbf{Output}: Emits a standardized narrative column with semantic typography.
+    \end{itemize}
+\end{itemize}
+}
+\end{sloppypar}
+
+\subsection{Live Rendered Specimens}
+
+\CGSidebarTitle{Specimen Header}
+\CGTextSingleColumn{Single Column Block}{This is a sample single-column narrative block used across front-matter sections.}
+
+\CGObsBox{\textbf{\textcolor{brand_color}{OBSERVATION:}} Check local anchors and verify rappel rings prior to descending.}
+
+\vspace{0.5em}\noindent
+\DrawSummaryBlock{guide_cyan}{2}{1}%
+\DrawSummaryBlock{guide_green}{4}{0}%
+\DrawSummaryBlock{guide_yellow}{7}{3}%
+\DrawSummaryBlock{guide_orange}{5}{2}%
+\DrawSummaryBlock{guide_red}{1}{1}%
+\DrawSummaryBlock{guide_purple}{0}{0}%
+\DrawSummaryBlockSingle{guide_gray}{2}
+
+\vspace{0.5em}
+\CGRoute{VIA DOS SONHOS}{7a}{25m}{6+2}{Allan Carlos}[Requires 60m rope and 10 quickdraws.]
+\CGRoute{CAMINHO DO SOL}{5sup}{15m}{4+2}{Vinicin}
+\CGRoute{PROJETO X}{Proj.}{30m}{Mista}{Messias}
