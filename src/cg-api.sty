@@ -33,8 +33,8 @@
         }
     }
 }
-\AtEndDocument{ 
-    \guide_save_sector_summary: 
+\AtEndDocument{
+    \guide_save_sector_summary:
     \directlua{cg.export_json("export/database.json")}
     \directlua{cg.export_text_lists("export/")}
 }
@@ -75,8 +75,7 @@
     \tl_gset:Nn \g_guide_current_sector_name_tl {#2}
     \directlua{cg.set_sector("\luaescapestring{\unexpanded{#2}}")}
     \addcontentsline{toc}{section}{#2} % Native TOC Integration
-    \addcontentsline{toc}{section}{#2} % Native TOC Integration
-    
+
     \int_gzero:N \g_guide_cyan_top_int \int_gzero:N \g_guide_cyan_bot_int
     \int_gzero:N \g_guide_green_top_int \int_gzero:N \g_guide_green_bot_int
     \int_gzero:N \g_guide_yellow_top_int \int_gzero:N \g_guide_yellow_bot_int
@@ -104,7 +103,7 @@
     \int_gincr:N \g_guide_route_int
     \directlua{cg.register_route("\int_use:N \g_guide_route_int", "\luaescapestring{\unexpanded{#1}}", "\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}", "\luaescapestring{\unexpanded{#4}}", "\luaescapestring{\unexpanded{#5}}")}
     \directlua{cg.eval_tex("\luaescapestring{\unexpanded{#2}}")}
-    
+
     \noindent
     \begin{minipage}[t]{8mm}
         \vspace{0pt}
@@ -128,5 +127,10 @@
         \IfValueT{#6}{ \CGObservationText{#6} }
     \end{minipage}\par\vspace{3mm}
 }
+
+\NewDocumentCommand{\CGZoneStats}{ m }{
+    \directlua{cg.render_zone_stats("\luaescapestring{\unexpanded{#1}}")}
+}
 \ExplSyntaxOff
+
 \endinput

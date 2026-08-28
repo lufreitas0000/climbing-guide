@@ -7,6 +7,7 @@ local Sorter = require("route_sorter")
 local JSON = require("export_json")
 local Sanitizer = require("sanitize_tex")
 local TXT = require("export_txt")
+local ZoneStats = require("zone_stats")
 
 local romans = {"xii", "viii", "vii", "iii", "xi", "ix", "vi", "iv", "ii", "x", "v", "i"}
 local roman_map = { xii=12, xi=11, x=10, ix=9, viii=8, vii=7, vi=6, v=5, iv=4, iii=3, ii=2, i=1 }
@@ -98,7 +99,7 @@ end
 
 function M.eval_tex(g)
     local max_val = M.get_val(Sanitizer.strip_tex_macros(g))
-    if max_val == 999 then 
+    if max_val == 999 then
         tex.sprint("\\CGEvalGrade{guide_gray}{gray}")
         return
     end
@@ -118,7 +119,7 @@ function M.eval_tex(g)
     if base ~= "gray" and not is_top then color = color .. "!60!black" end
     local top_str = is_top and "_top" or "_bot"
 
-    if base ~= "gray" then 
+    if base ~= "gray" then
         tex.sprint("\\CGEvalGrade{" .. color .. "}{" .. base .. top_str .. "}")
     else
         tex.sprint("\\CGEvalGrade{" .. color .. "}{}")
@@ -128,8 +129,8 @@ end
 function M.print_alpha()
     local sorted = Sorter.sort_by_alpha(M.routes)
     tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
-    for _, v in ipairs(sorted) do 
-        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})") 
+    for _, v in ipairs(sorted) do
+        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})")
     end
     tex.sprint("\\end{itemize}")
 end
@@ -137,10 +138,14 @@ end
 function M.print_grade()
     local sorted = Sorter.sort_by_grade(M.routes, M.get_val)
     tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
-    for _, v in ipairs(sorted) do 
-        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})") 
+    for _, v in ipairs(sorted) do
+        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})")
     end
     tex.sprint("\\end{itemize}")
+end
+
+function M.render_zone_stats(target_zone)
+    ZoneStats.render_zone_chart(target_zone, M.routes, M.get_val)
 end
 
 return M

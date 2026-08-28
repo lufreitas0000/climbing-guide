@@ -45,12 +45,17 @@ function ZoneStats.render_zone_chart(target_zone, routes, get_val_func)
     tex.sprint("\\begin{tikzpicture}[baseline=0pt]")
     tex.sprint("\\draw[help lines, color=gray!30, dashed] (0,0) grid (7.0, 3.0);")
     
-    local x = 0.5
+    local bar_width = 0.6
+    local bar_spacing = 0.9
+    local start_x = 0.5
+    local max_height = 2.5
+
+    local x = start_x
     for _, tier in ipairs(tiers) do
-        local h = (counts[tier] / max_count) * 2.5
-        tex.sprint(string.format("\\fill[%s] (%.2f, 0) rectangle (%.2f, %.2f);", tier, x, x + 0.6, h))
-        tex.sprint(string.format("\\node[above, font=\\tiny] at (%.2f, %.2f) {%d};", x + 0.3, h, counts[tier]))
-        x = x + 0.9
+        local h = (counts[tier] / max_count) * max_height
+        tex.sprint(string.format("\\fill[%s] (%.2f, 0) rectangle (%.2f, %.2f);", tier, x, x + bar_width, h))
+        tex.sprint(string.format("\\node[above, font=\\tiny] at (%.2f, %.2f) {%d};", x + (bar_width / 2), h, counts[tier]))
+        x = x + bar_spacing
     end
     
     tex.sprint("\\end{tikzpicture}")

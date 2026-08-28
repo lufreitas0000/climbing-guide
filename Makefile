@@ -59,6 +59,14 @@ test-miniguide: init-dirs check-fonts
 	@mv tests/aux/test_miniguide.log tests/log/
 	@./scripts/parse_logs.sh tests/log/test_miniguide.log
 
+test-zone-stats: init-dirs check-fonts
+	@echo "Compiling test_zone_stats.tex..."
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_zone_stats.tex > /dev/null
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_zone_stats.tex > /dev/null
+	@mv tests/aux/test_zone_stats.pdf tests/pdf/
+	@mv tests/aux/test_zone_stats.log tests/log/
+	@./scripts/parse_logs.sh tests/log/test_zone_stats.log
+
 test: test-lua test-fonts test-summary test-suite test-visual test-miniguide
 
 production: init-dirs check-fonts test-lua
