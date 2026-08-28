@@ -13,13 +13,13 @@
 \ExplSyntaxOn
 \NewDocumentCommand{\CGObsBox}{ m }{
     \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp~corners]
-        \CGBaseFont\normalsize\color{text_body} #1
+        \color{text_body}\CGBodyFont #1
     \end{tcolorbox}
 }
 
 \NewDocumentCommand{\CGZoneHeader}{ m m }{
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#2}}")}
-    \addcontentsline{toc}{part}{#2} % Native TOC Integration
+    \addcontentsline{toc}{part}{#2}
     \begin{tikzpicture}[remember~picture, overlay]
         \clip (current~page.north~west) rectangle ($ (current~page.north~east) + (0, -62.5mm) $);
         \node[anchor=north, inner~sep=0pt] at ($ (current~page.north) + (0, 0) $) {
@@ -29,7 +29,7 @@
     \begin{tikzpicture}[remember~picture, overlay]
         \fill[brand_color] ($ (current~page.north~west) + (0, -62.5mm + 8mm) $) rectangle ($ (current~page.north~west) + (\MarginWidth + 0.75\textwidth, -62.5mm - 8mm) $);
         \node[anchor=west, text=white, inner~sep=0pt] at ($ (current~page.north~west) + (\MarginWidth, -62.5mm) $) {
-            \CGCoverFont\fontsize{26}{28}\selectfont #2
+            \CGZoneTitleFont #2
         };
     \end{tikzpicture}
     \vspace*{60.5mm}
@@ -40,8 +40,8 @@
         \useasboundingbox (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
         \fill[#1] (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
         \fill[#1!60!black] (0,0) -- (\cgsummaryboxsize,0) -- (\cgsummaryboxsize,\cgsummaryboxsize) -- cycle;
-        \node[text=white, font=\CGItalicFont\normalsize, anchor=center] at (0.35*\cgsummaryboxsize, 0.68*\cgsummaryboxsize) {#2};
-        \node[text=white, font=\CGItalicFont\small, anchor=center] at (0.68*\cgsummaryboxsize, 0.25*\cgsummaryboxsize) {#3};
+        \node[text=white, font=\CGSummaryLabelFont, anchor=center] at (0.35*\cgsummaryboxsize, 0.68*\cgsummaryboxsize) {#2};
+        \node[text=white, font=\CGSummaryValueFont, anchor=center] at (0.68*\cgsummaryboxsize, 0.25*\cgsummaryboxsize) {#3};
     \end{tikzpicture}\hspace{0.0pt}%
 }
 
@@ -49,7 +49,7 @@
     \begin{tikzpicture}[baseline=0pt]
         \useasboundingbox (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
         \fill[#1!80!black] (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
-        \node[text=white, font=\CGItalicFont\normalsize, anchor=center] at (0.5*\cgsummaryboxsize, 0.5*\cgsummaryboxsize) {#2};
+        \node[text=white, font=\CGSummaryLabelFont, anchor=center] at (0.5*\cgsummaryboxsize, 0.5*\cgsummaryboxsize) {#2};
     \end{tikzpicture}\hspace{0.0pt}%
 }
 
