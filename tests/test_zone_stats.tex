@@ -1,4 +1,4 @@
-\documentclass[tikz,border=0pt]{standalone}
+\documentclass[11pt]{article}
 \usepackage{climbingguide}
 
 \begin{document}
@@ -20,11 +20,12 @@
     cg.register_route(8, "Via Theta", "IXb", "40m", "12+2", "Setter H")
 }
 
-\begin{tikzpicture}
-    \node[anchor=north west] at (0,3) {\textbf{Zona Boqueirão Statistics}};
-    \node[anchor=north west] at (0,2) {\CGZoneStats{ZONA BOQUEIRÃO}};
-    
-    \node[anchor=north west] at (0,-1) {\textbf{Zona Serra Negra Statistics}};
-    \node[anchor=north west] at (0,-2) {\CGZoneStats{ZONA SERRA NEGRA}};
-\end{tikzpicture}
+\CGTextSingleColumn{ZONA BOQUEIRÃO}{Estatísticas de vias da zona}
+\noindent\CGZoneStats{ZONA BOQUEIRÃO}
+
+\vspace{3em}
+
+\CGTextSingleColumn{ZONA SERRA NEGRA}{Estatísticas de vias da zona}
+\noindent\CGZoneStats{ZONA SERRA NEGRA}
+
 \end{document}
