@@ -5,6 +5,27 @@
 \RequirePackage{tikz}
 \usetikzlibrary{calc, positioning}
 
+% Ensure length registers exist independently of geometry package loading order
+\ifdefined\CGSummaryBoxSize\relax\else
+  \newlength{\CGSummaryBoxSize}
+  \setlength{\CGSummaryBoxSize}{0.8cm}
+\fi
+
+\ifdefined\CGZoneBannerHeight\relax\else
+  \newlength{\CGZoneBannerHeight}
+  \setlength{\CGZoneBannerHeight}{62.5mm}
+\fi
+
+\ifdefined\CGMarginWidth\relax\else
+  \newlength{\CGMarginWidth}
+  \setlength{\CGMarginWidth}{15mm}
+\fi
+
+\ifdefined\CGVerticalSpacingDefault\relax\else
+  \newlength{\CGVerticalSpacingDefault}
+  \setlength{\CGVerticalSpacingDefault}{4mm}
+\fi
+
 \ExplSyntaxOn
 \NewDocumentCommand{\CGObsBox}{ m }{
     \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp~corners]
