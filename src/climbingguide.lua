@@ -130,7 +130,7 @@ function M.print_alpha()
     local sorted = Sorter.sort_by_alpha(M.routes)
     tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
     for _, v in ipairs(sorted) do
-        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})")
+        tex.sprint(string.format("\\item {\\CGListRouteNameFont %s} \\dotfill {\\CGListSectorFont %s} \\dotfill {\\CGListGradeFont %s}~({\\CGListSectorFont %s})", v.name, v.sector, v.grade, v.id))
     end
     tex.sprint("\\end{itemize}")
 end
@@ -139,7 +139,7 @@ function M.print_grade()
     local sorted = Sorter.sort_by_grade(M.routes, M.get_val)
     tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
     for _, v in ipairs(sorted) do
-        tex.sprint("\\item {\\CGBaseFont\\bfseries " .. v.name .. "} \\dotfill {\\small " .. v.sector .. "} \\dotfill {\\CGBaseFont\\slshape " .. v.grade .. "}~({\\small " .. v.id .. "})")
+        tex.sprint(string.format("\\item {\\CGListRouteNameFont %s} \\dotfill {\\CGListSectorFont %s} \\dotfill {\\CGListGradeFont %s}~({\\CGListSectorFont %s})", v.name, v.sector, v.grade, v.id))
     end
     tex.sprint("\\end{itemize}")
 end
