@@ -5,11 +5,6 @@
 \RequirePackage{tikz}
 \usetikzlibrary{calc, positioning}
 
-\newlength{\cgsummaryboxsize}
-\setlength{\cgsummaryboxsize}{0.8cm}
-\newlength{\MarginWidth}
-\setlength{\MarginWidth}{15mm}
-
 \ExplSyntaxOn
 \NewDocumentCommand{\CGObsBox}{ m }{
     \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp~corners]
@@ -21,14 +16,14 @@
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#2}}")}
     \addcontentsline{toc}{part}{#2}
     \begin{tikzpicture}[remember~picture, overlay]
-        \clip (current~page.north~west) rectangle ($ (current~page.north~east) + (0, -62.5mm) $);
+        \clip (current~page.north~west) rectangle ($ (current~page.north~east) + (0, -\CGZoneBannerHeight) $);
         \node[anchor=north, inner~sep=0pt] at ($ (current~page.north) + (0, 0) $) {
             \includegraphics[width=\paperwidth]{#1}
         };
     \end{tikzpicture}
     \begin{tikzpicture}[remember~picture, overlay]
-        \fill[brand_color] ($ (current~page.north~west) + (0, -62.5mm + 8mm) $) rectangle ($ (current~page.north~west) + (\MarginWidth + 0.75\textwidth, -62.5mm - 8mm) $);
-        \node[anchor=west, text=white, inner~sep=0pt] at ($ (current~page.north~west) + (\MarginWidth, -62.5mm) $) {
+        \fill[brand_color] ($ (current~page.north~west) + (0, -\CGZoneBannerHeight + 8mm) $) rectangle ($ (current~page.north~west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 8mm) $);
+        \node[anchor=west, text=white, inner~sep=0pt] at ($ (current~page.north~west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
             \CGZoneTitleFont #2
         };
     \end{tikzpicture}
@@ -37,26 +32,26 @@
 
 \NewDocumentCommand{\DrawSummaryBlock}{ m m m }{
     \begin{tikzpicture}[baseline=0pt]
-        \useasboundingbox (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
-        \fill[#1] (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
-        \fill[#1!60!black] (0,0) -- (\cgsummaryboxsize,0) -- (\cgsummaryboxsize,\cgsummaryboxsize) -- cycle;
-        \node[text=white, font=\CGSummaryLabelFont, anchor=center] at (0.35*\cgsummaryboxsize, 0.68*\cgsummaryboxsize) {#2};
-        \node[text=white, font=\CGSummaryValueFont, anchor=center] at (0.68*\cgsummaryboxsize, 0.25*\cgsummaryboxsize) {#3};
+        \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
+        \fill[#1] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
+        \fill[#1!60!black] (0,0) -- (\CGSummaryBoxSize,0) -- (\CGSummaryBoxSize,\CGSummaryBoxSize) -- cycle;
+        \node[text=white, font=\CGSummaryLabelFont, anchor=center] at (0.35*\CGSummaryBoxSize, 0.68*\CGSummaryBoxSize) {#2};
+        \node[text=white, font=\CGSummaryValueFont, anchor=center] at (0.68*\CGSummaryBoxSize, 0.25*\CGSummaryBoxSize) {#3};
     \end{tikzpicture}\hspace{0.0pt}%
 }
 
 \NewDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
     \begin{tikzpicture}[baseline=0pt]
-        \useasboundingbox (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
-        \fill[#1!80!black] (0,0) rectangle (\cgsummaryboxsize,\cgsummaryboxsize);
-        \node[text=white, font=\CGSummaryLabelFont, anchor=center] at (0.5*\cgsummaryboxsize, 0.5*\cgsummaryboxsize) {#2};
+        \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
+        \fill[#1!80!black] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
+        \node[text=white, font=\CGSummaryLabelFont, anchor=center] at (0.5*\CGSummaryBoxSize, 0.5*\CGSummaryBoxSize) {#2};
     \end{tikzpicture}\hspace{0.0pt}%
 }
 
 \NewDocumentCommand{\CGTopoImage}{ m }{ 
     \vspace{2mm}\noindent 
     \includegraphics[width=\textwidth]{#1} 
-    \par\vspace{4mm} 
+    \par\vspace{\CGVerticalSpacingDefault} 
 } 
 \ExplSyntaxOff
 \endinput
