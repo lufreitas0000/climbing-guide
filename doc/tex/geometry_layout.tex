@@ -1,0 +1,31 @@
+\clearpage
+\section{Geometry, Headers \& Layout Containers}
+
+\subsection{Geometry Boundaries \& Centralized Dimensions}
+The physical document layout is defined in \texttt{cg-geometry.sty} ($150\text{mm} \times 210\text{mm}$). All spatial constants are centralized as \TeX\ lengths:
+\begin{itemize}
+    \item \texttt{\textbackslash CGSummaryBoxSize} ($0.8\text{cm}$): Dimensions of sector difficulty summary boxes.
+    \item \texttt{\textbackslash CGMarginWidth} ($15\text{mm}$): Left margin offset for full-bleed title overlays.
+    \item \texttt{\textbackslash CGRouteBadgeSize} ($6\text{mm}$): Dimension of colored route number indicators.
+    \item \texttt{\textbackslash CGRouteNumberWidth} ($8\text{mm}$): Width of the leading route number column.
+    \item \texttt{\textbackslash CGZoneBannerHeight} ($62.5\text{mm}$): Clip height for top-of-page zone images.
+    \item \texttt{\textbackslash CGVerticalSpacingDefault} ($4\text{mm}$): Standard block separation distance.
+\end{itemize}
+
+\subsection{Header \& Footer Management}
+Encapsulated within \texttt{cg-header.sty}, the module provides two-sided running headers:
+\begin{itemize}
+    \item \texttt{\textbackslash CGSetHeaderLeft\{<text:tl>\}}: Configures left-hand (even page) header text.
+    \item \texttt{\textbackslash CGSetHeaderRight\{<text:tl>\}}: Configures right-hand (odd page) header text.
+    \item \texttt{\textbackslash CGSetFooterCenter\{<text:tl>\}}: Configures page numbering in the center footer.
+    \item \texttt{\textbackslash fancypagestyle\{plain\}}: Suppresses headers and footers on chapter breaks and cover pages.
+\end{itemize}
+
+\subsection{Front Matter \& Visual Containers}
+Defined across \texttt{cg-frontmatter.sty} and \texttt{cg-boxes.sty}:
+\begin{itemize}
+    \item \texttt{\textbackslash CGCoverPage\{<image>\}\{<title>\}\{<subtitle>\}}: Generates a full-bleed title page.
+    \item \texttt{\textbackslash CGZoneHeader\{<image>\}\{<zone\_name>\}}: Emits a clipped cover banner and registers the zone with the Table of Contents.
+    \item \texttt{\textbackslash CGObsBox\{<content>\}}: Displays a beige-tinted callout container for crag betas.
+    \item \texttt{\textbackslash DrawSummaryBlock\{<color>\}\{<top\_count>\}\{<bot\_count>\}}: Compiles dual-tier diagonal grade counters.
+\end{itemize}

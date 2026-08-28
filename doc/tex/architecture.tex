@@ -4,7 +4,8 @@ The engine enforces an absolute decoupling between the presentation layer (\LaTe
 
 \subsection{Core Design Principles}
 \begin{itemize}
-    \item \textbf{Single Responsibility Principle}: Separate modules handle font loading, geometry boundaries, TikZ overlays, sorting algorithms, lexical sanitization, and serialization.
+    \item \textbf{Single Responsibility Principle (SRP)}: Presentation macros, state tracking, font loading, geometry boundaries, TikZ overlays, sorting algorithms, lexical sanitization, and serialization are isolated into dedicated modules.
+    \item \textbf{State vs. Presentation Decoupling}: \texttt{cg-api.sty} manages dataflow and backend counters; \texttt{cg-macros.sty} handles visual output and page layout.
     \item \textbf{Immutability \& Pure Functions}: Algorithmic operations never mutate global state; they clone inputs and return new structures.
     \item \textbf{Zero TeX Leakage}: TeX control sequences embedded in route parameters are sanitized before entering in-memory state.
 \end{itemize}
@@ -22,13 +23,16 @@ The engine enforces an absolute decoupling between the presentation layer (\LaTe
 \texttt{sanitize\_tex.lua} & Pure Lua Utility & Lexical parser stripping macros and checking brace depth. \\
 \texttt{export\_json.lua} & Pure/IO Lua Utility & RFC-8259 Unicode control character hex-serializer. \\
 \texttt{export\_txt.lua} & Pure/IO Lua Utility & Fixed-delimiter schema writer with \texttt{N/A} padding. \\
-\texttt{cg-colors.sty} & \LaTeX\ Package & Difficulty color matrix and subsector palettes. \\
-\texttt{cg-fonts.sty} & \LaTeX\ Package & Binary font family loader using \texttt{fontspec}. \\
-\texttt{cg-geometry.sty} & \LaTeX\ Package & Page bounds ($150\text{mm} \times 210\text{mm}$) and running headers. \\
-\texttt{cg-boxes.sty} & \LaTeX\ Package & TikZ positioning, callouts, and sector summary blocks. \\
-\texttt{cg-api.sty} & \LaTeX3 Package & Frontend user macros, route counters, and I/O triggers. \\
+\texttt{zone\_stats.lua} & Pure/IO Lua Utility & In-memory tier aggregation and TikZ bar chart rendering. \\
+\texttt{cg-colors.sty} & \LaTeX\ Package & Difficulty color matrix and extended accent palettes. \\
+\texttt{cg-fonts.sty} & \LaTeX\ Package & Binary font loaders and explicit pt-sized semantic aliases. \\
+\texttt{cg-geometry.sty} & \LaTeX\ Package & Physical page dimensions, margins, and centralized lengths. \\
+\texttt{cg-header.sty} & \LaTeX\ Package & Two-sided running header/footer and page style definitions. \\
+\texttt{cg-boxes.sty} & \LaTeX\ Package & TikZ positioning, observation callouts, and summary blocks. \\
+\texttt{cg-api.sty} & \LaTeX3 Package & Internal state tracking, LaTeX3 counters, and I/O triggers. \\
+\texttt{cg-macros.sty} & \LaTeX3 Package & Frontend visual presentation macros and layout boxes. \\
 \texttt{cg-lists.sty} & \LaTeX\ Package & Multi-column alphabetical and difficulty listings. \\
-\texttt{cg-frontmatter.sty} & \LaTeX3 Package & Full-bleed asymmetric layouts and native ToC styling. \\
+\texttt{cg-frontmatter.sty} & \LaTeX3 Package & Asymmetric layouts, cover builder, and native ToC styling. \\
 \bottomrule
 \end{tabularx}
 }

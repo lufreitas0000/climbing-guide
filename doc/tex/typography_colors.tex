@@ -1,0 +1,37 @@
+\clearpage
+\section{Typography \& Color Architecture}
+
+\subsection{Grade Color Scale Matrix}
+Climbing routes are categorized by the Brazilian difficulty scale and mapped to standardized color tiers defined in \texttt{cg-colors.sty}:
+
+\vspace{0.5em}
+\noindent
+{\small
+\begin{tabularx}{\linewidth}{@{}llcX@{}}
+\toprule
+\textbf{Color Name} & \textbf{HEX Code} & \textbf{Sample} & \textbf{Grade Range \& Logic} \\
+\midrule
+\texttt{guide\_cyan}   & \texttt{\#00AEEF} & \textcolor{guide_cyan}{\rule{14mm}{3mm}}   & 1st to 4th Sup ($< 5.0$). \\
+\texttt{guide\_green}  & \texttt{\#009640} & \textcolor{guide_green}{\rule{14mm}{3mm}}  & 5th to 5th Sup ($[5.0, 6.0)$). \\
+\texttt{guide\_yellow} & \texttt{\#F29400} & \textcolor{guide_yellow}{\rule{14mm}{3mm}} & 6th to 6th Sup ($[6.0, 7.0)$). \\
+\texttt{guide\_orange} & \texttt{\#F05A28} & \textcolor{guide_orange}{\rule{14mm}{3mm}} & 7th A to 7th C ($[7.0, 8.0)$). \\
+\texttt{guide\_red}    & \texttt{\#BE1E2D} & \textcolor{guide_red}{\rule{14mm}{3mm}}    & 8th A to 8th C ($[8.0, 9.0)$). \\
+\texttt{guide\_purple} & \texttt{\#92278F} & \textcolor{guide_purple}{\rule{14mm}{3mm}} & 9th A to 12th C ($[9.0, 20.0)$). \\
+\texttt{guide\_gray}   & \texttt{\#3A3A3C} & \textcolor{guide_gray}{\rule{14mm}{3mm}}   & Projects, unrated routes, artificial aids ($A0\dots A5+$). \\
+\texttt{brand\_color}  & \texttt{\#BE1E2D} & \textcolor{brand_color}{\rule{14mm}{3mm}}  & Primary structural accent and header bar color. \\
+\texttt{bg\_beige}     & \texttt{\#EFECE6} & \textcolor{bg_beige}{\rule{14mm}{3mm}}     & Front-matter background and observation box fill. \\
+\texttt{cg\_yellow\_soft} & \texttt{\#F9DC5C} & \textcolor{cg_yellow_soft}{\rule{14mm}{3mm}} & Extended warm pastel accent tier. \\
+\texttt{cg\_sage}      & \texttt{\#87A96B} & \textcolor{cg_sage}{\rule{14mm}{3mm}}      & Desaturated green mid-tone accent. \\
+\texttt{cg\_indigo}    & \texttt{\#4B6B94} & \textcolor{cg_indigo}{\rule{14mm}{3mm}}    & Cool grounding neutral accent. \\
+\bottomrule
+\end{tabularx}
+}
+
+\subsection{Typography Abstraction \& Semantic Hierarchy}
+Typography is strictly abstracted in \texttt{cg-fonts.sty}. Direct calls to font sizing primitives (\texttt{\textbackslash LARGE}, \texttt{\textbackslash small}) in layout files are strictly forbidden; all elements map to semantic commands with explicit pt sizing:
+\begin{itemize}
+    \item \textbf{Base Font Loaders}: \texttt{\textbackslash CGTitleFont} (Barlow Condensed), \texttt{\textbackslash CGCoverFont} (Bebas Neue), \texttt{\textbackslash CGBaseFont} (Sans-Serif Regular), \texttt{\textbackslash CGItalicFont} (Sans-Serif Slanted).
+    \item \textbf{Semantic Header Aliases}: \texttt{\textbackslash CGHeaderFont} ($9\text{pt}/11\text{pt}$), \texttt{\textbackslash CGZoneTitleFont} ($26\text{pt}/28\text{pt}$), \texttt{\textbackslash CGSectorTitleFont} ($24\text{pt}/28\text{pt}$).
+    \item \textbf{Semantic Route Aliases}: \texttt{\textbackslash CGRouteNameFont} ($12\text{pt}/14\text{pt}$ bold), \texttt{\textbackslash CGGradeFont} ($10\text{pt}/12\text{pt}$ italic), \texttt{\textbackslash CGSetterFont} ($9\text{pt}/11\text{pt}$ italic), \texttt{\textbackslash CGObservationFont} ($9\text{pt}/11\text{pt}$ italic).
+    \item \textbf{Semantic List Aliases}: \texttt{\textbackslash CGListRouteNameFont}, \texttt{\textbackslash CGListSectorFont}, \texttt{\textbackslash CGListGradeFont}.
+\end{itemize}

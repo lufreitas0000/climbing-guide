@@ -8,10 +8,18 @@ The backend is built as modular, pure Lua utilities orchestrating mathematical e
 \begin{itemize}
     \item \texttt{M.set\_zone(z: string)}: Updates internal active zone string \texttt{M.current\_zone}.
     \item \texttt{M.set\_sector(s: string)}: Updates internal active sector string \texttt{M.current\_sector}.
-    \item \texttt{M.register\_route(id, name, grade, length, gear, setter)}: Sanitizes parameters via \texttt{Sanitizer.strip\_tex\_macros} and pushes route objects into \texttt{M.routes}.
+    \item \texttt{M.register\_route(id, name, grade, length, gear, setter)}: Sanitizes parameters and pushes route objects into \texttt{M.routes}.
     \item \texttt{M.get\_val(g: string) $\to$ number (pure)}: Mathematical grade evaluator mapping Brazilian grades to rational numbers for Strict Weak Ordering ($Proj \to 999.0$, $sup \to +0.5$, $A4 \to 24.0$).
-    \item \texttt{M.eval\_tex(g: string)}: Evaluates grade and prints \texttt{\textbackslash CGEvalGrade} macro into TeX input stream.
-    \item \texttt{M.print\_alpha()} \& \texttt{M.print\_grade()}: Consumes sorted tables and streams formatted \LaTeX\ \texttt{itemize} lists.
+    \item \texttt{M.eval\_tex(g: string)}: Evaluates grade and prints \texttt{\textbackslash CGEvalGrade} macro into TeX stream.
+    \item \texttt{M.render\_zone\_stats(zone)}: Delegates zone aggregation to \texttt{zone\_stats.lua}.
+    \item \texttt{M.print\_alpha()} \& \texttt{M.print\_grade()}: Consumes sorted tables and streams formatted \LaTeX\ \texttt{itemize} lists with semantic typography.
+\end{itemize}
+}
+
+\subsection{Module: \texttt{zone\_stats.lua} (Visualization Engine)}
+{\small
+\begin{itemize}
+    \item \texttt{ZoneStats.render\_zone\_chart(target\_zone, routes, get\_val\_func)}: Iterates through in-memory routes, filters by zone, aggregates into color tiers, and emits dynamic TikZ bar chart markup.
 \end{itemize}
 }
 

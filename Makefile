@@ -17,6 +17,7 @@ check-fonts:
 test-lua:
 	@echo "Executing Lua mathematical logic..."
 	@lua tests/test_lua.lua
+	@lua tests/test_sanitizer.lua
 
 test-fonts: init-dirs check-fonts
 	@echo "Compiling test_fonts.tex..."
@@ -57,6 +58,14 @@ test-miniguide: init-dirs check-fonts
 	@mv tests/aux/test_miniguide.pdf tests/pdf/
 	@mv tests/aux/test_miniguide.log tests/log/
 	@./scripts/parse_logs.sh tests/log/test_miniguide.log
+
+test-zone-stats: init-dirs check-fonts
+	@echo "Compiling test_zone_stats.tex..."
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_zone_stats.tex > /dev/null
+	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_zone_stats.tex > /dev/null
+	@mv tests/aux/test_zone_stats.pdf tests/pdf/
+	@mv tests/aux/test_zone_stats.log tests/log/
+	@./scripts/parse_logs.sh tests/log/test_zone_stats.log
 
 test: test-lua test-fonts test-summary test-suite test-visual test-miniguide
 
