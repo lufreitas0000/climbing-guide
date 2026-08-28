@@ -35,8 +35,8 @@
         \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
         \fill[#1] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
         \fill[#1!60!black] (0,0) -- (\CGSummaryBoxSize,0) -- (\CGSummaryBoxSize,\CGSummaryBoxSize) -- cycle;
-        \node[text=white, font=\CGSummaryLabelFont, anchor=center] at (0.35*\CGSummaryBoxSize, 0.68*\CGSummaryBoxSize) {#2};
-        \node[text=white, font=\CGSummaryValueFont, anchor=center] at (0.68*\CGSummaryBoxSize, 0.25*\CGSummaryBoxSize) {#3};
+        \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.33*\CGSummaryBoxSize, 0.67*\CGSummaryBoxSize) {#2};
+        \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.67*\CGSummaryBoxSize, 0.33*\CGSummaryBoxSize) {#3};
     \end{tikzpicture}\hspace{0.0pt}%
 }
 
@@ -44,7 +44,7 @@
     \begin{tikzpicture}[baseline=0pt]
         \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
         \fill[#1!80!black] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
-        \node[text=white, font=\CGSummaryLabelFont, anchor=center] at (0.5*\CGSummaryBoxSize, 0.5*\CGSummaryBoxSize) {#2};
+        \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.5*\CGSummaryBoxSize, 0.5*\CGSummaryBoxSize) {#2};
     \end{tikzpicture}\hspace{0.0pt}%
 }
 
