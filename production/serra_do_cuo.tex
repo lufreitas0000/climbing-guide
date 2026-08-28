@@ -1,0 +1,32 @@
+\documentclass[11pt]{article}
+\usepackage{climbingguide}
+
+\begin{document}
+
+\CGCoverPage{example-image.jpg}{SERRA DO CUÓ}{Guia Oficial}
+
+\CGTextSingleColumn{Expediente}{
+    Guia de Escalada da Serra do Cuó\\
+    Autores: N/A\\
+    Revisão: N/A
+}
+\clearpage
+
+% --- Zone Ingestion ---
+\input{zones/01_talhado_dos_americanos.tex}
+\input{zones/02_paraiso.tex}
+% \input{zones/03_catedral.tex}
+% \input{zones/04_muro_de_pedra.tex}
+
+% --- Deferred Index Rendering ---
+\clearpage
+\CGTitleFont\Large Listagem Alfabética\par\vspace{2mm}
+\CGBaseFont\normalsize
+\CGPrintAlphaList 
+
+\clearpage
+\CGTitleFont\Large Listagem por Dificuldade\par\vspace{2mm}
+\CGBaseFont\normalsize
+\CGPrintGradeList
+
+\end{document}
