@@ -18,12 +18,12 @@
     }
 }
 
-\NewDocumentCommand{\CGTextSingleColumn}{ m m }{
+\NewDocumentCommand{\CGTextSingleColumn}{ m +m }{
     \tl_if_empty:nF {#1} { {\color{brand_color}\CGColumnTitleFont #1}\par\vspace{2pt} }
     {\CGBodyFont #2}\par\vspace{\CGVerticalSpacingDefault}
 }
 
-\NewDocumentCommand{\CGDoubleTextSection}{ m m m m }{
+\NewDocumentCommand{\CGDoubleTextSection}{ m +m m +m }{
     \begin{multicols}{2}
         \tl_if_empty:nF {#1} { {\color{brand_color}\CGColumnTitleFont #1}\par\vspace{2pt} }
         {\CGBodyFont #2}\par
