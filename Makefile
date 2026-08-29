@@ -86,3 +86,12 @@ docs: init-dirs check-fonts
 	@$(TEX) $(FLAGS) --output-directory=doc/export doc/cg-documentation.tex > /dev/null
 	@$(TEX) $(FLAGS) --output-directory=doc/export doc/cg-documentation.tex > /dev/null
 	@./scripts/parse_logs.sh doc/export/cg-documentation.log
+
+# V1.3 Compression Target
+compress: $(PROD_PDF)
+	@echo "Compressing PDF for digital distribution (sRGB, 300 DPI)..."
+	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/printer \
+	-dNOPAUSE -dQUIET -dBATCH \
+	-dProcessColorModel=/DeviceRGB -dColorConversionStrategy=/sRGB \
+	-sOutputFile=production/serra_do_cuo_optimized.pdf production/serra_do_cuo.pdf
+	@echo "Compression complete: production/serra_do_cuo_optimized.pdf"
