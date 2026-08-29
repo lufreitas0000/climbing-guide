@@ -16,15 +16,19 @@ function M.set_zone(z) M.current_zone = z end
 function M.set_sector(s) M.current_sector = s end
 
 function M.register_route(id, name, grade, length, gear, setter)
+    local len_s = Sanitizer.strip_tex_macros(length)
+    local gear_s = Sanitizer.strip_tex_macros(gear)
+    local setter_s = Sanitizer.strip_tex_macros(setter)
+
     table.insert(M.routes, {
         zone = Sanitizer.strip_tex_macros(M.current_zone),
         sector = Sanitizer.strip_tex_macros(M.current_sector),
         id = tonumber(id) or 0,
         name = Sanitizer.strip_tex_macros(name),
         grade = Sanitizer.strip_tex_macros(grade),
-        local len_s = Sanitizer.strip_tex_macros(length); length = (len_s == "N/A" or len_s == "") and "#m" or len_s,
-        local gear_s = Sanitizer.strip_tex_macros(gear); gear = (gear_s == "N/A" or gear_s == "") and "(#+2)" or gear_s,
-        local setter_s = Sanitizer.strip_tex_macros(setter); setter = (setter_s == "N/A" or setter_s == "") and "Conquistador(es)?" or setter_s
+        length = (len_s == "N/A" or len_s == "") and "#m" or len_s,
+        gear = (gear_s == "N/A" or gear_s == "") and "(#+2)" or gear_s,
+        setter = (setter_s == "N/A" or setter_s == "") and "Conquistador(es)?" or setter_s
     })
 end
 
