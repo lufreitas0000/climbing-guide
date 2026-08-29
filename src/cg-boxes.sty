@@ -1,30 +1,28 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{cg-boxes}[2026/08/26 Boxes]
+\ProvidesPackage{cg-boxes}[2026/08/29 Boxes]
 \RequirePackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
 \RequirePackage{tikz}
 \usetikzlibrary{calc, positioning}
 
-% Ensure length registers exist independently of geometry package loading order
 \ifdefined\CGSummaryBoxSize\relax\else
   \newlength{\CGSummaryBoxSize}
   \setlength{\CGSummaryBoxSize}{0.8cm}
 \fi
-
 \ifdefined\CGZoneBannerHeight\relax\else
   \newlength{\CGZoneBannerHeight}
   \setlength{\CGZoneBannerHeight}{62.5mm}
 \fi
-
 \ifdefined\CGMarginWidth\relax\else
   \newlength{\CGMarginWidth}
   \setlength{\CGMarginWidth}{15mm}
 \fi
-
 \ifdefined\CGVerticalSpacingDefault\relax\else
   \newlength{\CGVerticalSpacingDefault}
   \setlength{\CGVerticalSpacingDefault}{4mm}
 \fi
+
+\newcounter{cgfigure}
 
 \ExplSyntaxOn
 \NewDocumentCommand{\CGObsBox}{ m }{
@@ -32,7 +30,6 @@
         \color{text_body}\CGBodyFont #1
     \end{tcolorbox}
 }
-
 \NewDocumentCommand{\CGZoneHeader}{ m m }{
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#2}}")}
     \addcontentsline{toc}{part}{#2}
@@ -50,7 +47,6 @@
     \end{tikzpicture}
     \vspace*{60.5mm}
 }
-
 \NewDocumentCommand{\DrawSummaryBlock}{ m m m }{
     \begin{tikzpicture}[baseline=0pt]
         \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
@@ -60,7 +56,6 @@
         \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.67*\CGSummaryBoxSize, 0.33*\CGSummaryBoxSize) {#3};
     \end{tikzpicture}\hspace{0.0pt}%
 }
-
 \NewDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
     \begin{tikzpicture}[baseline=0pt]
         \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
@@ -68,11 +63,15 @@
         \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.5*\CGSummaryBoxSize, 0.5*\CGSummaryBoxSize) {#2};
     \end{tikzpicture}\hspace{0.0pt}%
 }
-
-\NewDocumentCommand{\CGTopoImage}{ m }{ 
-    \vspace{2mm}\noindent 
-    \includegraphics[width=\textwidth]{#1} 
-    \par\vspace{\CGVerticalSpacingDefault} 
-} 
+\NewDocumentCommand{\CGTopoImage}{ o m }{
+     \vspace{2mm}\noindent
+     \includegraphics[width=\textwidth]{#2}
+     \IfValueT{#1}{
+         \par\vspace{2pt}\noindent
+         \stepcounter{cgfigure}
+         {\CGItalicFont\textcolor{brand_color}{Figura~\thecgfigure:}~#1}
+     }
+     \par\vspace{\CGVerticalSpacingDefault}
+}
 \ExplSyntaxOff
 \endinput
