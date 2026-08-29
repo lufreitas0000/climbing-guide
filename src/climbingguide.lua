@@ -128,20 +128,20 @@ end
 
 function M.print_alpha()
     local sorted = Sorter.sort_by_alpha(M.routes)
-    tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
+    tex.sprint("\\begin{longtable}{ p{0.45\\linewidth} >{\\centering\\arraybackslash}p{0.2\\linewidth} >{\\centering\\arraybackslash}p{0.35\\linewidth} }")
     for _, v in ipairs(sorted) do
-        tex.sprint(string.format("\\item {\\CGListRouteNameFont %s} \\dotfill {\\CGListSectorFont %s} \\dotfill {\\CGListGradeFont %s}~({\\CGListSectorFont %s})", v.name, v.sector, v.grade, v.id))
+        tex.sprint(string.format("{\\CGListRouteNameFont %s} & {\\CGListGradeFont %s} & {\\CGListSectorFont %s} \\\\", v.name, v.grade, v.sector))
     end
-    tex.sprint("\\end{itemize}")
+    tex.sprint("\\end{longtable}")
 end
 
 function M.print_grade()
     local sorted = Sorter.sort_by_grade(M.routes, M.get_val)
-    tex.sprint("\\begin{itemize}[label={}, leftmargin=0pt, itemsep=4pt]")
+    tex.sprint("\\begin{longtable}{ p{0.45\\linewidth} >{\\centering\\arraybackslash}p{0.2\\linewidth} >{\\centering\\arraybackslash}p{0.35\\linewidth} }")
     for _, v in ipairs(sorted) do
-        tex.sprint(string.format("\\item {\\CGListRouteNameFont %s} \\dotfill {\\CGListSectorFont %s} \\dotfill {\\CGListGradeFont %s}~({\\CGListSectorFont %s})", v.name, v.sector, v.grade, v.id))
+        tex.sprint(string.format("{\\CGListRouteNameFont %s} & {\\CGListGradeFont %s} & {\\CGListSectorFont %s} \\\\", v.name, v.grade, v.sector))
     end
-    tex.sprint("\\end{itemize}")
+    tex.sprint("\\end{longtable}")
 end
 
 function M.render_zone_stats(target_zone)

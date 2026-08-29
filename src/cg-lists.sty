@@ -1,19 +1,13 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{cg-lists}[2026/08/26 Lists]
-\RequirePackage{multicol}
-\RequirePackage{enumitem}
-
+\ProvidesPackage{cg-lists}[2026/08/29 Lists Refactor]
+\RequirePackage{longtable}
+\RequirePackage{array}
 \directlua{cg = require("climbingguide")}
 
 \NewDocumentCommand{\CGPrintAlphaList}{}{
-    \begin{multicols}{2}
-    \directlua{cg.print_alpha()}
-    \end{multicols}
+    \directlua{cg.print_alpha()}
 }
-
 \NewDocumentCommand{\CGPrintGradeList}{}{
-    \begin{multicols}{2}
-    \directlua{cg.print_grade()}
-    \end{multicols}
+    \directlua{cg.print_grade()}
 }
 \endinput
