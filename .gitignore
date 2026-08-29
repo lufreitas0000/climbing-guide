@@ -17,3 +17,8 @@
 # Exported databases and lists
 export/
 doc/export/
+
+#images
+*.jpg
+*.jpeg
+*.png

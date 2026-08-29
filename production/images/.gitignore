@@ -1,7 +1,0 @@
-
-# Production Visual Assets (Ignore binaries, track scaffolding)
-production/images/**/*.jpg
-production/images/**/*.jpeg
-production/images/**/*.png
-production/images/**/*.heic
-!production/images/**/.gitkeep
