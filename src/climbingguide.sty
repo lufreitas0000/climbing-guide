@@ -32,3 +32,13 @@
 \vbadness=10000
 \tolerance=2000
 \emergencystretch=20pt
+
+% --- Enforce Log Suppression After Preamble ---
+\AtBeginDocument{
+    \hfuzz=\maxdimen
+    \vfuzz=\maxdimen
+    \hbadness=10000
+    \vbadness=10000
+    \multicoltolerance=10000
+    \sloppy
+}
