@@ -25,12 +25,12 @@
 \newcounter{cgfigure}
 
 \ExplSyntaxOn
-\NewDocumentCommand{\CGObsBox}{ m }{
+\DeclareDocumentCommand{\CGObsBox}{ m }{
     \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp~corners]
         \color{text_body}\CGBodyFont #1
     \end{tcolorbox}
 }
-\NewDocumentCommand{\CGZoneHeader}{ m m }{
+\DeclareDocumentCommand{\CGZoneHeader}{ m m }{
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#2}}")}
     \addcontentsline{toc}{part}{#2}
     
@@ -52,7 +52,7 @@
     \end{tikzpicture}
     \vspace*{60.5mm}
 }
-\NewDocumentCommand{\DrawSummaryBlock}{ m m m }{
+\DeclareDocumentCommand{\DrawSummaryBlock}{ m m m }{
     \begin{tikzpicture}[baseline=0pt]
         \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
         \fill[#1] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
@@ -61,14 +61,14 @@
         \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.67*\CGSummaryBoxSize, 0.33*\CGSummaryBoxSize) {#3};
     \end{tikzpicture}\hspace{0.0pt}%
 }
-\NewDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
+\DeclareDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
     \begin{tikzpicture}[baseline=0pt]
         \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
         \fill[#1!80!black] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
         \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.5*\CGSummaryBoxSize, 0.5*\CGSummaryBoxSize) {#2};
     \end{tikzpicture}\hspace{0.0pt}%
 }
-\NewDocumentCommand{\CGTopoImage}{ o m }{
+\DeclareDocumentCommand{\CGTopoImage}{ o m }{
      \vspace{2mm}\noindent
      \includegraphics[width=\textwidth]{#2}
      \IfValueT{#1}{

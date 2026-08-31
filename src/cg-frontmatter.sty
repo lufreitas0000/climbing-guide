@@ -14,7 +14,7 @@
 \setlength{\cftsecindent}{1em}
 
 \ExplSyntaxOn
-\NewDocumentCommand{\CGSidebarTitle}{ m }{
+\DeclareDocumentCommand{\CGSidebarTitle}{ m }{
     \vspace{1em}\noindent
     \begin{tikzpicture}[baseline=(current~bounding~box.north)]
         \fill[brand_color] (0,0) rectangle (4mm, -10mm);
@@ -24,14 +24,14 @@
     \end{tikzpicture}\par\vspace{1em}
 }
 
-\NewDocumentCommand{\CGSplitBackground}{ O{0.5} m m }{
+\DeclareDocumentCommand{\CGSplitBackground}{ O{0.5} m m }{
     \begin{tikzpicture}[remember~picture, overlay]
         \fill[#2] (current~page.north~west) rectangle ($ (current~page.south~west) !#1! (current~page.south~east) $);
         \fill[#3] ($ (current~page.north~west) !#1! (current~page.north~east) $) rectangle (current~page.south~east);
     \end{tikzpicture}
 }
 
-\NewDocumentCommand{\CGIndexCorner}{}{
+\DeclareDocumentCommand{\CGIndexCorner}{}{
     \begin{tikzpicture}[remember~picture, overlay]
         \fill[brand_color] ($ (current~page.north~west) + (0, 0) $) rectangle ($ (current~page.north~west) + (11.25mm, -22mm) $);
         \node[anchor=south~west, inner~sep=0pt, text=black] at ($ (current~page.north~west) + (\CGMarginWidth, -22mm) $) {
@@ -40,13 +40,13 @@
     \end{tikzpicture}
 }
 
-\NewDocumentCommand{\CGIndexBackground}{}{
+\DeclareDocumentCommand{\CGIndexBackground}{}{
     \begin{tikzpicture}[remember~picture, overlay]
         \fill[bg_beige] ($ (current~page.north~west) + (11.25mm, -22mm) $) rectangle ($ (current~page.north~west) + (11.25mm + 0.55\textwidth, -180mm) $);
     \end{tikzpicture}
 }
 
-\NewDocumentCommand{\CGCoverPage}{ m m m }{ 
+\DeclareDocumentCommand{\CGCoverPage}{ m m m }{ 
     \begin{tikzpicture}[remember~picture, overlay] 
         \clip (current~page.north~west) rectangle (current~page.south~east); 
         \node[anchor=center, inner~sep=0pt] at (current~page.center) { 

@@ -13,11 +13,11 @@
 }
 \tl_set:Nn \l_guide_current_grade_color_tl { guide_gray }
 
-\NewDocumentCommand{\CGObs}{}{
+\DeclareDocumentCommand{\CGObs}{}{
     \textcolor{brand_color}{\CGObservationLabelFont Obs:~}
 }
 
-\NewDocumentCommand{\CGObservationText}{ m }{
+\DeclareDocumentCommand{\CGObservationText}{ m }{
     \par\vspace{1pt}
     {
         \setlength{\baselineskip}{10pt}
@@ -25,12 +25,12 @@
     }
 }
 
-\NewDocumentCommand{\CGTextSingleColumn}{ m +m }{
+\DeclareDocumentCommand{\CGTextSingleColumn}{ m +m }{
     \tl_if_empty:nF {#1} { {\color{brand_color}\CGColumnTitleFont #1}\par\vspace{2pt} }
     {\CGBodyFont #2}\par\vspace{\CGVerticalSpacingDefault}
 }
 
-\NewDocumentCommand{\CGDoubleTextSection}{ m +m m +m }{
+\DeclareDocumentCommand{\CGDoubleTextSection}{ m +m m +m }{
     \begin{multicols}{2}
         \tl_if_empty:nF {#1} { {\color{brand_color}\CGColumnTitleFont #1}\par\vspace{2pt} }
         {\CGBodyFont #2}\par
@@ -40,7 +40,7 @@
     \end{multicols}
 }
 
-\NewDocumentCommand{\CGSectorHeader}{ m m }{
+\DeclareDocumentCommand{\CGSectorHeader}{ m m }{
     \cs_if_exist:NT \guide_save_sector_summary: { \guide_save_sector_summary: }
     \int_gincr:N \g_guide_sector_int
     \cs_if_exist:NT \g_guide_current_sector_name_tl { \tl_gset:Nn \g_guide_current_sector_name_tl {#2} }
@@ -73,7 +73,7 @@
     \vspace{\CGSectorHeaderSpaceAfter}
 }
 
-\NewDocumentEnvironment{CGSectorRoutes}{ O{} +b }{
+\DeclareDocumentEnvironment{CGSectorRoutes}{ O{} +b }{
     \regex_count:nnN { \c{CGRoute} } { #2 } \l_tmpa_int
     \int_set:Nn \l_tmpb_int { 1 }
     \tl_if_empty:nTF { #1 } {
@@ -90,7 +90,7 @@
     }
 }{}
 
-\NewDocumentCommand{\CGEvalGrade}{ m m }{
+\DeclareDocumentCommand{\CGEvalGrade}{ m m }{
     \tl_gset:Nn \l_guide_current_grade_color_tl { #1 }
     \tl_if_empty:nTF { #2 } {
         \int_gincr:N \g_guide_gray_int
@@ -101,7 +101,7 @@
     }
 }
 
-\NewDocumentCommand{\CGRoute}{ m m m m m o }{
+\DeclareDocumentCommand{\CGRoute}{ m m m m m o }{
     \int_gincr:N \g_guide_route_int
     \directlua{cg.register_route("\int_use:N \g_guide_route_int", "\luaescapestring{\unexpanded{#1}}", "\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}", "\luaescapestring{\unexpanded{#4}}", "\luaescapestring{\unexpanded{#5}}")}
     \directlua{cg.eval_tex("\luaescapestring{\unexpanded{#2}}")}
@@ -130,7 +130,7 @@
     \end{minipage}\par\vspace{3mm}
 }
 
-\NewDocumentCommand{\CGZoneStats}{ m }{
+\DeclareDocumentCommand{\CGZoneStats}{ m }{
     \directlua{cg.render_zone_stats("\luaescapestring{\unexpanded{#1}}")}
 }
 \ExplSyntaxOff

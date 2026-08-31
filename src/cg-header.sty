@@ -15,15 +15,15 @@
 \tl_gset:Nn \g_guide_header_right_tl { Documentation }
 \tl_gset:Nn \g_guide_footer_center_tl { \thepage }
 
-\NewDocumentCommand{\CGSetHeaderLeft}{ m }{
+\DeclareDocumentCommand{\CGSetHeaderLeft}{ m }{
   \tl_gset:Nn \g_guide_header_left_tl { #1 }
 }
 
-\NewDocumentCommand{\CGSetHeaderRight}{ m }{
+\DeclareDocumentCommand{\CGSetHeaderRight}{ m }{
   \tl_gset:Nn \g_guide_header_right_tl { #1 }
 }
 
-\NewDocumentCommand{\CGSetFooterCenter}{ m }{
+\DeclareDocumentCommand{\CGSetFooterCenter}{ m }{
   \tl_gset:Nn \g_guide_footer_center_tl { #1 }
 }
 

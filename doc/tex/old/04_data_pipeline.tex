@@ -5,16 +5,16 @@ The guidebook engine operates on a hybrid compilation lifecycle where TeX acts e
 \subsection{Compilation Lifecycle \& Execution Flow}
 
 \begin{enumerate}
-    \item \textbf{State Capture}: As TeX parses the document, \texttt{\textbackslash CGZoneHeader} and \texttt{\textbackslash CGSectorHeader} invoke Lua callbacks (\texttt{cg.set\_zone} and \texttt{cg.set\_sector}) to establish active topological context.
-    \item \textbf{Boundary Sanitization}: \texttt{\textbackslash CGRoute} passes raw parameters through \texttt{sanitize\_tex.lua} inside \texttt{cg.register\_route()}, ensuring the in-memory \texttt{M.routes} table stores exclusively pure UTF-8 strings.
-    \item \textbf{Deferred Export Trigger}: At document termination (\texttt{\textbackslash AtEndDocument}), \texttt{cg-api.sty} executes two direct Lua calls:
-    \begin{itemize}
-        \item \texttt{\textbackslash directlua\{cg.export\_json("export/database.json")\}}
-        \item \texttt{\textbackslash directlua\{cg.export\_text\_lists("export/")\}}
-    \end{itemize}
-    \item \textbf{CI/CD Schema Validation}: The \texttt{Makefile} triggers \texttt{scripts/validate\_exports.sh}, which scans every generated text line and asserts that exactly 7 pipe delimiters exist:
-    \begin{quote}
-    \texttt{[ID] | [Name] | [Grade] | [Length] | [Gear] | [Setter] | [Sector] | [Zone]}
-    \end{quote}
-    If a schema violation is detected, the build halts immediately.
+    \item \textbf{State Capture}: As TeX parses the document, \texttt{\textbackslash CGZoneHeader} and \texttt{\textbackslash CGSectorHeader} invoke Lua callbacks (\texttt{cg.set\_zone} and \texttt{cg.set\_sector}) to establish active topological context.
+    \item \textbf{Boundary Sanitization}: \texttt{\textbackslash CGRoute} passes raw parameters through \texttt{sanitize\_tex.lua} inside \texttt{cg.register\_route()}, ensuring the in-memory \texttt{M.routes} table stores exclusively pure UTF-8 strings.
+    \item \textbf{Deferred Export Trigger}: At document termination (\texttt{\textbackslash AtEndDocument}), \texttt{cg-api.sty} executes two direct Lua calls:
+    \begin{itemize}
+        \item \texttt{\textbackslash directlua\{cg.export\_json("export/database.json")\}}
+        \item \texttt{\textbackslash directlua\{cg.export\_text\_lists("export/")\}}
+    \end{itemize}
+    \item \textbf{CI/CD Schema Validation}: The \texttt{Makefile} triggers \texttt{scripts/validate\_exports.sh}, which scans every generated text line and asserts that exactly 7 pipe delimiters exist:
+    \begin{quote}
+    \texttt{[ID] | [Name] | [Grade] | [Length] | [Gear] | [Setter] | [Sector] | [Zone]}
+    \end{quote}
+    If a schema violation is detected, the build halts immediately.
 \end{enumerate}
