@@ -46,7 +46,7 @@
     \cs_if_exist:NT \g_guide_current_sector_name_tl { \tl_gset:Nn \g_guide_current_sector_name_tl {#2} }
     \directlua{cg.set_sector("\luaescapestring{\unexpanded{#2}}")}
     \addcontentsline{toc}{section}{#2}
-    
+
     % Dynamically update running page headers
     \CGSetHeaderRight{#2}
 
@@ -136,7 +136,6 @@
     \directlua{cg.render_zone_stats("\luaescapestring{\unexpanded{#1}}")}
 }
 \ExplSyntaxOff
-\endinput
 
 \ExplSyntaxOn
 \AtBeginDocument{
@@ -145,4 +144,8 @@
 \AtEndDocument{
     \directlua{cg.export_stats_aux("\luaescapestring{\jobname.cgstats}")}
 }
+
+\DeclareDocumentCommand{\Obs}{}{\CGObs}
+\DeclareDocumentCommand{\obs}{}{\CGObs}
 \ExplSyntaxOff
+\endinput
