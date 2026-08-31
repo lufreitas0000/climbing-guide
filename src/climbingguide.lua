@@ -174,10 +174,10 @@ function M.export_stats_aux(filepath)
             local colors = {"guide_cyan", "guide_green", "guide_yellow", "guide_orange", "guide_red", "guide_purple", "guide_gray"}
             for _, c in ipairs(colors) do
                 if st[c] > 0 then
-                    tex_str = tex_str .. string.format("\\\\DrawSummaryBlockSingle{%s}{%d} ", c, st[c])
+                    tex_str = tex_str .. string.format("\\DrawSummaryBlockSingle{%s}{%d} ", c, st[c])
                 end
             end
-            f:write(string.format("\\\\cs_gset:cpn {g_guide_stats_%s} { %s }\\n", z, tex_str))
+            f:write(string.format("\\cs_gset:cpn {g_guide_stats_%s} { %s }\n", z, tex_str))
         end
         f:close()
     end
