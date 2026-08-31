@@ -152,4 +152,35 @@ function M.render_zone_stats(target_zone)
     ZoneStats.render_zone_chart(target_zone, M.routes, M.get_val)
 end
 
+function M.export_stats_aux(filepath)
+    local z_stats = {}
+    for _, r in ipairs(M.routes) do
+        local z = r.zone
+        if not z_stats[z] then z_stats[z] = {guide_cyan=0, guide_green=0, guide_yellow=0, guide_orange=0, guide_red=0, guide_purple=0, guide_gray=0} end
+        local val = M.get_val(r.grade)
+        if val == 999 then z_stats[z].guide_gray = z_stats[z].guide_gray + 1
+        elseif val > 0 and val < 5 then z_stats[z].guide_cyan = z_stats[z].guide_cyan + 1
+        elseif val >= 5 and val < 6 then z_stats[z].guide_green = z_stats[z].guide_green + 1
+        elseif val >= 6 and val < 7 then z_stats[z].guide_yellow = z_stats[z].guide_yellow + 1
+        elseif val >= 7 and val < 8 then z_stats[z].guide_orange = z_stats[z].guide_orange + 1
+        elseif val >= 8 and val < 9 then z_stats[z].guide_red = z_stats[z].guide_red + 1
+        elseif val >= 9 then z_stats[z].guide_purple = z_stats[z].guide_purple + 1
+        end
+    end
+    local f = io.open(filepath, "w")
+    if f then
+        for z, st in pairs(z_stats) do
+            local tex_str = ""
+            local colors = {"guide_cyan", "guide_green", "guide_yellow", "guide_orange", "guide_red", "guide_purple", "guide_gray"}
+            for _, c in ipairs(colors) do
+                if st[c] > 0 then
+                    tex_str = tex_str .. string.format("\\\\DrawSummaryBlockSingle{%s}{%d} ", c, st[c])
+                end
+            end
+            f:write(string.format("\\\\cs_gset:cpn {g_guide_stats_%s} { %s }\\n", z, tex_str))
+        end
+        f:close()
+    end
+end
+
 return M
