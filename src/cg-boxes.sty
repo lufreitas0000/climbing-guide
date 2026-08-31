@@ -33,6 +33,11 @@
 \NewDocumentCommand{\CGZoneHeader}{ m m }{
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#2}}")}
     \addcontentsline{toc}{part}{#2}
+    
+    % Dynamically update running page headers
+    \CGSetHeaderLeft{#2}
+    \CGSetHeaderRight{}
+
     \begin{tikzpicture}[remember~picture, overlay]
         \clip (current~page.north~west) rectangle ($ (current~page.north~east) + (0, -\CGZoneBannerHeight) $);
         \node[anchor=north, inner~sep=0pt] at ($ (current~page.north) + (0, 0) $) {
