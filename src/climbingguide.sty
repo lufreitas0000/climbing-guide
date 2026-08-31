@@ -24,7 +24,7 @@
 % This intercepts the file stream BEFORE tokenization, replacing UTF-8 bytes 194 160 with a standard space.
 \directlua{
   luatexbase.add_to_callback('process_input_buffer', function(line)
-    return line:gsub('\194\160', ' ')
+    return line:gsub(string.char(194, 160), ' ')
   end, 'sanitize_nbsp')
 }
 
