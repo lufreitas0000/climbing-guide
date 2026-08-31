@@ -33,7 +33,7 @@
 \DeclareDocumentCommand{\CGZoneHeader}{ m m }{
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#2}}")}
     \addcontentsline{toc}{part}{#2}
-    
+
     % Dynamically update running page headers
     \CGSetHeaderLeft{#2}
     \CGSetHeaderRight{}
@@ -51,7 +51,7 @@
         };
     \end{tikzpicture}
     \vspace*{60.5mm}
-    
+
     % Render cached Zone Statistics horizontally if they exist
     \cs_if_exist:cT { g_guide_stats_#2 } {
         \vspace{2mm}\noindent
@@ -83,6 +83,22 @@
          \stepcounter{cgfigure}
          {\CGItalicFont\textcolor{brand_color}{Figura~\thecgfigure:}~#1}
      }
+     \par\vspace{\CGVerticalSpacingDefault}
+}
+\DeclareDocumentCommand{\CGFullWidthImage}{ o m }{
+    \CGTopoImage[#1]{#2} % Alias to existing full-column-width logic
+}
+
+\DeclareDocumentCommand{\CGHalfWidthImage}{ o m }{
+     \vspace{2mm}\noindent
+     \begin{minipage}{0.48\textwidth}
+         \includegraphics[width=\linewidth]{#2}
+         \IfValueT{#1}{
+             \par\vspace{2pt}\noindent
+             \stepcounter{cgfigure}
+             {\CGItalicFont\textcolor{brand_color}{Figura~\thecgfigure:}~#1}
+         }
+     \end{minipage}
      \par\vspace{\CGVerticalSpacingDefault}
 }
 \ExplSyntaxOff
