@@ -119,12 +119,14 @@
         \sbox0{\hspace{1ex}{\CGGradeFont #2} \textcolor{guide_gray}{|} {\CGGradeFont #3} \tl_if_empty:nF {#4} { {\CGGradeFont (#4)} }}%
         \sbox1{{\CGRouteNameFont #1}}%
         \dimen0=\dimexpr\linewidth-\wd0\relax
-        \ifdim\wd1>\dimen0
-            \resizebox{\dimen0}{\ht1}{\usebox1}%
-        \else
-            \usebox1\hfill
-        \fi
-        \usebox0\par
+        \noindent\makebox[\linewidth][l]{%
+            \ifdim\wd1>\dimen0
+                \resizebox{\dimen0}{\ht1}{\usebox1}%
+            \else
+                \usebox1\hfill
+            \fi
+            \usebox0%
+        }\par
         {\CGSetterFont #5}
         \IfValueT{#6}{ \CGObservationText{#6} }
     \end{minipage}\par\vspace{3mm}

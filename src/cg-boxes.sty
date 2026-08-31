@@ -25,12 +25,12 @@
 \newcounter{cgfigure}
 
 \ExplSyntaxOn
-\DeclareDocumentCommand{\CGObsBox}{ m }{
+\NewDocumentCommand{\CGObsBox}{ m }{
     \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp~corners]
         \color{text_body}\CGBodyFont #1
     \end{tcolorbox}
 }
-\DeclareDocumentCommand{\CGZoneHeader}{ m m }{
+\NewDocumentCommand{\CGZoneHeader}{ m m }{
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#2}}")}
     \addcontentsline{toc}{part}{#2}
     
@@ -47,12 +47,12 @@
     \begin{tikzpicture}[remember~picture, overlay]
         \fill[brand_color] ($ (current~page.north~west) + (0, -\CGZoneBannerHeight + 8mm) $) rectangle ($ (current~page.north~west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 8mm) $);
         \node[anchor=west, text=white, inner~sep=0pt] at ($ (current~page.north~west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
-            \CGZoneTitleFont #2
+            \CGZoneTitleFont ZONA~#2
         };
     \end{tikzpicture}
     \vspace*{60.5mm}
 }
-\DeclareDocumentCommand{\DrawSummaryBlock}{ m m m }{
+\NewDocumentCommand{\DrawSummaryBlock}{ m m m }{
     \begin{tikzpicture}[baseline=0pt]
         \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
         \fill[#1] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
@@ -61,14 +61,14 @@
         \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.67*\CGSummaryBoxSize, 0.33*\CGSummaryBoxSize) {#3};
     \end{tikzpicture}\hspace{0.0pt}%
 }
-\DeclareDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
+\NewDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
     \begin{tikzpicture}[baseline=0pt]
         \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
         \fill[#1!80!black] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
         \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.5*\CGSummaryBoxSize, 0.5*\CGSummaryBoxSize) {#2};
     \end{tikzpicture}\hspace{0.0pt}%
 }
-\DeclareDocumentCommand{\CGTopoImage}{ o m }{
+\NewDocumentCommand{\CGTopoImage}{ o m }{
      \vspace{2mm}\noindent
      \includegraphics[width=\textwidth]{#2}
      \IfValueT{#1}{
