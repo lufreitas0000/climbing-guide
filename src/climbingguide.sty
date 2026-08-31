@@ -20,8 +20,13 @@
 \RequirePackage{cg-frontmatter}
 
 % --- Automated Formatting Tolerances & Character Patches ---
-% 1. Map Non-Breaking Space (U+00A0) to standard space to prevent nullfont errors
-\catcode"00A0=10\relax
+% 1. Global LuaTeX Input Buffer Interception for U+00A0
+% This intercepts the file stream BEFORE tokenization, replacing UTF-8 bytes 194 160 with a standard space.
+\directlua{
+  luatexbase.add_to_callback('process_input_buffer', function(line)
+    return line:gsub('\194\160', ' ')
+  end, 'sanitize_nbsp')
+}
 
 % 2. Override strict boundary checks to allow dynamic block compilation
 \hfuzz=500pt
