@@ -7,7 +7,6 @@
 
 \ExplSyntaxOn
 
-% Ensure idempotent declaration to survive multiple package reloads
 \cs_if_exist:NF \l_guide_current_grade_color_tl {
     \tl_new:N \l_guide_current_grade_color_tl
 }
@@ -16,6 +15,9 @@
 \DeclareDocumentCommand{\CGObs}{}{
     \textcolor{brand_color}{\CGObservationLabelFont Obs:~}
 }
+
+\DeclareDocumentCommand{\obs}{}{\CGObs}
+\DeclareDocumentCommand{\Obs}{}{\CGObs}
 
 \DeclareDocumentCommand{\CGObservationText}{ m }{
     \par\vspace{1pt}
@@ -46,8 +48,7 @@
     \cs_if_exist:NT \g_guide_current_sector_name_tl { \tl_gset:Nn \g_guide_current_sector_name_tl {#2} }
     \directlua{cg.set_sector("\luaescapestring{\unexpanded{#2}}")}
     \addcontentsline{toc}{section}{#2}
-
-    % Dynamically update running page headers
+    
     \CGSetHeaderRight{#2}
 
     \int_gzero:N \g_guide_cyan_top_int \int_gzero:N \g_guide_cyan_bot_int
@@ -116,17 +117,16 @@
     \end{minipage}%
     \begin{minipage}[t]{\dimexpr\linewidth-\CGRouteNumberWidth\relax}
         \vspace{0pt}\raggedright\setlength{\baselineskip}{13pt}
-        \sbox0{\hspace{1ex}{\CGGradeFont #2} \textcolor{guide_gray}{|} {\CGGradeFont #3} \tl_if_empty:nF {#4} { {\CGGradeFont (#4)} }}%
+        \sbox0{\hspace{1em}{\CGGradeFont #2} \textcolor{guide_gray}{|} {\CGGradeFont #3} \tl_if_empty:nF {#4} { {\CGGradeFont (#4)} }}%
         \sbox1{{\CGRouteNameFont #1}}%
         \dimen0=\dimexpr\linewidth-\wd0\relax
-        \noindent\makebox[\linewidth][l]{%
-            \ifdim\wd1>\dimen0
-                \resizebox{\dimen0}{\ht1}{\usebox1}%
-            \else
-                \usebox1\hfill
-            \fi
-            \usebox0%
-        }\par
+        \noindent
+        \ifdim\wd1>\dimen0
+            \resizebox{\dimen0}{\ht1}{\usebox1}%
+        \else
+            \usebox1\hspace{0.5em}% Tight spacing
+        \fi
+        \usebox0\par
         {\CGSetterFont #5}
         \IfValueT{#6}{ \CGObservationText{#6} }
     \end{minipage}\par\vspace{3mm}
@@ -144,8 +144,5 @@
 \AtEndDocument{
     \directlua{cg.export_stats_aux("\luaescapestring{\jobname.cgstats}")}
 }
-
-\DeclareDocumentCommand{\Obs}{}{\CGObs}
-\DeclareDocumentCommand{\obs}{}{\CGObs}
 \ExplSyntaxOff
 \endinput
