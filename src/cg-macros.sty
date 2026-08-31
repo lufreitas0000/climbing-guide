@@ -6,7 +6,11 @@
 \RequirePackage{tcolorbox}
 
 \ExplSyntaxOn
-\tl_new:N \l_guide_current_grade_color_tl
+
+% Ensure idempotent declaration to survive multiple package reloads
+\cs_if_exist:NF \l_guide_current_grade_color_tl {
+    \tl_new:N \l_guide_current_grade_color_tl
+}
 \tl_set:Nn \l_guide_current_grade_color_tl { guide_gray }
 
 \NewDocumentCommand{\CGObs}{}{
