@@ -65,4 +65,16 @@
     \clearpage 
 } 
 \ExplSyntaxOff
+
+\ExplSyntaxOn
+\DeclareDocumentCommand{\CGTableOfContents}{}{
+    \clearpage
+    \CGIndexBackground
+    \CGIndexCorner
+    \renewcommand{\contentsname}{} % Suppress default title
+    \vspace*{1.5cm} % Add clearance below the corner graphic
+    \@starttoc{toc}
+    \clearpage
+}
+\ExplSyntaxOff
 \endinput
