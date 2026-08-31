@@ -137,3 +137,12 @@
 }
 \ExplSyntaxOff
 \endinput
+
+\ExplSyntaxOn
+\AtBeginDocument{
+    \InputIfFileExists{\jobname.cgstats}{}{}
+}
+\AtEndDocument{
+    \directlua{cg.export_stats_aux("\luaescapestring{\jobname.cgstats}")}
+}
+\ExplSyntaxOff
