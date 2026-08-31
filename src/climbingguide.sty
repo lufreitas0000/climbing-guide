@@ -20,3 +20,15 @@
 \RequirePackage{cg-frontmatter}
 
 \endinput
+
+% --- Automated Formatting Tolerances & Character Patches ---
+% 1. Map Non-Breaking Space (U+00A0) to standard space to prevent nullfont errors
+\catcode"00A0=10 
+
+% 2. Override strict boundary checks to allow dynamic block compilation
+\hfuzz=500pt
+\vfuzz=500pt
+\hbadness=10000
+\vbadness=10000
+\tolerance=2000
+\emergencystretch=20pt
