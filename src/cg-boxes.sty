@@ -30,10 +30,11 @@
         \color{text_body}\CGBodyFont #1
     \end{tcolorbox}
 }
+
 \DeclareDocumentCommand{\CGZoneHeader}{ m m }{
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#2}}")}
     \addcontentsline{toc}{part}{#2}
-
+    
     % Dynamically update running page headers
     \CGSetHeaderLeft{#2}
     \CGSetHeaderRight{}
@@ -51,7 +52,7 @@
         };
     \end{tikzpicture}
     \vspace*{60.5mm}
-
+    
     % Render cached Zone Statistics horizontally if they exist
     \cs_if_exist:cT { g_guide_stats_#2 } {
         \vspace{2mm}\noindent
@@ -59,6 +60,7 @@
         \par\vspace{4mm}
     }
 }
+
 \DeclareDocumentCommand{\DrawSummaryBlock}{ m m m }{
     \begin{tikzpicture}[baseline=0pt]
         \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
@@ -68,6 +70,7 @@
         \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.67*\CGSummaryBoxSize, 0.33*\CGSummaryBoxSize) {#3};
     \end{tikzpicture}\hspace{0.0pt}%
 }
+
 \DeclareDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
     \begin{tikzpicture}[baseline=0pt]
         \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
@@ -75,18 +78,21 @@
         \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.5*\CGSummaryBoxSize, 0.5*\CGSummaryBoxSize) {#2};
     \end{tikzpicture}\hspace{0.0pt}%
 }
+
 \DeclareDocumentCommand{\CGTopoImage}{ o m }{
      \vspace{2mm}\noindent
      \includegraphics[width=\textwidth]{#2}
      \IfValueT{#1}{
          \par\vspace{2pt}\noindent
          \stepcounter{cgfigure}
-         {\CGItalicFont\textcolor{brand_color}{Figura~\thecgfigure:}~#1}
+         % Braces protect \thecgfigure from absorbing the colon in expl3
+         {\CGItalicFont\textcolor{brand_color}{Figura~{\thecgfigure}:}~#1}
      }
      \par\vspace{\CGVerticalSpacingDefault}
 }
+
 \DeclareDocumentCommand{\CGFullWidthImage}{ o m }{
-    \CGTopoImage[#1]{#2} % Alias to existing full-column-width logic
+    \CGTopoImage[#1]{#2}
 }
 
 \DeclareDocumentCommand{\CGHalfWidthImage}{ o m }{
@@ -96,7 +102,7 @@
          \IfValueT{#1}{
              \par\vspace{2pt}\noindent
              \stepcounter{cgfigure}
-             {\CGItalicFont\textcolor{brand_color}{Figura~\thecgfigure:}~#1}
+             {\CGItalicFont\textcolor{brand_color}{Figura~{\thecgfigure}:}~#1}
          }
      \end{minipage}
      \par\vspace{\CGVerticalSpacingDefault}
