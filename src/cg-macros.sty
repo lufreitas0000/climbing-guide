@@ -120,11 +120,10 @@
         \sbox0{\hspace{0.5em}{\CGGradeFont #2} \textcolor{guide_gray}{|} {\CGGradeFont #3} \tl_if_empty:nF {#4} { {\CGGradeFont (#4)} }}%
         \sbox1{{\CGRouteNameFont #1}}%
         \dimen0=\dimexpr\linewidth-\wd0\relax
-        \noindent
         \ifdim\wd1>\dimen0
             \resizebox{\dimen0}{\ht1}{\usebox1}%
         \else
-            \usebox1\hspace{0.5em}% Tight spacing
+            \usebox1
         \fi
         \usebox0\par
         {\CGSetterFont #5}
