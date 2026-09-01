@@ -2,18 +2,10 @@
 
 The engine enforces an absolute decoupling between the presentation layer (\LaTeX) and the data/logic layer (Lua). Production source files remain purely declarative databases with zero manual spacing, hardcoded breaks, or visual overrides.
 
-\subsection{Core Design Principles}
-\begin{itemize}
-    \item \textbf{Single Responsibility Principle (SRP)}: Presentation macros, state tracking, font loading, geometry boundaries, TikZ overlays, sorting algorithms, lexical sanitization, and serialization are isolated into dedicated modules.
-    \item \textbf{State vs. Presentation Decoupling}: \texttt{cg-api.sty} manages dataflow and backend counters; \texttt{cg-macros.sty} handles visual output and page layout.
-    \item \textbf{Immutability \& Pure Functions}: Algorithmic operations never mutate global state; they clone inputs and return new structures.
-    \item \textbf{Zero TeX Leakage}: TeX control sequences embedded in route parameters are sanitized before entering in-memory state.
-\end{itemize}
-
 \subsection{Import Structure \& Namespace Encapsulation}
 The engine guarantees zero namespace collision by utilizing orthogonal import strategies for its two primary languages:
 \begin{itemize}
-    \item \textbf{\LaTeX\ Dependencies}: Handled exclusively via \texttt{\textbackslash RequirePackage} inside the \texttt{.sty} component files. This scopes all visual packages safely.
+    \item \textbf{\LaTeX\ Dependencies}: Handled exclusively via \texttt{\textbackslash RequirePackage} inside the \texttt{.sty} component files. This scopes all visual packages safely without polluting declarative \texttt{.tex} files.
     \item \textbf{Lua Dependencies}: Handled natively via Lua's \texttt{require("module\_name")}. The \texttt{Makefile} explicitly exposes the \texttt{src/} directory to the Lua compiler by injecting \texttt{LUAINPUTS := \$(abspath src)//:}. This allows the backend to assemble its own logic tree independently of the \TeX\ engine's pathing.
 \end{itemize}
 
