@@ -133,7 +133,11 @@
 }
 
 \DeclareDocumentCommand{\CGZoneStats}{ m }{
-    \directlua{cg.render_zone_stats("\luaescapestring{\unexpanded{#1}}")}
+    \str_if_eq:nnTF {#1} {Global} {
+        \cs_if_exist:NTF \CGGlobalChart { \CGGlobalChart } { \textsl{Gráfico global disponível na próxima compilação...} }
+    } {
+        \directlua{cg.render_zone_stats("\luaescapestring{\unexpanded{#1}}")}
+    }
 }
 \ExplSyntaxOff
 
