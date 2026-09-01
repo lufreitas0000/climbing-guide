@@ -10,29 +10,34 @@ The engine enforces an absolute decoupling between the presentation layer (\LaTe
     \item \textbf{Zero TeX Leakage}: TeX control sequences embedded in route parameters are sanitized before entering in-memory state.
 \end{itemize}
 
+\subsection{Import Structure \& Namespace Encapsulation}
+The engine guarantees zero namespace collision by utilizing orthogonal import strategies for its two primary languages:
+\begin{itemize}
+    \item \textbf{\LaTeX\ Dependencies}: Handled exclusively via \texttt{\textbackslash RequirePackage} inside the \texttt{.sty} component files. This scopes all visual packages safely.
+    \item \textbf{Lua Dependencies}: Handled natively via Lua's \texttt{require("module\_name")}. The \texttt{Makefile} explicitly exposes the \texttt{src/} directory to the Lua compiler by injecting \texttt{LUAINPUTS := \$(abspath src)//:}. This allows the backend to assemble its own logic tree independently of the \TeX\ engine's pathing.
+\end{itemize}
+
 \subsection{Module Responsibility Matrix}
 
 \noindent
-{\small
-\begin{tabularx}{\linewidth}{@{}llX@{}}
+\begin{tabularx}{\linewidth}{@{} >{\ttfamily\footnotesize}l >{\footnotesize\arraybackslash}X @{}}
 \toprule
-\textbf{Module / Script} & \textbf{Type} & \textbf{Functional Scope} \\
+\normalfont\textbf{Module / Script} & \textbf{Functional Scope} \\
 \midrule
-\texttt{climbingguide.lua} & Lua Orchestrator & In-memory AST state manager and TeX bridge. \\
-\texttt{route\_sorter.lua} & Pure Lua Utility & Sorting routines enforcing Strict Weak Ordering. \\
-\texttt{sanitize\_tex.lua} & Pure Lua Utility & Lexical parser stripping macros and checking brace depth. \\
-\texttt{export\_json.lua} & Pure/IO Lua Utility & RFC-8259 Unicode control character hex-serializer. \\
-\texttt{export\_txt.lua} & Pure/IO Lua Utility & Fixed-delimiter schema writer with \texttt{N/A} padding. \\
-\texttt{zone\_stats.lua} & Pure/IO Lua Utility & In-memory tier aggregation and TikZ bar chart rendering. \\
-\texttt{cg-colors.sty} & \LaTeX\ Package & Difficulty color matrix and extended accent palettes. \\
-\texttt{cg-fonts.sty} & \LaTeX\ Package & Binary font loaders and explicit pt-sized semantic aliases. \\
-\texttt{cg-geometry.sty} & \LaTeX\ Package & Physical page dimensions, margins, and centralized lengths. \\
-\texttt{cg-header.sty} & \LaTeX\ Package & Two-sided running header/footer and page style definitions. \\
-\texttt{cg-boxes.sty} & \LaTeX\ Package & TikZ positioning, observation callouts, and summary blocks. \\
-\texttt{cg-api.sty} & \LaTeX3 Package & Internal state tracking, LaTeX3 counters, and I/O triggers. \\
-\texttt{cg-macros.sty} & \LaTeX3 Package & Frontend visual presentation macros and layout boxes. \\
-\texttt{cg-lists.sty} & \LaTeX\ Package & Multi-column alphabetical and difficulty listings. \\
-\texttt{cg-frontmatter.sty} & \LaTeX3 Package & Asymmetric layouts, cover builder, and native ToC styling. \\
+climbingguide.lua & In-memory AST state manager and TeX bridge. \\
+route\_sorter.lua & Sorting routines enforcing Strict Weak Ordering. \\
+sanitize\_tex.lua & Lexical parser stripping macros and checking brace depth. \\
+export\_json.lua & RFC-8259 Unicode control character hex-serializer. \\
+export\_txt.lua & Fixed-delimiter schema writer with \texttt{N/A} padding. \\
+zone\_stats.lua & In-memory tier aggregation and TikZ bar chart rendering. \\
+cg-colors.sty & Difficulty color matrix and extended accent palettes. \\
+cg-fonts.sty & Binary font loaders and explicit pt-sized semantic aliases. \\
+cg-geometry.sty & Physical page dimensions, margins, and centralized lengths. \\
+cg-header.sty & Two-sided running header/footer and page style definitions. \\
+cg-boxes.sty & TikZ positioning, observation callouts, and summary blocks. \\
+cg-api.sty & Internal state tracking, LaTeX3 counters, and I/O triggers. \\
+cg-macros.sty & Frontend visual presentation macros and layout boxes. \\
+cg-lists.sty & Multi-column alphabetical and difficulty listings. \\
+cg-frontmatter.sty & Asymmetric layouts, cover builder, and native ToC styling. \\
 \bottomrule
 \end{tabularx}
-}

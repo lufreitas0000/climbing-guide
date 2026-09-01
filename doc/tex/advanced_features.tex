@@ -1,0 +1,25 @@
+\clearpage
+\section{Advanced Engine Features \& Workarounds}
+
+\subsection{Two-Pass Zone Statistics Caching}
+To display aggregate Zone Statistics at the beginning of a zone chapter before the routes are logically parsed by the \LaTeX\ engine, the system utilizes a two-pass caching architecture.
+\begin{itemize}
+    \item \textbf{Pass 1 (Aggregation)}: Routes are read sequentially into the Lua memory table \texttt{M.routes}. At the \texttt{\textbackslash AtEndDocument} hook, Lua evaluates all grades, calculates the totals, and exports them as \texttt{expl3} variable declarations into an external \texttt{.cgstats} file.
+    \item \textbf{Pass 2 (Rendering)}: The \texttt{\textbackslash AtBeginDocument} hook reads the \texttt{.cgstats} file into the \TeX\ memory. When \texttt{\textbackslash CGZoneHeader} is executed, it queries the existence of \texttt{g\_guide\_stats\_<ZONE>} and dynamically renders the visual blocks.
+\end{itemize}
+
+\subsection{Multi-Column Constraints \& Image Simplifications}
+The route blocks are wrapped inside a dynamic \texttt{CGSectorRoutes} environment, which utilizes the \LaTeX\ \texttt{multicol} package to intelligently balance route columns.
+
+\textbf{The Float Limitation}: The \texttt{multicol} algorithm strictly forbids \LaTeX\ floats (e.g., \texttt{\textbackslash begin\{figure\}}). Furthermore, forcing elements wider than a single column (\texttt{\textbackslash linewidth}) into this environment destroys the column balance math.
+
+\textbf{Simplification Option}: To maintain architectural stability, images are implemented as sequential, declarative macros that must be placed \textbf{strictly outside and after} the \texttt{CGSectorRoutes} blocks:
+\begin{itemize}
+    \item \textbf{\texttt{\textbackslash CGFullWidthImage[<caption:tl>]\{<path>\}}}: Bypasses column geometry to span the entire \texttt{\textbackslash textwidth}. Place this after closing the sector routes to insert a full-page panorama.
+    \item \textbf{\texttt{\textbackslash CGHalfWidthImage[<caption:tl>]\{<path>\}}}: Confines the image to a \texttt{0.48\textbackslash textwidth} minipage, naturally matching the visual footprint of a single column.
+\end{itemize}
+
+\subsection{Strict Weak Ordering: Accent Normalization}
+The Brazilian route database features Portuguese characters (\'A, \'E, \'I, \c{C}). Lua's native \texttt{table.sort} algorithm evaluates strings at the byte level, which incorrectly pushes UTF-8 accented characters to the end of alphabetical lists. 
+
+To guarantee mathematical Strict Weak Ordering, the \texttt{route\_sorter.lua} module applies a \texttt{remove\_accents()} byte-replacement mapping function strictly during the evaluation phase. This ensures strings like ``\'Aguia'' correctly sort alongside ``A'', without mutating the printed \TeX\ payload.

@@ -1,31 +1,24 @@
 \clearpage
 \section{Data Pipeline \& CI/CD Verification}
 
-The engine implements a continuous data extraction pipeline during \LaTeX\ compilation.
+The engine implements a continuous data extraction pipeline during \LaTeX\ compilation, safeguarded by a suite of POSIX Bash scripts.
 
 \subsection{Compilation Lifecycle Flow}
 \begin{sloppypar}
 \begin{enumerate}
     \item \textbf{AST Capture}: \texttt{\textbackslash CGZoneHeader} and \texttt{\textbackslash CGSectorHeader} update topological state in Lua runtime memory.
     \item \textbf{Lexical Sanitization}: \texttt{\textbackslash CGRoute} passes raw arguments through \texttt{sanitize\_tex.lua} to store pure UTF-8 strings in \texttt{M.routes}.
-    \item \textbf{Two-Pass Sector Summaries}: At sector transitions, \linebreak \texttt{\textbackslash guide\_save\_sector\_summary:} writes sector tally definitions to the \texttt{.aux} file.
+    \item \textbf{Two-Pass Sector Summaries}: At sector transitions, \texttt{\textbackslash guide\_save\_sector\_summary:} writes sector tally definitions to the \texttt{.aux} file.
     \item \textbf{Document Termination Hook}: At \texttt{\textbackslash AtEndDocument}, \texttt{cg-api.sty} triggers automatic disk serialization (\texttt{database.json} and text lists).
 \end{enumerate}
 \end{sloppypar}
 
-\subsection{Plain Text Output Schema}
-The plain text lists (\texttt{list\_alpha.txt} and \texttt{list\_grade.txt}) adhere to a single-line, fixed-separator format with exactly 7 pipe delimiters:
+\subsection{Pipeline Scripts \& Logic}
+The \texttt{Makefile} acts as a continuous integration pipeline, relying on four primary scripts to ensure code purity and layout stability:
 
-\vspace{0.5em}
-\noindent
-\resizebox{\linewidth}{!}{\texttt{[ID] | [Name] | [Grade] | [Length] | [Gear] | [Setter] | [Sector] | [Zone]}}
-
-\subsection{CI/CD Automated Test Vectors}
-\begin{sloppypar}
 \begin{itemize}
-    \item \texttt{make test-lua}: Runs \texttt{tests/test\_lua.lua} and \texttt{tests/test\_sanitizer.lua} for mathematical, JSON, and sanitization purity.
-    \item \texttt{make test-zone-stats}: Verifies standalone compilation of dynamic in-memory TikZ bar charts.
-    \item \texttt{make test-suite}: Compiles test suites and invokes \linebreak \mbox{\texttt{scripts/validate\_exports.sh}}.
-    \item \texttt{make docs}: Compiles this technical documentation manual into \mbox{\texttt{doc/export/cg-documentation.pdf}}.
+    \item \textbf{\texttt{clean\_nbsp.sh}}: This script executes a Perl regex substitution across the entire codebase prior to compilation. It forcibly strips all invisible \texttt{U+00A0} (non-breaking space) UTF-8 characters (\texttt{\textbackslash xC2\textbackslash xA0}) and converts them to standard ASCII spaces, preventing fatal column overflow bugs.
+    \item \textbf{\texttt{check\_fonts.sh}}: Reads the \texttt{fonts.in} manifest and executes \texttt{luaotfload-tool} to audit the OS environment. If a required proprietary font (e.g., Barlow Condensed, Bebas Neue) is missing, it aborts the build before \TeX\ can crash.
+    \item \textbf{\texttt{parse\_logs.sh}}: A compilation wrapper that parses the \texttt{.log} output. It captures critical engine failures (e.g., \texttt{! LaTeX Error}), echoing the exact context line to the terminal. Concurrently, it silences and gracefully accepts \texttt{Overfull \textbackslash hbox} warnings, allowing minor visual overflows to compile safely.
+    \item \textbf{\texttt{validate\_exports.sh}}: Guarantees the integrity of the plain text exports. It iterates through \texttt{list\_alpha.txt} and \texttt{list\_grade.txt}, counting the pipe (\texttt{|}) delimiters on every line to strictly validate the 7-pipe structural schema.
 \end{itemize}
-\end{sloppypar}

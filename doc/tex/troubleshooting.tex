@@ -1,0 +1,36 @@
+\clearpage
+\section{Troubleshooting \& Error Resolution}
+
+This section details common architectural crashes, their root causes in the \TeX/Lua interplay, and the exact files required for operational fixes.
+
+\subsection{Column Breaking and Visual Overlaps}
+\textbf{Symptom}: Route names push into the grade strings, or lines bleed into the adjacent column, ignoring \texttt{\textbackslash linewidth} boundaries.
+
+\noindent\textbf{Root Cause}: The injection of non-breaking spaces (\texttt{U+00A0}) via OS clipboards or rich-text editors. \TeX\ interprets these spaces as strict commands to never wrap the line.
+
+\noindent\textbf{Resolution}: 
+\begin{itemize}
+    \item \textbf{Automated Fix}: Rely on the \texttt{make} pipeline, which executes \texttt{scripts/clean\_nbsp.sh} to purge these spaces globally.
+    \item \textbf{Engine Fallback}: A LuaTeX \texttt{process\_input\_buffer} interceptor is implemented in \texttt{src/climbingguide.sty} to physically swap the UTF-8 bytes (\texttt{\textbackslash194\textbackslash160}) into spaces before \TeX\ tokenization.
+\end{itemize}
+
+\subsection{Fatal Error: Command Already Defined}
+\textbf{Symptom}: \texttt{! LaTeX cmd Error: Command '\textbackslash CGEvalGrade' already defined.}
+
+\noindent\textbf{Root Cause}: Multi-pass compilation (required for ToC and \texttt{.cgstats} caching) evaluates \texttt{.sty} files multiple times. The \texttt{\textbackslash NewDocumentCommand} macro throws a fatal error if the function already exists in memory.
+
+\noindent\textbf{Resolution}: All presentation macros must be declared using \texttt{\textbackslash DeclareDocumentCommand} instead. Update the macro definitions in \texttt{src/cg-macros.sty} and \texttt{src/cg-boxes.sty} to enforce idempotency (allowing silent overwrites).
+
+\subsection{Fatal Error: There's no line here to end}
+\textbf{Symptom}: Compilation aborts immediately after reading the \texttt{.cgstats} file.
+
+\noindent\textbf{Root Cause}: Incorrect string escaping in the Lua exporter. Using \texttt{\textbackslash\textbackslash\textbackslash\textbackslash cs\_gset} in a Lua string literal evaluates to \texttt{\textbackslash\textbackslash cs\_gset} in the output file. \TeX\ interprets \texttt{\textbackslash\textbackslash} as a forced line break in vertical mode, triggering a crash.
+
+\noindent\textbf{Resolution}: Reduce the escaping logic in \texttt{src/climbingguide.lua} (specifically the \texttt{export\_stats\_aux} function) to \texttt{\textbackslash\textbackslash cs\_gset}, ensuring exactly one backslash is written to the cache file.
+
+\subsection{Fatal Error: Undefined Control Sequence on Macros}
+\textbf{Symptom}: \texttt{! Undefined control sequence. \textbackslash CGObservationFont \textbackslash Obs}
+
+\noindent\textbf{Root Cause}: \LaTeX\ is strictly case-sensitive. Declarative database files typing \texttt{\textbackslash Obs} or \texttt{\textbackslash obs} will crash if the API strictly defines \texttt{\textbackslash CGObs}.
+
+\noindent\textbf{Resolution}: Alias common user typoes to the master macro. Update \texttt{src/cg-macros.sty} to include \texttt{\textbackslash DeclareDocumentCommand\{\textbackslash Obs\}\{\}\{\textbackslash CGObs\}}.
