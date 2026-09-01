@@ -19,6 +19,14 @@
 \DeclareDocumentCommand{\obs}{}{\CGObs}
 \DeclareDocumentCommand{\Obs}{}{\CGObs}
 
+\DeclareDocumentCommand{\CGstar}{ m }{
+    \begin{tikzpicture}[baseline=-0.1em]
+        \foreach~\i~in~{1,...,#1}~{
+            \node[star, star~points=5, star~point~ratio=2.25, fill=cg_yellow_soft, inner~sep=0pt, minimum~size=0.8em] at (\i*0.9em-0.9em, 0) {};
+        }
+    \end{tikzpicture}\hspace{0.3em}
+}
+
 \DeclareDocumentCommand{\CGObservationText}{ m }{
     \par\vspace{1pt}
     {
