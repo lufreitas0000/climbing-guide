@@ -74,7 +74,6 @@ docs: sanitize init-dirs check-fonts
 	@$(TEX) $(FLAGS) --output-directory=doc/export doc/cg-documentation.tex > /dev/null
 	@./scripts/parse_logs.sh doc/export/cg-documentation.log
 
-# V1.3 Compression Target
 compress:
 	@echo "Compressing PDF (sRGB, 300 DPI)..."
 	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/printer \
