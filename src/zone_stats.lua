@@ -25,12 +25,12 @@ function ZoneStats.get_chart_string(target_zone, routes, get_val_func)
     local tiers = {"guide_cyan", "guide_green", "guide_yellow", "guide_orange", "guide_red", "guide_purple", "guide_gray"}
     
     local labels = {
-        guide_cyan = "$\\leq$ IV", 
-        guide_green = "$\\phantom{\\geq}$ V", 
-        guide_yellow = "$\\phantom{\\geq}$ VI", 
-        guide_orange = "$\\phantom{\\geq}$ VII", 
-        guide_red = "$\\phantom{\\geq}$ VIII", 
-        guide_purple = "$\\geq$ IX", 
+        guide_cyan = "\\makebox[0pt][r]{$\\leq$~}IV", 
+        guide_green = "V", 
+        guide_yellow = "VI", 
+        guide_orange = "VII", 
+        guide_red = "VIII", 
+        guide_purple = "\\makebox[0pt][r]{$\\geq$~}IX", 
         guide_gray = "?"
     }
     
