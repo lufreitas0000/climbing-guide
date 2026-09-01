@@ -9,7 +9,7 @@
 
 \ExplSyntaxOn
 \DeclareDocumentCommand{\CGListStar}{ m }{
-    \begin{tikzpicture}[baseline=-0.1ex]
+    \begin{tikzpicture}[baseline=-0.6ex]
         \foreach~\i~in~{1,...,#1}~{
             \node[star, star~points=5, star~point~ratio=2.25, fill=cg_yellow_soft, inner~sep=0pt, minimum~size=0.65em] at (\i*0.7em-0.7em, 0) {};
         }
