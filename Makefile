@@ -66,7 +66,7 @@ production: sanitize init-dirs check-fonts test-lua
 
 clean:
 	@echo "Cleaning auxiliary build artifacts..."
-	@rm -rf production/aux/* doc/export/*
+	@rm -rf production/aux/* doc/export/* *.cgstats production/*.cgstats tests/aux/*.cgstats
 
 docs: sanitize init-dirs check-fonts
 	@echo "Compiling doc/cg-documentation.tex..."
