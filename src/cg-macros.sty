@@ -145,4 +145,5 @@
     \directlua{cg.export_stats_aux("\luaescapestring{\jobname.cgstats}")}
 }
 \ExplSyntaxOff
+\DeclareDocumentCommand{\CGToday}{}{\directlua{cg.print_today()}}
 \endinput

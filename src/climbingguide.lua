@@ -8,9 +8,14 @@ local JSON = require("export_json")
 local Sanitizer = require("sanitize_tex")
 local TXT = require("export_txt")
 local ZoneStats = require("zone_stats")
+local CGDate = require("cg_date")
 
 local romans = {"xii", "viii", "vii", "iii", "xi", "ix", "vi", "iv", "ii", "x", "v", "i"}
 local roman_map = { xii=12, xi=11, x=10, ix=9, viii=8, vii=7, vi=6, v=5, iv=4, iii=3, ii=2, i=1 }
+
+function M.print_today()
+    tex.sprint(CGDate.get_numeric())
+end
 
 function M.set_zone(z) M.current_zone = z end
 function M.set_sector(s) M.current_sector = s end
