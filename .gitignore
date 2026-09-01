@@ -22,3 +22,5 @@ doc/export/
 *.jpg
 *.jpeg
 *.png
+*.cgstats
+*.cgstats
