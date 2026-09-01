@@ -110,9 +110,10 @@
             \includegraphics[min~width=\paperwidth, min~height=\paperheight, keepaspectratio]{#2}
         };
         \IfValueT{#1}{
+            \stepcounter{cgfigure}
             \node[anchor=south~west, inner~sep=0pt] at ($ (current~page.south~west) + (\CGMarginWidth, \CGMarginWidth) $) {
                 \begin{tcolorbox}[colback=black, opacityback=0.5, colframe=black, opacityframe=0.5, boxrule=0pt, arc=0pt, width=\dimexpr\paperwidth-2\CGMarginWidth\relax, fontupper=\color{white}\CGItalicFont, sharp~corners]
-                    #1
+                    \textbf{Figura~\thecgfigure:}~#1
                 \end{tcolorbox}
             };
         }
