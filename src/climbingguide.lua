@@ -169,18 +169,17 @@ function M.export_stats_aux(filepath)
     local f = io.open(filepath, "w")
     if f then
         f:write(string.format("\\gdef\\CGTotalRoutes{%d}\n", #M.routes))
-        f:write("\\ExplSyntaxOn\n")
         
-        -- Export Global Chart
-        f:write("\\cs_gset:cpn {CGGlobalChart} {" .. ZoneStats.get_chart_string("Global", M.routes, M.get_val) .. "}\n")
+        -- Turn off ExplSyntax temporarily to preserve spaces in TikZ (Fixes /tikz/helplines crash)
+        f:write("\\ExplSyntaxOff\n")
+        f:write("\\expandafter\\gdef\\csname CGGlobalChart\\endcsname{" .. ZoneStats.get_chart_string("Global", M.routes, M.get_val) .. "}\n")
         
-        -- Export Specific Zone Charts
         for z, _ in pairs(z_stats) do
             local chart_tikz = ZoneStats.get_chart_string(z, M.routes, M.get_val)
-            f:write(string.format("\\cs_gset:cpn {g_guide_stats_%s} { %s }\n", z, chart_tikz))
+            f:write(string.format("\\expandafter\\gdef\\csname g_guide_stats_%s\\endcsname{%s}\n", z, chart_tikz))
         end
         
-        f:write("\\ExplSyntaxOff\n")
+        f:write("\\ExplSyntaxOn\n")
         f:close()
     end
 end
