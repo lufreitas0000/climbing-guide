@@ -3,74 +3,17 @@
 
 \begin{document}
 
-\CGCoverPage{example-image.jpg}{IBICOARA}{22º EENe | 2025}
+\CGOverlayImage[Testando a legenda com opacidade de 50\% sobre a imagem de bleed completo, garantindo que não vaze das margens de A5.]{example-image-a.jpg}
 
-\CGTextSingleColumn{Expediente}{
-    Guia de Escalada de Ibicoara, Bahia - 22º EENe | 2025\\
-    Foto da Capa: Ygor Tinoco\\
-    Textos: Janine Falcão, Allan Carlos
-}
+\CGZoneHeader{example-image-b.jpg}{ZONA TESTE V1.6}
 
-\CGDoubleTextSection{Apresentação}{
-    Este é mais um guia para o Encontro de Escaladores do Nordeste! Ele foi elaborado para ajudar e facilitar o acesso dos escaladores aos diversos setores de escalada, que, desta vez, estarão na comunidade de Campo Redondo, em Ibicoara.
-}{}{
-    Este EENe tem um valor único na verdade, todas as edições são especiais! Mas esta, em particular, além de marcar um destino inédito para o nosso querido encontro, não poderia ser diferente: sendo na Bahia, tinha que ser longe, né?
-}
-\clearpage
+\CGSectorHeader{guide_red}{SETOR ESTRELADO}
 
-\CGZoneHeader{example-image-a.jpg}{ZONA BOQUEIRÃO}
-
-\CGDoubleTextSection{Setores}{
-    \textbf{Mocozado, Mocozinho e Mocó.}\\[4pt]
-    A Zona Boqueirão é composta por três setores de escalada distintos: Mocó, Mocozinho e Mocozado. Cada um apresenta características próprias, somando mais de 40 vias, com graus de dificuldade que vão do 5º ao 8º.\\[4pt]
-    O acesso a este setor é realizado através da propriedade do Sr. Adjacy. A caminhada leva aproximadamente 20 minutos e conecta os três setores.
-}{Betas da zona}{
-    O horário mais recomendado para escalar nesta zona é à tarde, com a possibilidade de iniciar a escalada a partir das 11 horas.\\[4pt]
-    \CGObsBox{\textbf{\color{brand_color}OBS.} Em algumas épocas do ano, é comum encontrar, na Chapada Diamantina, uma espécie de vespa que se abriga nas fendas das vias. A boa notícia é que essas vespas não apresentam comportamento agressivo.}
-}
-\clearpage
-
-\CGSectorHeader{guide_red}{MOCOZADO}
-
-\CGTextSingleColumn{}{
-    O setor Mocozado conta com apenas 2 vias, sendo as mais desafiadoras da Zona, ideais para quem busca maiores dificuldades. O acesso a esse setor é feito por uma pequena chaminé.
-}
-
-\CGTopoImage{example-image-b.jpg}
-
-\begin{multicols}{2}
-    \CGRoute{GUERRA E PAZ}{Proj.}{30m}{10+2}{Messias e Paulinho}
-    \CGRoute{ESCAFÓIDE}{8a}{30m}{13+2}{Messias e Paulinho}
-\end{multicols}
-\clearpage
-
-\CGSectorHeader{guide_yellow}{MOCOZINHO}
-
-\CGDoubleTextSection{}{
-    Diferente do Mocó, o setor Mocozinho é mais acessível, com vias que variam entre 5º e 6sup, todas em proteções fixas e bem protegidas, com destaque para a via "Chama os Amigos".
-}{}{
-    A base é confortável, mas é necessário tomar cuidado com algumas áreas mais expostas. Uma vantagem desse setor é que é possível escalar até em dias chuvosos.
-}
-
-\CGTopoImage{example-image-c.jpg}
-
-\begin{multicols}{2}
-    \CGRoute{CAFÉ SEM TABACO}{6sup}{15m}{5+2}{Allan Carlos e Vinicin}
-    \CGRoute{EQUILÍBRIO MALUCO}{7c}{15m}{4+2}{Allan Carlos e Vinicin}
-    \CGRoute{A BUSCA CONTINUA}{7a}{15m}{5+2}{Allan Carlos e Vinicin}
-    \CGRoute{NÃO SUFOQUE O ARTISTA}{5sup}{15m}{4+2}{Allan Carlos e Vinicin}
-    \CGRoute{AÇÃO E REAÇÃO}{5sup}{15m}{4+2}{Allan Carlos e Vinicin}
-    \CGRoute{DÍZIMO DA PEDRA}{6sup}{17m}{5+2}{Allan Carlos e Vinicin}
-    \columnbreak
-    \CGRoute{CONVITE ESPIRITUAL}{6sup}{15m}{6+2}{Allan Carlos e Vinicin}
-    \CGRoute{GLAUCOMA}{7a}{15m}{6+2}{Allan Carlos e Vinicin}
-    \CGRoute{CHAMA OS AMIGOS}{6sup}{16m}{6+2}{Allan Carlos e Vinicin}
-    \CGRoute{SECOS E MOLHADOS}{6sup}{16m}{6+2}{Allan Carlos e João Paulo}
-    \CGRoute{CARANGA}{6sup}{15m}{7+2}{Allan Carlos e Vinicin}
-    \CGRoute{CAXINGUELÊ}{6sup}{15m}{5+2}{Allan Carlos e Vinicin}
-    \CGRoute{CUSPINDO MARIBONDO}{5sup}{15m}{5+2}{Allan Carlos e Vinicin}
-    \CGRoute{POÇO DE ILUSÕES}{6}{15m}{Mista}{Messias e Belinha}[1 Jogo de Camalot com pequenas repetidas + duas proteções fixas para descer.]
-    \CGRoute{IBICOARA AVENTURA}{5sup}{15m}{4+2}{Allan Carlos e Vinicin}
-\end{multicols}
+\begin{CGSectorRoutes}
+    \CGRoute{VIA NORMAL}{5sup}{10m}{Móvel}{João e Maria}[Esta via não possui estrelas, apenas observações clássicas.]
+    \CGRoute{VIA BOA}{6sup}{15m}{Fixa}{Luiza}[\CGstar1 Uma via legal, vale a pena entrar.]
+    \CGRoute{VIA MUITO BOA}{7a}{20m}{Mista}{Carlos}[\CGstar2 Clássica do setor com aderência técnica.]
+    \CGRoute{VIA IMPERDÍVEL}{8a}{25m}{Fixa}{Ana}[\CGstar3 A melhor via de todas! Proteções longe, mas seguras.]
+\end{CGSectorRoutes}
 
 \end{document}
