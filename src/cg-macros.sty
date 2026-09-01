@@ -128,7 +128,12 @@
 
 \DeclareDocumentCommand{\CGRoute}{ m m m m m o }{
     \int_gincr:N \g_guide_route_int
-    \directlua{cg.register_route("\int_use:N \g_guide_route_int", "\luaescapestring{\unexpanded{#1}}", "\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}", "\luaescapestring{\unexpanded{#4}}", "\luaescapestring{\unexpanded{#5}}")}
+    \IfValueTF{#6}{
+        \directlua{cg.register_route("\int_use:N \g_guide_route_int", "\luaescapestring{\unexpanded{#1}}", "\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}", "\luaescapestring{\unexpanded{#4}}", "\luaescapestring{\unexpanded{#5}}", "\luaescapestring{\unexpanded{#6}}")}
+    }{
+        \directlua{cg.register_route("\int_use:N \g_guide_route_int", "\luaescapestring{\unexpanded{#1}}", "\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}", "\luaescapestring{\unexpanded{#4}}", "\luaescapestring{\unexpanded{#5}}", "")}
+    }
+    
     \directlua{cg.eval_tex("\luaescapestring{\unexpanded{#2}}")}
 
     \noindent
