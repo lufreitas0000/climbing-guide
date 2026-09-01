@@ -114,5 +114,22 @@
      \end{minipage}
      \par\vspace{\CGVerticalSpacingDefault}
 }
+\DeclareDocumentCommand{\CGRouteImageRight}{ o m +m }{
+    \vspace{2mm}\noindent
+    \begin{minipage}[t]{0.48\linewidth}
+        \vspace{0pt}%
+        #3
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\linewidth}
+        \vspace{0pt}%
+        \includegraphics[width=\linewidth]{#2}
+        \IfValueT{#1}{
+            \par\vspace{2pt}\noindent
+            \stepcounter{cgfigure}
+            {\CGItalicFont\textcolor{brand_color}{Figura~{\thecgfigure}:}~#1}
+        }
+    \end{minipage}
+    \par\vspace{\CGVerticalSpacingDefault}
+}
 \ExplSyntaxOff
 \endinput
