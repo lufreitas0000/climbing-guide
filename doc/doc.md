@@ -76,3 +76,26 @@ Confines the image to 48% of the text width, mirroring the visual dimension of a
 
 ### Adding Captions
 All image macros (including `\CGTopoImage`, `\CGFullWidthImage`, and `\CGHalfWidthImage`) natively support captions. To add a caption, pass an optional argument enclosed in square brackets `[]` immediately after the macro name:
+
+## 7. Dynamic Zone Statistics (`.cgstats` Cache)
+To display aggregate Zone Statistics (e.g., total routes by grade) at the *top* of a zone chapter before the routes are logically parsed, the engine utilizes a two-pass cache system:
+1.  **Pass 1:** Routes are read into `M.routes`. At `\AtEndDocument`, Lua calculates the totals and exports them as `expl3` variable declarations to an external `.cgstats` file.
+2.  **Pass 2:** `\AtBeginDocument` reads the `.cgstats` file into memory. When `\CGZoneHeader` is called, it natively checks for the existence of `g_guide_stats_<ZONE>` and renders the visual blocks dynamically.
+
+## 8. Accent Normalization for Sorting
+The Brazilian route database features Portuguese characters (Á, É, Í, Ç). Lua's native `table.sort` evaluates byte arrays, which incorrectly pushes UTF-8 accented characters to the end of alphabetical lists. The `route_sorter.lua` module mitigates this by applying a `remove_accents()` byte-replacement mapping function *during* the strict weak ordering evaluation, ensuring "Águia" correctly sorts alongside "A".
+
+## 9. Expanded Image Layout API (V1.4)
+Due to strict mathematical constraints inside the LaTeX `multicol` package, images cannot break column logic. To handle topos and pictures cleanly, they must be explicitly declared *outside* and *after* `\begin{CGSectorRoutes} ... \end{CGSectorRoutes}`.
+
+### `\CGFullWidthImage[caption]{path}`
+Spans the entire text column width (`\textwidth`). Use this for wide crag panoramas.
+
+### `\CGHalfWidthImage[caption]{path}`
+Confines the image to a 0.48% `minipage` width, replicating the visual footprint of a single text column.
+
+### Adding Captions
+All image macros seamlessly support an optional caption passed in square brackets `[]` immediately after the macro name:
+```tex
+\CGHalfWidthImage[Brito escalando a via Fenda Linda]{path/to/image.jpg}
+```
