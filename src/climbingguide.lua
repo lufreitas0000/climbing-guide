@@ -170,9 +170,10 @@ function M.export_stats_aux(filepath)
             end
         end
     end
-    
+
     local f = io.open(filepath, "w")
     if f then
+        f:write(string.format("\\gdef\\CGTotalRoutes{%d}\n", #M.routes))
         f:write("\\ExplSyntaxOn\n")
         for z, st in pairs(z_stats) do
             local tex_str = ""
