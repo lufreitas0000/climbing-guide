@@ -169,6 +169,7 @@ function M.export_stats_aux(filepath)
     end
     local f = io.open(filepath, "w")
     if f then
+        f:write("\\ExplSyntaxOn\n")
         for z, st in pairs(z_stats) do
             local tex_str = ""
             local colors = {"guide_cyan", "guide_green", "guide_yellow", "guide_orange", "guide_red", "guide_purple", "guide_gray"}
@@ -179,6 +180,7 @@ function M.export_stats_aux(filepath)
             end
             f:write(string.format("\\cs_gset:cpn {g_guide_stats_%s} { %s }\n", z, tex_str))
         end
+        f:write("\\ExplSyntaxOff\n")
         f:close()
     end
 end
