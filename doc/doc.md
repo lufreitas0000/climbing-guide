@@ -46,7 +46,7 @@ The LuaTeX engine adheres to local TeX Live security configurations (governed by
 *   **Ordering Logic**: Implemented as Step 2 to ensure that once the TeX parsing and text extraction (Step 3) occurs, the resulting strings can be safely serialized without risking control character corruption in the final export payloads.
 
 ### 6.3. Lexical Sanitization Pipeline
-*   **Rationale**: LaTeX macros embedded within route parameters corrupted the JSON and plain text exports. Stripping these directly inside `climbingguide.lua` would violate the Single Responsibility Principle. 
+*   **Rationale**: LaTeX macros embedded within route parameters corrupted the JSON and plain text exports. Stripping these directly inside `climbingguide.lua` would violate the Single Responsibility Principle.
 *   **Implementation**: Created `src/sanitize_tex.lua`. Implemented a byte-level bracket depth counter to strictly prohibit macro nesting. Applied sequential Lua `string.gsub` pattern matching to eradicate color macros, extract text payloads from formatting macros (`\textbf`, `\textit`, `\emph`), and translate structural spacings into standard UTF-8 spaces.
 *   **Ordering Logic**: Implemented as Step 3 and hooked into `M.register_route` to guarantee that all subsequent I/O layers (JSON and Plain Text exports) read from an inherently pure, TeX-free in-memory data structure.
 
@@ -54,3 +54,25 @@ The LuaTeX engine adheres to local TeX Live security configurations (governed by
 *   **Rationale**: To support plain text catalogs without TeX pollution, the string-sanitized arrays needed to be formatted and exported. Embedding this logic inside the core TeX wrapper would violate SOLID principles and intertwine structural formatting with engine orchestration.
 *   **Implementation**: Abstracted fixed-separator (`|`) plain text generation into `src/export_txt.lua`. Implemented `N/A` placeholder injections for `nil` or empty TeX arguments to maintain strict schema width. Bound the execution to TeX via `\directlua{cg.export_text_lists("export/")}` within the `\AtEndDocument` hook in `cg-api.sty`.
 *   **Validation**: Developed `scripts/validate_exports.sh` to algorithmically assert that every exported TeX line contains exactly 7 pipe delimiters. Attached this shell script to the `test-suite` target in `Makefile`, establishing a strict CI/CD failure parameter if TeX payloads break the fixed-schema constraints.
+
+
+
+## New Image Layout APIs (V1.4)
+The image insertion macros have been expanded to allow for better layout integration around the `CGSectorRoutes` blocks.
+
+**Note:** Both of these macros must be placed *outside* of `\begin{CGSectorRoutes} ... \end{CGSectorRoutes}`. Do not place them inside the route lists, as this will conflict with column balancing.
+
+### 1. Full-Width Images
+Spans the entire text column width (`\textwidth`). Use this for wide crag panoramas.
+```tex
+\CGFullWidthImage{path/to/image.jpg}
+```
+### 2. Half-Width Images
+Confines the image to 48% of the text width, mirroring the visual dimension of a single route column.
+
+```tex
+\CGHalfWidthImage{path/to/image.jpg}
+```
+
+### Adding Captions
+All image macros (including `\CGTopoImage`, `\CGFullWidthImage`, and `\CGHalfWidthImage`) natively support captions. To add a caption, pass an optional argument enclosed in square brackets `[]` immediately after the macro name:
