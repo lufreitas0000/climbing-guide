@@ -24,9 +24,9 @@ This section details common architectural crashes, their root causes in the \TeX
 \subsection{Fatal Error: There's no line here to end}
 \textbf{Symptom}: Compilation aborts immediately after reading the \texttt{.cgstats} file.
 
-\noindent\textbf{Root Cause}: Incorrect string escaping in the Lua exporter. Using \texttt{\textbackslash\textbackslash\textbackslash\textbackslash cs\_gset} in a Lua string literal evaluates to \texttt{\textbackslash\textbackslash cs\_gset} in the output file. \TeX\ interprets \texttt{\textbackslash\textbackslash} as a forced line break in vertical mode, triggering a crash.
+\noindent\textbf{Root Cause}: Incorrect string escaping in the Lua exporter. Using \texttt{\textbackslash\textbackslash\textbackslash\textbackslash cs\_gset} in a Lua string literal evaluates to \texttt{\textbackslash\textbackslash cs\_gset} in the output file. \TeX\ interprets \texttt{\textbackslash\textbackslash} as a forced line break in vertical mode, triggering an infinite cache-poisoning loop.
 
-\noindent\textbf{Resolution}: Reduce the escaping logic in \texttt{src/climbingguide.lua} (specifically the \texttt{export\_stats\_aux} function) to \texttt{\textbackslash\textbackslash cs\_gset}, ensuring exactly one backslash is written to the cache file.
+\noindent\textbf{Resolution}: Delete all \texttt{*.cgstats} files from the disk to break the loop. Then reduce the escaping logic in \texttt{src/climbingguide.lua} to \texttt{\textbackslash\textbackslash cs\_gset}, ensuring exactly one backslash is written to the cache file.
 
 \subsection{Fatal Error: Undefined Control Sequence on Macros}
 \textbf{Symptom}: \texttt{! Undefined control sequence. \textbackslash CGObservationFont \textbackslash Obs}

@@ -5,8 +5,8 @@ The engine enforces an absolute decoupling between the presentation layer (\LaTe
 \subsection{Import Structure \& Namespace Encapsulation}
 The engine guarantees zero namespace collision by utilizing orthogonal import strategies for its two primary languages:
 \begin{itemize}
-    \item \textbf{\LaTeX\ Dependencies}: Handled exclusively via \texttt{\textbackslash RequirePackage} inside the \texttt{.sty} component files. This scopes all visual packages safely without polluting declarative \texttt{.tex} files.
-    \item \textbf{Lua Dependencies}: Handled natively via Lua's \texttt{require("module\_name")}. The \texttt{Makefile} explicitly exposes the \texttt{src/} directory to the Lua compiler by injecting \texttt{LUAINPUTS := \$(abspath src)//:}. This allows the backend to assemble its own logic tree independently of the \TeX\ engine's pathing.
+    \item \textbf{\LaTeX\ Dependencies (\texttt{\textbackslash RequirePackage})}: Handled exclusively inside the \texttt{.sty} component files. This isolates all visual and structural packages, keeping declarative \texttt{.tex} files pristine.
+    \item \textbf{Lua Dependencies (\texttt{require})}: Handled natively via Lua. The \texttt{Makefile} explicitly exposes the \texttt{src/} directory to the Lua compiler by injecting \texttt{LUAINPUTS := \$(abspath src)//:}. This allows the backend to assemble its logic tree independently of the \TeX\ engine's pathing.
 \end{itemize}
 
 \subsection{Module Responsibility Matrix}

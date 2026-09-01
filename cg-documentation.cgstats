@@ -1,1 +1,0 @@
-\cs_gset:cpn {g_guide_stats_} { \DrawSummaryBlockSingle{guide_green}{1} \DrawSummaryBlockSingle{guide_orange}{1} \DrawSummaryBlockSingle{guide_gray}{1}  }
