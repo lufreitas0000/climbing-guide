@@ -13,8 +13,8 @@ local function write_list(filepath, sorted_routes)
     if not f then return false end
     
     for _, r in ipairs(sorted_routes) do
-        local line = string.format("%s | %s | %s | %s | %s | %s | %s | %s\n",
-            pad(r.id), pad(r.name), pad(r.grade), pad(r.length), pad(r.gear), pad(r.setter), pad(r.sector), pad(r.zone))
+        local line = string.format("%s | %s | %s | %s | %s | %s | %s | %s | %s\n",
+            pad(r.id), pad(r.name), pad(r.grade), pad(r.stars), pad(r.length), pad(r.gear), pad(r.setter), pad(r.sector), pad(r.zone))
         f:write(line)
     end
     

@@ -20,10 +20,16 @@ end
 function M.set_zone(z) M.current_zone = z end
 function M.set_sector(s) M.current_sector = s end
 
-function M.register_route(id, name, grade, length, gear, setter)
+function M.register_route(id, name, grade, length, gear, setter, obs)
     local len_s = Sanitizer.strip_tex_macros(length)
     local gear_s = Sanitizer.strip_tex_macros(gear)
     local setter_s = Sanitizer.strip_tex_macros(setter)
+    
+    local stars = 0
+    local star_match = string.match(obs or "", "\\CGstar%s*[{]?([1-3])[}]?")
+    if star_match then
+        stars = tonumber(star_match)
+    end
 
     table.insert(M.routes, {
         zone = Sanitizer.strip_tex_macros(M.current_zone),
@@ -33,7 +39,8 @@ function M.register_route(id, name, grade, length, gear, setter)
         grade = Sanitizer.strip_tex_macros(grade),
         length = (len_s == "N/A" or len_s == "") and "#m" or len_s,
         gear = (gear_s == "N/A" or gear_s == "") and "(#+2)" or gear_s,
-        setter = (setter_s == "N/A" or setter_s == "") and "Conquistador(es)?" or setter_s
+        setter = (setter_s == "N/A" or setter_s == "") and "Conquistador(es)?" or setter_s,
+        stars = stars
     })
 end
 
@@ -139,7 +146,8 @@ function M.print_alpha()
     local sorted = Sorter.sort_by_alpha(M.routes)
     tex.sprint("\\begin{longtable}{ p{0.45\\linewidth} >{\\centering\\arraybackslash}p{0.2\\linewidth} >{\\centering\\arraybackslash}p{0.35\\linewidth} }")
     for _, v in ipairs(sorted) do
-        tex.sprint(string.format("{\\CGListRouteNameFont %s} & {\\CGListGradeFont %s} & {\\CGListSectorFont %s} \\\\", v.name, v.grade, v.sector))
+        local star_str = v.stars > 0 and string.format(" \\CGListStar{%d}", v.stars) or ""
+        tex.sprint(string.format("{\\CGListRouteNameFont %s%s} & {\\CGListGradeFont %s} & {\\CGListSectorFont %s} \\\\", v.name, star_str, v.grade, v.sector))
     end
     tex.sprint("\\end{longtable}")
 end
@@ -148,7 +156,8 @@ function M.print_grade()
     local sorted = Sorter.sort_by_grade(M.routes, M.get_val)
     tex.sprint("\\begin{longtable}{ p{0.45\\linewidth} >{\\centering\\arraybackslash}p{0.2\\linewidth} >{\\centering\\arraybackslash}p{0.35\\linewidth} }")
     for _, v in ipairs(sorted) do
-        tex.sprint(string.format("{\\CGListRouteNameFont %s} & {\\CGListGradeFont %s} & {\\CGListSectorFont %s} \\\\", v.name, v.grade, v.sector))
+        local star_str = v.stars > 0 and string.format(" \\CGListStar{%d}", v.stars) or ""
+        tex.sprint(string.format("{\\CGListRouteNameFont %s%s} & {\\CGListGradeFont %s} & {\\CGListSectorFont %s} \\\\", v.name, star_str, v.grade, v.sector))
     end
     tex.sprint("\\end{longtable}")
 end
