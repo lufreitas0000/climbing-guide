@@ -57,6 +57,8 @@ test-zone-stats: sanitize init-dirs check-fonts
 test: test-lua test-fonts test-summary test-suite test-visual test-miniguide
 
 production: sanitize init-dirs check-fonts test-lua
+	@echo "Clearing .cgstats cache..."
+	@rm -f production/aux/*.cgstats tests/aux/*.cgstats *.cgstats
 	@echo "Compiling serra_do_cuo.tex..."
 	@$(TEX) $(FLAGS) --output-directory=production/aux production/serra_do_cuo.tex > /dev/null
 	@$(TEX) $(FLAGS) --output-directory=production/aux production/serra_do_cuo.tex > /dev/null
