@@ -156,7 +156,7 @@ function M.export_stats_aux(filepath)
     local z_stats = {}
     for _, r in ipairs(M.routes) do
         local z = r.zone
-        -- Skip empty zones (e.g. specimen routes in documentation)
+        -- Strictly filter out empty zones (e.g. from documentation specimens)
         if z and z ~= "" then
             if not z_stats[z] then z_stats[z] = {guide_cyan=0, guide_green=0, guide_yellow=0, guide_orange=0, guide_red=0, guide_purple=0, guide_gray=0} end
             local val = M.get_val(r.grade)
@@ -170,6 +170,7 @@ function M.export_stats_aux(filepath)
             end
         end
     end
+    
     local f = io.open(filepath, "w")
     if f then
         f:write("\\ExplSyntaxOn\n")
