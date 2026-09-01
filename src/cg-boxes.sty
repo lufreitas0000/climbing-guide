@@ -4,7 +4,7 @@
 \RequirePackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
 \RequirePackage{tikz}
-\usetikzlibrary{calc, positioning}
+\usetikzlibrary{calc, positioning, shapes.geometric}
 
 \ifdefined\CGSummaryBoxSize\relax\else
   \newlength{\CGSummaryBoxSize}
@@ -100,6 +100,24 @@
 
 \DeclareDocumentCommand{\CGFullWidthImage}{ o m }{
     \CGTopoImage[#1]{#2}
+}
+
+\DeclareDocumentCommand{\CGOverlayImage}{ o m }{
+    \clearpage
+    \begin{tikzpicture}[remember~picture, overlay]
+        \clip (current~page.north~west) rectangle (current~page.south~east);
+        \node[anchor=center, inner~sep=0pt] at (current~page.center) {
+            \includegraphics[min~width=\paperwidth, min~height=\paperheight, keepaspectratio]{#2}
+        };
+        \IfValueT{#1}{
+            \node[anchor=south~west, inner~sep=0pt] at ($ (current~page.south~west) + (\CGMarginWidth, \CGMarginWidth) $) {
+                \begin{tcolorbox}[colback=black, opacityback=0.5, colframe=black, opacityframe=0.5, boxrule=0pt, arc=0pt, width=\dimexpr\paperwidth-2\CGMarginWidth\relax, fontupper=\color{white}\CGItalicFont, sharp~corners]
+                    #1
+                \end{tcolorbox}
+            };
+        }
+    \end{tikzpicture}
+    \clearpage
 }
 
 \DeclareDocumentCommand{\CGHalfWidthImage}{ o m }{
