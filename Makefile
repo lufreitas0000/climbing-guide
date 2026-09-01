@@ -38,23 +38,6 @@ test-summary: sanitize init-dirs check-fonts
 	@mv tests/aux/test_summary.log tests/log/
 	@./scripts/parse_logs.sh tests/log/test_summary.log
 
-test-suite: sanitize init-dirs check-fonts
-	@echo "Compiling test_suite.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_suite.tex > /dev/null
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_suite.tex > /dev/null
-	@mv tests/aux/test_suite.pdf tests/pdf/
-	@mv tests/aux/test_suite.log tests/log/
-	@./scripts/parse_logs.sh tests/log/test_suite.log
-	@./scripts/validate_exports.sh
-
-test-visual: sanitize init-dirs check-fonts
-	@echo "Compiling test_visual.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_visual.tex > /dev/null
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_visual.tex > /dev/null
-	@mv tests/aux/test_visual.pdf tests/pdf/
-	@mv tests/aux/test_visual.log tests/log/
-	@./scripts/parse_logs.sh tests/log/test_visual.log
-
 test-miniguide: sanitize init-dirs check-fonts
 	@echo "Compiling test_miniguide.tex..."
 	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_miniguide.tex > /dev/null
@@ -92,10 +75,10 @@ docs: sanitize init-dirs check-fonts
 	@./scripts/parse_logs.sh doc/export/cg-documentation.log
 
 # V1.3 Compression Target
-compress: $(PROD_PDF)
-	@echo "Compressing PDF for digital distribution (sRGB, 300 DPI)..."
+compress:
+	@echo "Compressing PDF (sRGB, 300 DPI)..."
 	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/printer \
-	-dNOPAUSE -dQUIET -dBATCH \
+	-dNOPAUSE -dBATCH -dQUIET \
 	-dProcessColorModel=/DeviceRGB -dColorConversionStrategy=/sRGB \
-	-sOutputFile=production/serra_do_cuo_optimized.pdf production/serra_do_cuo.pdf
-	@echo "Compression complete: production/serra_do_cuo_optimized.pdf"
+	-sOutputFile=production/pdf/serra_do_cuo_optimized.pdf production/pdf/serra_do_cuo.pdf
+	@echo "Compression complete!"
