@@ -81,3 +81,22 @@ CLIMBING GUIDE ENGINE: AI INGESTION SCHEMA (V1.5)<Directory path="production/" r
     <Description>Provide a mechanism to embed captions directly inside full-bleed, zero-margin images without breaking page geometry.</Description>
     <Architecture>A new macro \CGOverlayImage[caption]{path} will be introduced. It will wrap the image in a TikZ node, calculate the south-west anchor, and overlay a tcolorbox (with a 50% opacity gray background and white text) within the bounding box of the image itself.</Architecture>
 </Feature>
+
+<VersionSpec version="1.6">
+    <Macro name="\CGstar">
+        <Signature>\CGstar{n}</Signature>
+        <Arguments>
+            <Arg type="mandatory" format="{}">n: Integer (1, 2, or 3). The number of stars to render.</Arg>
+        </Arguments>
+        <Constraints>Intended to be used at the start of the optional [obs] argument within \CGRoute. Draws a horizontal sequence of yellow TikZ stars dynamically sized to the current baseline.</Constraints>
+    </Macro>
+
+    <Macro name="\CGOverlayImage">
+        <Signature>\CGOverlayImage[caption]{path}</Signature>
+        <Arguments>
+            <Arg type="optional" format="[]">caption: String. Text to be rendered in the semi-transparent box.</Arg>
+            <Arg type="mandatory" format="{}">path: String. Path to the image file.</Arg>
+        </Arguments>
+        <Constraints>Automatically triggers \clearpage. Generates a full A5-bleed image using \clip against the page geometry. The caption is anchored to the south-west using absolute \CGMarginWidth coordinates with a 50% opacity background box.</Constraints>
+    </Macro>
+</VersionSpec>
