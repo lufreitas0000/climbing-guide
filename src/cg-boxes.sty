@@ -1,5 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{cg-boxes}[2026/08/29 Boxes]
+\RequirePackage{xparse}
 \RequirePackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
 \RequirePackage{tikz}
@@ -31,32 +32,39 @@
     \end{tcolorbox}
 }
 
-\DeclareDocumentCommand{\CGZoneHeader}{ m m }{
-    \directlua{cg.set_zone("\luaescapestring{\unexpanded{#2}}")}
-    \addcontentsline{toc}{part}{#2}
+\DeclareDocumentCommand{\CGZoneHeader}{ o m m }{
+    \directlua{cg.set_zone("\luaescapestring{\unexpanded{#3}}")}
     
-    % Dynamically update running page headers
-    \CGSetHeaderLeft{#2}
+    \phantomsection
+    \addcontentsline{toc}{part}{#3}
+    
+    \CGSetHeaderLeft{#3}
     \CGSetHeaderRight{}
 
     \begin{tikzpicture}[remember~picture, overlay]
         \clip (current~page.north~west) rectangle ($ (current~page.north~east) + (0, -\CGZoneBannerHeight) $);
         \node[anchor=north, inner~sep=0pt] at ($ (current~page.north) + (0, 0) $) {
-            \includegraphics[width=\paperwidth]{#1}
+            \includegraphics[width=\paperwidth]{#2}
         };
     \end{tikzpicture}
     \begin{tikzpicture}[remember~picture, overlay]
         \fill[brand_color] ($ (current~page.north~west) + (0, -\CGZoneBannerHeight + 8mm) $) rectangle ($ (current~page.north~west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 8mm) $);
         \node[anchor=west, text=white, inner~sep=0pt] at ($ (current~page.north~west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
-            \CGZoneTitleFont ZONA~#2
+            \IfValueTF{#1}{
+                \begin{minipage}{0.75\textwidth}
+                    {\CGTitleFont\fontsize{14}{16}\selectfont #1}\\[2pt]
+                    \CGZoneTitleFont #3
+                \end{minipage}
+            }{
+                \CGZoneTitleFont #3
+            }
         };
     \end{tikzpicture}
     \vspace*{60.5mm}
     
-    % Render cached Zone Statistics horizontally if they exist
-    \cs_if_exist:cT { g_guide_stats_#2 } {
+    \cs_if_exist:cT { g_guide_stats_#3 } {
         \vspace{2mm}\noindent
-        \use:c { g_guide_stats_#2 }
+        \use:c { g_guide_stats_#3 }
         \par\vspace{4mm}
     }
 }
@@ -85,7 +93,6 @@
      \IfValueT{#1}{
          \par\vspace{2pt}\noindent
          \stepcounter{cgfigure}
-         % Braces protect \thecgfigure from absorbing the colon in expl3
          {\CGItalicFont\textcolor{brand_color}{Figura~{\thecgfigure}:}~#1}
      }
      \par\vspace{\CGVerticalSpacingDefault}
