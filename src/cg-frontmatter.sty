@@ -2,7 +2,6 @@
 \ProvidesPackage{cg-frontmatter}[2026/08/27 Front Matter]
 \RequirePackage{tocloft}
 
-% TOC Customization
 \renewcommand{\cfttoctitlefont}{\color{brand_color}\CGFrontmatterTocTitleFont}
 \renewcommand{\cftpartfont}{\color{text_body}\CGFrontmatterPartFont}
 \renewcommand{\cftsecfont}{\color{text_body}\CGFrontmatterSecFont}
@@ -65,14 +64,11 @@
     \clearpage 
 } 
 
-% Hijack standard TOC for graphical background
-\let\oldtableofcontents\tableofcontents
-\DeclareDocumentCommand{\tableofcontents}{}{
+\DeclareDocumentCommand{\CGTableOfContents}{}{
     \clearpage
-    \CGIndexBackground
-    \CGIndexCorner
-    \renewcommand{\contentsname}{} % Suppress default text
-    \vspace*{1.5cm} % Add clearance for corner
+    \noindent\CGIndexBackground
+    \noindent\CGIndexCorner
+    \par\vspace*{1.5cm}
     \@starttoc{toc}
     \clearpage
 }
