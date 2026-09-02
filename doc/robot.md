@@ -178,3 +178,29 @@ The project enforces an absolute decoupling between the presentation layer (\LaT
       \adjustbox{width=\paperwidth, min height=\paperheight}{\includegraphics{...}}
   };
 * Result: The image is mathematically forced to match the paper width first. If the resulting scaled height is less than the paper height, the min height parameter triggers further scaling. The outer \clip trims the excess overflow, rendering perfectly centered, distortion-free full-bleed graphics regardless of the source image's native resolution.
+
+<VersionSpec version="1.8">
+    <Description>Architectural restructuring to isolate expl3 scopes from pgfkeys and centralize image rendering logic.</Description>
+    
+    <Enhancement name="Strict Separation of Concerns (expl3 vs LaTeX2e)">
+        <Description>The \ExplSyntaxOn scope is now exclusively restricted to data manipulation, counters, and regex parsing. All graphical operations (TikZ nodes, tcolorbox environments) MUST be defined in standard LaTeX2e (\ExplSyntaxOff). This permanently resolves silent pgfkeys parsing failures caused by expl3 space consumption.</Description>
+    </Enhancement>
+
+    <Enhancement name="Catcode Neutral Internal Macros">
+        <Description>Internal helper macros no longer use the `@` symbol (e.g., \CGRenderImageInternal instead of \CG@RenderImage). This prevents fatal 'Undefined control sequence' errors when macros defined inside a \makeatletter block are invoked outside of it.</Description>
+    </Enhancement>
+
+    <Enhancement name="Consolidated Build Exports">
+        <Description>Fragmented output directories (aux/, log/, pdf/) have been deprecated in favor of unified target directories: tests/tests_export/ and production/production_exports/. The JSON/TXT structural data dumps are now natively routed to production_exports/.</Description>
+    </Enhancement>
+</VersionSpec>
+
+### Session: V1.8 Architecture Fix - Catcode Mismatches and expl3 Space Stripping
+
+**Issue 1:** Fatal Error `! Undefined control sequence. \CGZoneHeader code ... { \CG @RenderClippedImage{...`.
+* **Root Cause:** A catcode mismatch. The `\CG@RenderClippedImage` macro was defined within `\makeatletter` (where `@` is treated as a letter, catcode 11) but invoked within `\CGZoneHeader` outside of that block (where `@` is treated as 'other', catcode 12). The parser split the token into the non-existent `\CG` macro and the literal string `@RenderClippedImage`.
+* **Resolution:** Renamed all internal macros to drop the `@` syntax (e.g., `\CGRenderClippedImageInternal`), ensuring universal accessibility without catcode fragility.
+
+**Issue 2:** `pgfkeys` parser failure and layout distortion in image rendering.
+* **Root Cause:** `cg-boxes.sty` and `cg-macros.sty` were entirely wrapped in `\ExplSyntaxOn`. LaTeX3 strips all normal spaces, forcing the use of `~` for spacing. Key-value parsers like `pgfkeys` (used by TikZ and tcolorbox) rely heavily on exact string matching including spaces (e.g., `min width`). The injected tildes were rejected by `pgfkeys`, silently discarding configuration options and dumping unformatted, unscaled images.
+* **Resolution:** Decoupled data from presentation. All TikZ drawing macros are now explicitly defined in `\ExplSyntaxOff` blocks. `\ExplSyntaxOn` is reserved solely for parsing state (e.g., regex extraction of star ratings) which it then passes downstream to the safe LaTeX2e drawing macros.
