@@ -12,7 +12,7 @@ sanitize:
 	@./scripts/clean_nbsp.sh
 
 init-dirs:
-	@mkdir -p tests/aux tests/pdf tests/log production/aux production/pdf production/log export doc/export doc/tex
+	@mkdir -p tests/tests_export production/production_exports export doc/export doc/tex
 
 check-fonts:
 	@echo "Auditing system fonts..."
@@ -25,69 +25,50 @@ test-lua: sanitize
 
 test-fonts: sanitize init-dirs check-fonts
 	@echo "Compiling test_fonts.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_fonts.tex
-	@mv tests/aux/test_fonts.pdf tests/pdf/
-	@mv tests/aux/test_fonts.log tests/log/
-	@./scripts/parse_logs.sh tests/log/test_fonts.log
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_fonts.tex
 
 test-summary: sanitize init-dirs check-fonts
 	@echo "Compiling test_summary.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_summary.tex
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_summary.tex
-	@mv tests/aux/test_summary.pdf tests/pdf/
-	@mv tests/aux/test_summary.log tests/log/
-	@./scripts/parse_logs.sh tests/log/test_summary.log
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_summary.tex
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_summary.tex
 
 test-miniguide: sanitize init-dirs check-fonts
 	@echo "Compiling test_miniguide.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_miniguide.tex
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_miniguide.tex
-	@mv tests/aux/test_miniguide.pdf tests/pdf/
-	@mv tests/aux/test_miniguide.log tests/log/
-	@./scripts/parse_logs.sh tests/log/test_miniguide.log
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_miniguide.tex
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_miniguide.tex
 
 test-images: sanitize init-dirs check-fonts
 	@echo "Compiling test_images.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_images.tex
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_images.tex
-	@mv tests/aux/test_images.pdf tests/pdf/
-	@mv tests/aux/test_images.log tests/log/
-	@./scripts/parse_logs.sh tests/log/test_images.log
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_images.tex
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_images.tex
 
 test-zone-stats: sanitize init-dirs check-fonts
 	@echo "Compiling test_zone_stats.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_zone_stats.tex
-	@$(TEX) $(FLAGS) --output-directory=tests/aux tests/test_zone_stats.tex
-	@mv tests/aux/test_zone_stats.pdf tests/pdf/
-	@mv tests/aux/test_zone_stats.log tests/log/
-	@./scripts/parse_logs.sh tests/log/test_zone_stats.log
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_zone_stats.tex
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_zone_stats.tex
 
-test: test-lua test-fonts test-summary test-suite test-visual test-miniguide test-images
+test: test-lua test-fonts test-summary test-suite test-visual test-miniguide test-images test-zone-stats
 
 production: sanitize init-dirs check-fonts test-lua
 	@echo "Clearing .cgstats cache..."
-	@rm -f production/aux/*.cgstats tests/aux/*.cgstats *.cgstats
+	@rm -f production/production_exports/*.cgstats tests/tests_export/*.cgstats *.cgstats
 	@echo "Compiling serra_do_cuo.tex..."
-	@$(TEX) $(FLAGS) --output-directory=production/aux production/serra_do_cuo.tex
-	@$(TEX) $(FLAGS) --output-directory=production/aux production/serra_do_cuo.tex
-	@mv production/aux/serra_do_cuo.pdf production/pdf/
-	@mv production/aux/serra_do_cuo.log production/log/
-	@./scripts/parse_logs.sh production/log/serra_do_cuo.log
+	@$(TEX) $(FLAGS) --output-directory=production/production_exports production/serra_do_cuo.tex
+	@$(TEX) $(FLAGS) --output-directory=production/production_exports production/serra_do_cuo.tex
 
 clean:
 	@echo "Cleaning auxiliary build artifacts..."
-	@rm -rf production/aux/* doc/export/* *.cgstats production/*.cgstats tests/aux/*.cgstats
+	@rm -rf production/production_exports/* tests/tests_export/* doc/export/* *.cgstats
 
 docs: sanitize init-dirs check-fonts
 	@echo "Compiling doc/cg-documentation.tex..."
 	@$(TEX) $(FLAGS) --output-directory=doc/export doc/cg-documentation.tex
 	@$(TEX) $(FLAGS) --output-directory=doc/export doc/cg-documentation.tex
-	@./scripts/parse_logs.sh doc/export/cg-documentation.log
 
 compress:
 	@echo "Compressing PDF (sRGB, 300 DPI)..."
 	gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/printer \
 	-dNOPAUSE -dBATCH -dQUIET \
 	-dProcessColorModel=/DeviceRGB -dColorConversionStrategy=/sRGB \
-	-sOutputFile=production/pdf/serra_do_cuo_optimized.pdf production/pdf/serra_do_cuo.pdf
+	-sOutputFile=production/production_exports/serra_do_cuo_optimized.pdf production/production_exports/serra_do_cuo.pdf
 	@echo "Compression complete!"
