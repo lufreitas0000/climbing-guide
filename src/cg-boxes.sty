@@ -45,8 +45,8 @@
     \IfFileExists{#3}{%
         \adjustbox{min width=#1, min height=#2}{\includegraphics{#3}}%
     }{%
-        \begin{tcolorbox}[width=#1, height=#2, colback=gray!20, colframe=gray!50, valign=center, halign=center, sharp corners]
-            \sffamily\footnotesize Imagem não encontrada: \detokenize{#3}
+        \begin{tcolorbox}[width=#1, height=#2, colback=black, opacityback=0.5, colframe=black, opacityframe=0.5, valign=center, halign=center, sharp corners]
+            \sffamily\footnotesize\color{white} Imagem não encontrada: \detokenize{#3}
         \end{tcolorbox}%
     }%
 }
@@ -90,11 +90,9 @@
         };
     \end{tikzpicture}%
     \par\vspace*{\dimexpr\CGZoneBannerHeight - 1.5\baselineskip\relax}
-    \ifcsname g_guide_stats_#3\endcsname
-        \vspace{2mm}\noindent
-        \csname g_guide_stats_#3\endcsname
-        \par\vspace{-2mm}%
-    \fi
+    \vspace{2mm}\noindent
+    \CGZoneStats{#3}%
+    \par\vspace{1mm}%
 }
 
 \DeclareDocumentCommand{\DrawSummaryBlock}{ m m m }{%
