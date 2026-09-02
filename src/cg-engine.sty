@@ -151,6 +151,14 @@
     \CGDrawRoute { \l_guide_current_grade_color_tl } { \int_use:N \g_guide_route_int } { #1 } { #2 } { #3 } { #4 } { #5 } { \l_tmpa_tl }
 }
 
+\NewDocumentCommand{\CGRenderZoneStatsInternal}{ m }{
+    \cs_if_exist:cTF { g_guide_stats_#1 } {
+        \use:c { g_guide_stats_#1 }
+    } {
+        \textsl{Gráfico~da~zona~disponível~na~próxima~compilação...}
+    }
+}
+
 \DeclareDocumentCommand{\CGZoneStats}{ m }{
     \str_if_eq:nnTF {#1} {Global} {
         \cs_if_exist:NTF \CGGlobalChart { \CGGlobalChart } { \textsl{Gráfico~global~disponível~na~próxima~compilação...} }
