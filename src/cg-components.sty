@@ -8,14 +8,9 @@
 \usetikzlibrary{calc, positioning, shapes.geometric}
 \RequirePackage{adjustbox}
 
-\ifdefined\CGSummaryBoxSize\relax\else\newlength{\CGSummaryBoxSize}\setlength{\CGSummaryBoxSize}{0.8cm}\fi
-\ifdefined\CGZoneBannerHeight\relax\else\newlength{\CGZoneBannerHeight}\setlength{\CGZoneBannerHeight}{62.5mm}\fi
-\ifdefined\CGMarginWidth\relax\else\newlength{\CGMarginWidth}\setlength{\CGMarginWidth}{15mm}\fi
-\ifdefined\CGVerticalSpacingDefault\relax\else\newlength{\CGVerticalSpacingDefault}\setlength{\CGVerticalSpacingDefault}{4mm}\fi
-
 \newcounter{cgfigure}
 
-% --- Fixed: Native hbox fallback (fcolorbox) preventing nested TikZ corruption ---
+% Native hbox fallbacks to prevent nested TikZ corruption
 \DeclareDocumentCommand{\CGRenderClippedImageInternal}{ m m m }{%
     \IfFileExists{#3}{%
         \adjustbox{width=#1, min height=#2}{\includegraphics{#3}}%
@@ -50,7 +45,7 @@
     \end{tcolorbox}
 }
 
-% --- Fixed: Symmetrical text constraint and explicit color wrapping ---
+% Symmetric wrapper guarantees text visibility and layout limits
 \DeclareDocumentCommand{\CGZoneHeader}{ o m m }{%
     \CGCloseCols
     \clearpage
@@ -145,9 +140,6 @@
     \par\vspace{\CGVerticalSpacingDefault}
 }
 
-% ========================================================
-% LaTeX2e Renderers (Pure Frontend, No expl3 syntax conflicts)
-% ========================================================
 \DeclareDocumentCommand{\CGDrawStars}{ m }{%
     \begin{tikzpicture}[baseline=-0.6ex]
         \foreach \i in {1,...,#1} {
@@ -180,42 +172,30 @@
     \vspace{\CGSectorHeaderSpaceAfter}
 }
 
-\DeclareDocumentCommand{\CGObs}{}{%
-    \textcolor{brand_color}{\CGObservationLabelFont Obs:~}%
-}
+\DeclareDocumentCommand{\CGObs}{}{\textcolor{brand_color}{\CGObservationLabelFont Obs:~}}
 \DeclareDocumentCommand{\obs}{}{\CGObs}
 \DeclareDocumentCommand{\Obs}{}{\CGObs}
 \DeclareDocumentCommand{\CGstar}{ m }{}
 
 \DeclareDocumentCommand{\CGDrawObservation}{ m m }{%
-    \par\vspace{1pt}
-    \noindent
+    \par\vspace{1pt}\noindent
     {%
         \setlength{\baselineskip}{10pt}%
         \textcolor{text_body}{\CGObservationFont
-        \ifx\relax#1\relax\else
-            \makebox[0pt][r]{\makebox[\CGRouteNumberWidth][c]{#1}}%
-        \fi
+        \ifx\relax#1\relax\else\makebox[0pt][r]{\makebox[\CGRouteNumberWidth][c]{#1}}\fi
         #2}\par
     }%
 }
 
 \DeclareDocumentCommand{\CGDrawRoute}{ m m m m m m m m }{%
-    \noindent
-    \CGDrawRouteBadge { #1 } { #2 }
+    \noindent\CGDrawRouteBadge { #1 } { #2 }
     \begin{minipage}[t]{\dimexpr\linewidth-\CGRouteNumberWidth\relax}
         \vspace{0pt}\raggedright\setlength{\baselineskip}{13pt}
         \sbox0{\hspace{0.5em}{\CGGradeFont #4} \textcolor{guide_gray}{|} {\CGGradeFont #5} \ifx\relax#6\relax\else {\CGGradeFont (#6)}\fi}%
         \sbox1{{\CGRouteNameFont #3}}%
         \dimen0=\dimexpr\linewidth-\wd0\relax
-        \ifdim\wd1>\dimen0
-            \resizebox{\dimen0}{\ht1}{\usebox1}%
-        \else
-            \usebox1
-        \fi
-        \usebox0\par
-        {\CGSetterFont #7}
-        #8
+        \ifdim\wd1>\dimen0\resizebox{\dimen0}{\ht1}{\usebox1}\else\usebox1\fi
+        \usebox0\par{\CGSetterFont #7} #8
     \end{minipage}\par\vspace{3mm}
 }
 
@@ -227,31 +207,19 @@
 \DeclareDocumentCommand{\CGDoubleTextSection}{ m +m m +m }{%
     \begin{multicols}{2}
         \ifx\relax#1\relax\else {\color{brand_color}\CGColumnTitleFont #1}\par\vspace{2pt} \fi
-        {\CGBodyFont #2}\par
-        \columnbreak
+        {\CGBodyFont #2}\par\columnbreak
         \ifx\relax#3\relax\else {\color{brand_color}\CGColumnTitleFont #3}\par\vspace{2pt} \fi
         {\CGBodyFont #4}\par
     \end{multicols}
 }
-\endinput
-\usetikzlibrary{shapes.geometric}
 
-\directlua{cg = require("climbingguide")}
-
-\ExplSyntaxOn
-\DeclareDocumentCommand{\CGListStar}{ m }{
+\DeclareDocumentCommand{\CGListStar}{ m }{%
     \begin{tikzpicture}[baseline=-0.6ex]
-        \foreach~\i~in~{1,...,#1}~{
-            \node[star, star~points=5, star~point~ratio=2.25, fill=cg_yellow_soft, inner~sep=0pt, minimum~size=0.65em] at (\i*0.7em-0.7em, 0) {};
+        \foreach \i in {1,...,#1} {
+            \node[star, star points=5, star point ratio=2.25, fill=cg_yellow_soft, inner sep=0pt, minimum size=0.65em] at (\i*0.7em-0.7em, 0) {};
         }
-    \end{tikzpicture}
+    \end{tikzpicture}%
 }
-\ExplSyntaxOff
-
-\NewDocumentCommand{\CGPrintAlphaList}{}{
-    \directlua{cg.print_alpha()}
-}
-\NewDocumentCommand{\CGPrintGradeList}{}{
-    \directlua{cg.print_grade()}
-}
+\DeclareDocumentCommand{\CGPrintAlphaList}{}{\directlua{cg.print_alpha()}}
+\DeclareDocumentCommand{\CGPrintGradeList}{}{\directlua{cg.print_grade()}}
 \endinput
