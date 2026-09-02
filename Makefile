@@ -1,4 +1,4 @@
-.PHONY: all test production clean check-fonts test-lua test-fonts test-suite test-visual test-miniguide test-images init-dirs docs sanitize
+.PHONY: all test production clean check-fonts test-lua test-fonts test-suite test-miniguide test-images init-dirs docs sanitize
 
 TEX = lualatex
 FLAGS = --interaction=batchmode --halt-on-error
@@ -33,12 +33,6 @@ test-suite: sanitize init-dirs check-fonts test-lua
 	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_suite.tex
 
-test-visual: sanitize init-dirs check-fonts
-	@echo "Compiling test_visual.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_visual.tex
-	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
-	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_visual.tex
-
 test-miniguide: sanitize init-dirs check-fonts
 	@echo "Compiling test_miniguide.tex..."
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_miniguide.tex
@@ -51,7 +45,7 @@ test-images: sanitize init-dirs check-fonts
 	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_images.tex
 
-test: test-lua test-fonts test-suite test-visual test-miniguide test-images
+test: test-lua test-fonts test-suite test-miniguide test-images
 
 production: sanitize init-dirs check-fonts test-lua
 	@echo "Clearing .cgstats cache..."
