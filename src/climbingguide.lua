@@ -36,7 +36,7 @@ function M.register_route(id, name, grade, length, gear, setter, obs)
     local len_s = Sanitizer.strip_tex_macros(length)
     local gear_s = Sanitizer.strip_tex_macros(gear)
     local setter_s = Sanitizer.strip_tex_macros(setter)
-    
+
     local stars = 0
     local star_match = string.match(obs or "", "\\CGstar%s*[{]?([1-3])[}]?")
     if star_match then
@@ -128,7 +128,7 @@ function M.eval_tex(g)
         return
     end
     local is_top = (math.abs((max_val % 1) - 0.5) < 0.01 or math.abs((max_val % 1) - 0.6) < 0.01)
-    
+
     local color = "guide_gray"
     local base = "gray"
     if max_val > 0 and max_val < 5 then color, base = "guide_cyan", "cyan"
@@ -141,7 +141,7 @@ function M.eval_tex(g)
 
     if base ~= "gray" and not is_top then color = color .. "!60!black" end
     local top_str = is_top and "_top" or "_bot"
-    
+
     if base ~= "gray" then
         tex.sprint("\\CGEvalGrade{" .. color .. "}{" .. base .. top_str .. "}")
     else
@@ -151,20 +151,20 @@ end
 
 function M.print_alpha()
     local sorted = Sorter.sort_by_alpha(M.routes)
-    tex.sprint("\\begin{longtable}{ p{0.40\\textwidth} >{\\centering\\arraybackslash}p{0.15\\textwidth} >{\\raggedleft\\arraybackslash}p{0.35\\textwidth} }")
+    tex.sprint("\\begin{longtable}{ p{0.45\\linewidth} >{\\centering\\arraybackslash}p{0.12\\linewidth} >{\\raggedleft\\arraybackslash}p{0.32\\linewidth} }")
     for _, v in ipairs(sorted) do
         local star_str = v.stars > 0 and string.format(" \\CGListStar{%d}", v.stars) or ""
-        tex.sprint(string.format("\\CGListRouteNameFont %s%s & \\CGListGradeFont %s & \\CGListSectorFont %s \\\\", v.name, star_str, v.grade, v.sector))
+        tex.sprint(string.format("{\\CGListRouteNameFont %s%s} & {\\CGListGradeFont %s} & {\\CGListSectorFont %s} \\\\", v.name, star_str, v.grade, v.sector))
     end
     tex.sprint("\\end{longtable}")
 end
 
 function M.print_grade()
     local sorted = Sorter.sort_by_grade(M.routes, M.get_val)
-    tex.sprint("\\begin{longtable}{ p{0.40\\textwidth} >{\\centering\\arraybackslash}p{0.15\\textwidth} >{\\raggedleft\\arraybackslash}p{0.35\\textwidth} }")
+    tex.sprint("\\begin{longtable}{ p{0.45\\linewidth} >{\\centering\\arraybackslash}p{0.12\\linewidth} >{\\raggedleft\\arraybackslash}p{0.32\\linewidth} }")
     for _, v in ipairs(sorted) do
         local star_str = v.stars > 0 and string.format(" \\CGListStar{%d}", v.stars) or ""
-        tex.sprint(string.format("\\CGListRouteNameFont %s%s & \\CGListGradeFont %s & \\CGListSectorFont %s \\\\", v.name, star_str, v.grade, v.sector))
+        tex.sprint(string.format("{\\CGListRouteNameFont %s%s} & {\\CGListGradeFont %s} & {\\CGListSectorFont %s} \\\\", v.name, star_str, v.grade, v.sector))
     end
     tex.sprint("\\end{longtable}")
 end
@@ -172,7 +172,7 @@ end
 function M.render_zone_stats(target_zone)
     local z = Sanitizer.strip_tex_macros(target_zone)
     local safe_z = string.gsub(z, "[^%w]", "_")
-    tex.sprint("\\cs_if_exist:cTF { g_guide_stats_" .. safe_z .. " } { \\use:c { g_guide_stats_" .. safe_z .. " } } { \\textsl{Gráfico~da~zona~disponível~na~próxima~compilação...} }")
+    tex.sprint("\\CGRenderZoneStatsInternal{" .. safe_z .. "}")
 end
 
 function M.export_stats_aux(filepath)
@@ -180,7 +180,7 @@ function M.export_stats_aux(filepath)
     if f then
         f:write(string.format("\\gdef\\CGTotalRoutes{%d}\n", #M.routes))
         f:write("\\expandafter\\gdef\\csname CGGlobalChart\\endcsname{" .. ZoneStats.get_chart_string("Global", M.routes, M.get_val) .. "}\n")
-        
+
         for _, z in ipairs(M.all_zones) do
             local safe_z = string.gsub(z, "[^%w]", "_")
             local chart_tikz = ZoneStats.get_chart_string(z, M.routes, M.get_val)
