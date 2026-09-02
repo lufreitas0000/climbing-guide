@@ -1,5 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{cg-components}[2026/09/02 UI Components and Layouts]
+
 \RequirePackage{xparse}
 \RequirePackage{multicol}
 \RequirePackage{tikz}
@@ -50,6 +51,7 @@
     \CGCloseCols
     \clearpage
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#3}}")}
+    
     \phantomsection
     \addcontentsline{toc}{part}{#3}
     \CGSetHeaderLeft{#3}
@@ -103,9 +105,11 @@
      \CGRenderImageInternal{\textwidth}{#2}[#1]%
      \par\vspace{\CGVerticalSpacingDefault}
 }
+
 \DeclareDocumentCommand{\CGFullWidthImage}{ o m }{%
     \CGCloseCols\CGTopoImage[#1]{#2}
 }
+
 \DeclareDocumentCommand{\CGOverlayImage}{ o m }{%
     \CGCloseCols\clearpage\thispagestyle{empty}\noindent\rule{0pt}{0pt}
     \begin{tikzpicture}[remember picture, overlay]
@@ -126,12 +130,14 @@
     \end{tikzpicture}%
     \clearpage
 }
+
 \DeclareDocumentCommand{\CGHalfWidthImage}{ o m }{%
      \ifCGInCols\else\begin{multicols*}{2}\CGInColstrue\fi
      \vspace{2mm}\noindent
      \CGRenderImageInternal{\linewidth}{#2}[#1]%
      \par\vspace{\CGVerticalSpacingDefault}
 }
+
 \DeclareDocumentCommand{\CGRouteImageRight}{ o m +m }{%
     \ifCGInCols\else\begin{multicols*}{2}\CGInColstrue\fi
     \vspace{2mm}\noindent
@@ -194,8 +200,16 @@
         \sbox0{\hspace{0.5em}{\CGGradeFont #4} \textcolor{guide_gray}{|} {\CGGradeFont #5} \ifx\relax#6\relax\else {\CGGradeFont (#6)}\fi}%
         \sbox1{{\CGRouteNameFont #3}}%
         \dimen0=\dimexpr\linewidth-\wd0\relax
-        \ifdim\wd1>\dimen0\resizebox{\dimen0}{\ht1}{\usebox1}\else\usebox1\fi
-        \usebox0\par{\CGSetterFont #7} #8
+        \ifdim\wd1>\dimen0
+            \ifdim\wd1>\dimexpr 1.15\dimen0\relax
+                {\CGRouteNameFont #3}\usebox0
+            \else
+                \resizebox{\dimen0}{\ht1}{\usebox1}\usebox0
+            \fi
+        \else
+            \usebox1\usebox0
+        \fi
+        \par{\CGSetterFont #7} #8
     \end{minipage}\par\vspace{3mm}
 }
 
@@ -220,6 +234,8 @@
         }
     \end{tikzpicture}%
 }
+
 \DeclareDocumentCommand{\CGPrintAlphaList}{}{\directlua{cg.print_alpha()}}
 \DeclareDocumentCommand{\CGPrintGradeList}{}{\directlua{cg.print_grade()}}
+
 \endinput
