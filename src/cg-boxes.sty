@@ -26,6 +26,35 @@
 
 \newcounter{cgfigure}
 
+\makeatletter
+% Helper for standard inline images
+\DeclareDocumentCommand{\CG@RenderImage}{ m m o }{
+    \IfFileExists{#2}{
+        \includegraphics[width=#1]{#2}
+    }{
+        \begin{tcolorbox}[width=#1, colback=gray!20, colframe=gray!50, valign=center, halign=center, sharp corners]
+            \sffamily\footnotesize Imagem não encontrada: \detokenize{#2}
+        \end{tcolorbox}
+    }
+    \IfValueT{#3}{
+        \par\vspace{2pt}\noindent
+        \stepcounter{cgfigure}
+        {\CGItalicFont\textcolor{brand_color}{Figura \thecgfigure:} #3}
+    }
+}
+
+% Helper for absolute-positioned clipped images
+\DeclareDocumentCommand{\CG@RenderClippedImage}{ m m m }{
+    \IfFileExists{#3}{
+        \adjustbox{width=#1, min height=#2}{\includegraphics{#3}}
+    }{
+        \begin{tcolorbox}[width=#1, height=#2, colback=gray!20, colframe=gray!50, valign=center, halign=center, sharp corners]
+            \sffamily\footnotesize Imagem não encontrada: \detokenize{#3}
+        \end{tcolorbox}
+    }
+}
+\makeatother
+
 \DeclareDocumentCommand{\CGObsBox}{ m }{
     \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp corners]
         \color{text_body}\CGBodyFont #1
@@ -35,25 +64,18 @@
 \DeclareDocumentCommand{\CGZoneHeader}{ o m m }{
     \clearpage
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#3}}")}
-
     \phantomsection
     \addcontentsline{toc}{part}{#3}
-
     \CGSetHeaderLeft{#3}
     \CGSetHeaderRight{}
-
-    \noindent\rule{0pt}{0pt}% Force absolute origin sync
+    
+    \noindent\rule{0pt}{0pt}
     \begin{tikzpicture}[remember picture, overlay]
-        % 1. Clip the precise boundary of the top banner
         \clip (current page.north west) rectangle ($ (current page.north east) + (0, -\CGZoneBannerHeight) $);
-        
-        % 2. Anchor the scaled image dead center. Adjustbox handles object-fit: cover natively
         \node[anchor=center, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (0.5\paperwidth, -0.5\CGZoneBannerHeight) $) {
-            \adjustbox{width=\paperwidth, min height=\CGZoneBannerHeight}{\includegraphics{#2}}
+            \CG@RenderClippedImage{\paperwidth}{\CGZoneBannerHeight}{#2}
         };
-
         \fill[brand_color] ($ (current page.north west) + (0, -\CGZoneBannerHeight + 8mm) $) rectangle ($ (current page.north west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 8mm) $);
-
         \node[anchor=west, text=white, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
             \IfValueTF{#1}{
                 \begin{minipage}{0.75\textwidth}
@@ -66,7 +88,6 @@
         };
     \end{tikzpicture}%
     \par\vspace*{60.5mm}
-
     \ifcsname g_guide_stats_#3\endcsname
         \vspace{2mm}\noindent
         \csname g_guide_stats_#3\endcsname
@@ -94,12 +115,7 @@
 
 \DeclareDocumentCommand{\CGTopoImage}{ o m }{
      \vspace{2mm}\noindent
-     \includegraphics[width=\textwidth]{#2}
-     \IfValueT{#1}{
-         \par\vspace{2pt}\noindent
-         \stepcounter{cgfigure}
-         {\CGItalicFont\textcolor{brand_color}{Figura \thecgfigure:} #1}
-     }
+     \CG@RenderImage{\textwidth}{#2}[#1]
      \par\vspace{\CGVerticalSpacingDefault}
 }
 
@@ -110,16 +126,12 @@
 \DeclareDocumentCommand{\CGOverlayImage}{ o m }{
     \clearpage
     \thispagestyle{empty}
-    \noindent\rule{0pt}{0pt}% Force TeX into horizontal mode to secure absolute page coordinates
+    \noindent\rule{0pt}{0pt}
     \begin{tikzpicture}[remember picture, overlay]
-        % 1. Clip to the full A5 page
         \clip (current page.north west) rectangle (current page.south east);
-        
-        % 2. Anchor the scaled image dead center. Adjustbox handles object-fit: cover
         \node[anchor=center, inner sep=0pt, outer sep=0pt] at (current page.center) {
-            \adjustbox{width=\paperwidth, min height=\paperheight}{\includegraphics{#2}}
+            \CG@RenderClippedImage{\paperwidth}{\paperheight}{#2}
         };
-        
         \IfValueT{#1}{
             \stepcounter{cgfigure}
             \node[anchor=south west, inner sep=0pt, outer sep=0pt] at ($ (current page.south west) + (\CGMarginWidth, \CGMarginWidth) $) {
@@ -135,12 +147,7 @@
 \DeclareDocumentCommand{\CGHalfWidthImage}{ o m }{
      \vspace{2mm}\noindent
      \begin{minipage}{0.48\textwidth}
-         \includegraphics[width=\linewidth]{#2}
-         \IfValueT{#1}{
-             \par\vspace{2pt}\noindent
-             \stepcounter{cgfigure}
-             {\CGItalicFont\textcolor{brand_color}{Figura \thecgfigure:} #1}
-         }
+         \CG@RenderImage{\linewidth}{#2}[#1]
      \end{minipage}
      \par\vspace{\CGVerticalSpacingDefault}
 }
@@ -153,14 +160,8 @@
     \end{minipage}\hfill
     \begin{minipage}[t]{0.48\linewidth}
         \vspace{0pt}%
-        \includegraphics[width=\linewidth]{#2}
-        \IfValueT{#1}{
-            \par\vspace{2pt}\noindent
-            \stepcounter{cgfigure}
-            {\CGItalicFont\textcolor{brand_color}{Figura \thecgfigure:} #1}
-        }
+        \CG@RenderImage{\linewidth}{#2}[#1]
     \end{minipage}
     \par\vspace{\CGVerticalSpacingDefault}
 }
-
 \endinput
