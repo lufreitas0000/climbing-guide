@@ -9,15 +9,11 @@
 % LaTeX2e Renderers (Pure Frontend, No expl3 syntax conflicts)
 % ========================================================
 \DeclareDocumentCommand{\CGDrawStars}{ m }{%
-    \makebox[0pt][r]{%
-        \makebox[\CGRouteNumberWidth][c]{%
-            \begin{tikzpicture}[baseline=-0.6ex]
-                \foreach \i in {1,...,#1} {
-                    \node[star, star points=5, star point ratio=2.25, fill=cg_yellow_soft, inner sep=0pt, minimum size=0.8em] at (\i*0.8em-0.8em, 0) {};
-                }
-            \end{tikzpicture}%
-        }%
-    }%
+    \begin{tikzpicture}[baseline=-0.6ex]
+        \foreach \i in {1,...,#1} {
+            \node[star, star points=5, star point ratio=2.25, fill=cg_yellow_soft, inner sep=0pt, minimum size=0.8em] at (\i*0.8em-0.8em, 0) {};
+        }
+    \end{tikzpicture}%
 }
 
 \DeclareDocumentCommand{\CGDrawRouteBadge}{ m m }{%
@@ -55,8 +51,12 @@
     \par\vspace{1pt}
     \noindent
     {%
-        \setlength{\baselineskip}{10pt}
-        \textcolor{text_body}{\CGObservationFont #1#2}\par
+        \setlength{\baselineskip}{10pt}%
+        \textcolor{text_body}{\CGObservationFont
+        \ifx\relax#1\relax\else
+            \makebox[0pt][r]{\makebox[\CGRouteNumberWidth][c]{#1}}%
+        \fi
+        #2}\par
     }%
 }
 
