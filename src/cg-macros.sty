@@ -6,10 +6,9 @@
 \RequirePackage{tcolorbox}
 
 % ========================================================
-% LaTeX2e Renderers (ExplSyntaxOff: Safeguards PGF space parsing)
+% LaTeX2e Renderers (ExplSyntaxOff: Safeguards PGF spaces)
 % ========================================================
-\makeatletter
-\DeclareDocumentCommand{\CG@DrawStars}{ m }{
+\DeclareDocumentCommand{\CGDrawStarsInternal}{ m }{
     \makebox[0pt][r]{
         \begin{tikzpicture}[baseline=-0.6ex]
             \foreach \i in {1,...,#1} {
@@ -19,7 +18,7 @@
     }
 }
 
-\DeclareDocumentCommand{\CG@DrawRouteBadge}{ m m }{
+\DeclareDocumentCommand{\CGDrawRouteBadgeInternal}{ m m }{
     \begin{minipage}[t]{\CGRouteNumberWidth}
         \vspace{0pt}
         \begin{tikzpicture}[baseline=(current bounding box.north)]
@@ -29,7 +28,7 @@
     \end{minipage}%
 }
 
-\DeclareDocumentCommand{\CG@DrawSectorHeader}{ m m m m }{
+\DeclareDocumentCommand{\CGDrawSectorHeaderInternal}{ m m m m }{
     \vspace{\CGSectorHeaderSpaceBefore}\noindent
     \begin{tcolorbox}[enhanced, boxrule=0pt, frame hidden, interior hidden, borderline west={3mm}{0pt}{#2}, left=4mm, right=0mm, top=0mm, bottom=0mm, sharp corners]
         #1
@@ -42,7 +41,6 @@
     \end{tcolorbox}
     \vspace{\CGSectorHeaderSpaceAfter}
 }
-\makeatother
 
 % ========================================================
 % LaTeX3 Logic & Macros (ExplSyntaxOn)
@@ -70,7 +68,7 @@
         \regex_extract_once:nnNTF { \A \s* \c{CGstar} \s* (?:\cB.)? \s* ([1-3]) \s* (?:\cE.)? \s* (.*) \Z } { #1 } \l_tmpa_seq
         {
             \tl_set:Nx \l_tmpa_tl { \seq_item:Nn \l_tmpa_seq { 2 } }
-            \CG@DrawStars { \l_tmpa_tl }
+            \CGDrawStarsInternal { \l_tmpa_tl }
             \seq_item:Nn \l_tmpa_seq { 3 }
         }
         {
@@ -112,7 +110,7 @@
     \int_gzero:N \g_guide_red_top_int \int_gzero:N \g_guide_red_bot_int
     \int_gzero:N \g_guide_gray_int
 
-    \CG@DrawSectorHeader { \tl_if_empty:nF {#1} { {\color{#2}\CGSectorHeaderLabelFont #1}\\[2pt] } } {#2} {#3} {
+    \CGDrawSectorHeaderInternal { \tl_if_empty:nF {#1} { {\color{#2}\CGSectorHeaderLabelFont #1}\\[2pt] } } {#2} {#3} {
         \cs_if_exist:cT { GuideSectorSummary \int_use:N \g_guide_sector_int } {
             \use:c { GuideSectorSummary \int_use:N \g_guide_sector_int }
         }
@@ -157,7 +155,7 @@
     \directlua{cg.eval_tex("\luaescapestring{\unexpanded{#2}}")}
 
     \noindent
-    \CG@DrawRouteBadge { \l_guide_current_grade_color_tl } { \int_use:N \g_guide_route_int }
+    \CGDrawRouteBadgeInternal { \l_guide_current_grade_color_tl } { \int_use:N \g_guide_route_int }
     \begin{minipage}[t]{\dimexpr\linewidth-\CGRouteNumberWidth\relax}
         \vspace{0pt}\raggedright\setlength{\baselineskip}{13pt}
         \sbox0{\hspace{0.5em}{\CGGradeFont #2} \textcolor{guide_gray}{|} {\CGGradeFont #3} \tl_if_empty:nF {#4} { {\CGGradeFont (#4)} }}%
