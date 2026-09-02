@@ -1,24 +1,36 @@
-\documentclass{article}
+\documentclass[11pt]{article}
 \usepackage{climbingguide}
+\usepackage{mwe} % For placeholder images
 
 \begin{document}
-\CGSectorHeader{guide_yellow}{Generic Route Testing}
 
-\begin{multicols}{2}
-    \CGRoute{Via Muito Longa Para Teste}{VIIb}{15m}{Livre}{Fulano e Ciclano}
-    \CGRoute{Complexa Mista}{5° VIIb A2 E4}{100m}{Móvel}{Beltrano}
-    \CGRoute{Multi}{5° Vsup (A0/VIIb) E4}{100m}{Mista}{Alguém}
-    \CGRoute{Via Antiga}{Proj.}{20m}{Desconhecido}{Autor Anônimo}
-\end{multicols}
+\CGZoneHeader{example-image-a.jpg}{ZONA DE STRESS E LIMITES}
 
-\vspace{1cm}
-\CGTitleFont\Large Listagem Alfabética\par\vspace{2mm}
-\CGBaseFont\normalsize
-\CGPrintAlphaList
+\CGSectorHeader{guide_red}{Setor de Overflows e Caracteres Especiais}
+\begin{CGSectorRoutes}
+    % 1. Special Characters Test (Validating Lua JSON/TXT export safety)
+    \CGRoute{Fenda 100\% \& \$10}{6sup}{20m}{Móvel}{Caçador\_de\_Mitos}[\CGstar3 Atenção à laca \#1 e à proteção em fenda profunda.]
+
+    % 2. String Overflow: Route Name & Setter (Validating minipage bounds)
+    \CGRoute{Esta é uma via com um nome propositalmente longo e exagerado para forçar a quebra de linha no layout}{7a}{15m}{Mista}{Um conquistador com um nome gigantesco que também deve quebrar de forma graciosa na coluna}[Uma observação curta de teste.]
+
+    % 3. String Overflow: Observation Block (Validating hanging indents)
+    \CGRoute{Resistência de Materiais}{8a}{35m}{Livre}{Autor Anônimo}[\CGstar2 Esta observação contém um volume massivo de texto. O objetivo é testar o recuo do bloco de notas em relação ao selo de graduação numérico. Se a macro \LaTeX\ estiver bem encapsulada, o texto respeitará a margem direita da página e manterá o alinhamento esquerdo paralelo ao nome da via, sem invadir o espaço do badge colorido à esquerda.]
+\end{CGSectorRoutes}
 
 \clearpage
-\CGTitleFont\Large Listagem por Dificuldade\par\vspace{2mm}
-\CGBaseFont\normalsize
-\CGPrintGradeList
+\CGSectorHeader{guide_purple}{Setor de Sobrecarga Volumétrica}
+% 4. Volumetric Load: Forcing Multicolumn breaks and Lua table scaling
+\ExplSyntaxOn
+\begin{CGSectorRoutes}[2]
+    \int_step_inline:nn {45} {
+        \CGRoute{Via~Sintética~#1}{5sup}{10m}{Fixa}{Test~Runner}[\CGstar1 Teste~de~carga~para~verificação~de~quebra~de~coluna~e~página~#1.]
+    }
+\end{CGSectorRoutes}
+\ExplSyntaxOff
+
+\clearpage
+\CGTextSingleColumn{Índice Alfabético (Teste de Quebra de Longtable)}{}
+\CGPrintAlphaList
 
 \end{document}
