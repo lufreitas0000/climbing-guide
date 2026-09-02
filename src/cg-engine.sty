@@ -150,30 +150,33 @@
 
     \CGDrawRoute { \l_guide_current_grade_color_tl } { \int_use:N \g_guide_route_int } { #1 } { #2 } { #3 } { #4 } { #5 } { \l_tmpa_tl }
 }
-\ExplSyntaxOff
 
-% Fallback to native TeX primitives for Lua evaluation
-\NewDocumentCommand{\CGRenderZoneStatsInternal}{ m }{%
+% Re-integrate stats generation securely inside the expl3 tokenization scope
+\NewDocumentCommand{\CGRenderZoneStatsInternal}{ m }{
     \ifcsname g_guide_stats_#1\endcsname
         \csname g_guide_stats_#1\endcsname
     \else
-        \textsl{Gráfico~da~zona~disponível~na~próxima~compilação...}%
+        \textsl{Gráfico~da~zona~disponível~na~próxima~compilação...}
     \fi
 }
 
-\DeclareDocumentCommand{\CGZoneStats}{ m }{%
-    \ExplSyntaxOn\str_if_eq:nnTF {#1} {Global}\ExplSyntaxOff
-    {%
+\DeclareDocumentCommand{\CGZoneStats}{ m }{
+    \str_if_eq:nnTF {#1} {Global}
+    {
         \ifcsname CGGlobalChart\endcsname
             \CGGlobalChart
         \else
-            \textsl{Gráfico~global~disponível~na~próxima~compilação...}%
+            \textsl{Gráfico~global~disponível~na~próxima~compilação...}
         \fi
-    }{%
-        \directlua{cg.render_zone_stats("\luaescapestring{\unexpanded{#1}}")}%
-    }%
+    }
+    {
+        \directlua{cg.render_zone_stats("\luaescapestring{\unexpanded{#1}}")}
+    }
 }
 
 \DeclareDocumentCommand{\CGToday}{}{\directlua{cg.print_today()}}
+
+\ExplSyntaxOff
+
 \providecommand{\CGTotalRoutes}{?}
 \endinput
