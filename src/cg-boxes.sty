@@ -42,14 +42,12 @@
     \CGSetHeaderLeft{#3}
     \CGSetHeaderRight{}
 
+    \noindent
     \begin{tikzpicture}[remember~picture, overlay]
-        \clip (current~page.north~west) rectangle ($ (current~page.north~east) + (0, -\CGZoneBannerHeight) $);
-        \node[anchor=north, inner~sep=0pt] at ($ (current~page.north) + (0, 0) $) {
-            \includegraphics[width=\paperwidth]{#2}
-        };
-    \end{tikzpicture}
-    \begin{tikzpicture}[remember~picture, overlay]
+        \fill [fill~image={#2}] (current~page.north~west) rectangle ($ (current~page.north~east) + (0, -\CGZoneBannerHeight) $);
+
         \fill[brand_color] ($ (current~page.north~west) + (0, -\CGZoneBannerHeight + 8mm) $) rectangle ($ (current~page.north~west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 8mm) $);
+
         \node[anchor=west, text=white, inner~sep=0pt] at ($ (current~page.north~west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
             \IfValueTF{#1}{
                 \begin{minipage}{0.75\textwidth}
@@ -60,24 +58,14 @@
                 \CGZoneTitleFont #3
             }
         };
-    \end{tikzpicture}
-    \vspace*{60.5mm}
+    \end{tikzpicture}%
+    \vspace*{60.5mm}\par
 
     \cs_if_exist:cT { g_guide_stats_#3 } {
         \vspace{2mm}\noindent
         \use:c { g_guide_stats_#3 }
         \par\vspace{4mm}
     }
-}
-
-\DeclareDocumentCommand{\DrawSummaryBlock}{ m m m }{
-    \begin{tikzpicture}[baseline=0pt]
-        \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
-        \fill[#1] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
-        \fill[#1!60!black] (0,0) -- (\CGSummaryBoxSize,0) -- (\CGSummaryBoxSize,\CGSummaryBoxSize) -- cycle;
-        \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.33*\CGSummaryBoxSize, 0.67*\CGSummaryBoxSize) {#2};
-        \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.67*\CGSummaryBoxSize, 0.33*\CGSummaryBoxSize) {#3};
-    \end{tikzpicture}\hspace{0.0pt}%
 }
 
 \DeclareDocumentCommand{\DrawSummaryBlockSingle}{ m m }{
@@ -105,21 +93,19 @@
 
 \DeclareDocumentCommand{\CGOverlayImage}{ o m }{
     \clearpage
-    \mbox{}%
+    \thispagestyle{empty}
+    \mbox{}% Force TeX into horizontal mode to secure absolute page coordinates
     \begin{tikzpicture}[remember~picture, overlay]
-        \clip (current~page.north~west) rectangle (current~page.south~east);
-        \node[anchor=center, inner~sep=0pt] at (current~page.center) {
-            \includegraphics[min~width=\paperwidth, min~height=\paperheight, keepaspectratio]{#2}
-        };
+        \fill [fill~image={#2}] (current~page.north~west) rectangle (current~page.south~east);
         \IfValueT{#1}{
             \stepcounter{cgfigure}
             \node[anchor=south~west, inner~sep=0pt] at ($ (current~page.south~west) + (\CGMarginWidth, \CGMarginWidth) $) {
-                \begin{tcolorbox}[colback=black, opacityback=0.5, colframe=black, opacityframe=0.5, boxrule=0pt, arc=0pt, width=\dimexpr\paperwidth-2\CGMarginWidth\relax, fontupper=\color{white}\CGItalicFont, sharp~corners]
+                \begin{tcolorbox}[colback=black, opacityback=0.3, colframe=black, opacityframe=0.3, boxrule=0pt, arc=0pt, width=\dimexpr\paperwidth-2\CGMarginWidth\relax, fontupper=\color{white}\CGItalicFont, sharp~corners]
                     \textbf{Figura~{\thecgfigure}:}~#1
                 \end{tcolorbox}
             };
         }
-    \end{tikzpicture}
+    \end{tikzpicture}%
     \clearpage
 }
 
