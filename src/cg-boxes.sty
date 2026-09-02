@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{cg-boxes}[2026/08/29 Boxes]
+\ProvidesPackage{cg-boxes}[2026/09/02 Boxes]
 \RequirePackage{xparse}
 \RequirePackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
@@ -26,7 +26,6 @@
 
 \newcounter{cgfigure}
 
-% Internal Helpers (No @ to avoid catcode issues)
 \DeclareDocumentCommand{\CGRenderImageInternal}{ m m o }{
     \IfFileExists{#2}{
         \includegraphics[width=#1]{#2}
@@ -68,11 +67,19 @@
     
     \noindent\rule{0pt}{0pt}
     \begin{tikzpicture}[remember picture, overlay]
-        \clip (current page.north west) rectangle ($ (current page.north east) + (0, -\CGZoneBannerHeight) $);
-        \node[anchor=center, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (0.5\paperwidth, -0.5\CGZoneBannerHeight) $) {
-            \CGRenderClippedImageInternal{\paperwidth}{\CGZoneBannerHeight}{#2}
-        };
-        \fill[brand_color] ($ (current page.north west) + (0, -\CGZoneBannerHeight + 8mm) $) rectangle ($ (current page.north west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 8mm) $);
+        \begin{scope}
+            \clip (current page.north west) rectangle ($ (current page.north east) + (0, -\CGZoneBannerHeight) $);
+            \node[anchor=center, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (0.5\paperwidth, -0.5\CGZoneBannerHeight) $) {
+                \CGRenderClippedImageInternal{\paperwidth}{\CGZoneBannerHeight}{#2}
+            };
+        \end{scope}
+        
+        % Explictly hide the overflow that leaks due to PDF bounding box caches
+        \fill[white] (current page.north west) ++(0, -\CGZoneBannerHeight) rectangle (current page.south east);
+
+        % Thicker, vertically centered red banner bar (30mm total thickness)
+        \fill[brand_color] ($ (current page.north west) + (0, -\CGZoneBannerHeight + 15mm) $) rectangle ($ (current page.north west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 15mm) $);
+        
         \node[anchor=west, text=white, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
             \IfValueTF{#1}{
                 \begin{minipage}{0.75\textwidth}
@@ -125,10 +132,12 @@
     \thispagestyle{empty}
     \noindent\rule{0pt}{0pt}
     \begin{tikzpicture}[remember picture, overlay]
-        \clip (current page.north west) rectangle (current page.south east);
-        \node[anchor=center, inner sep=0pt, outer sep=0pt] at (current page.center) {
-            \CGRenderClippedImageInternal{\paperwidth}{\paperheight}{#2}
-        };
+        \begin{scope}
+            \clip (current page.north west) rectangle (current page.south east);
+            \node[anchor=center, inner sep=0pt, outer sep=0pt] at (current page.center) {
+                \CGRenderClippedImageInternal{\paperwidth}{\paperheight}{#2}
+            };
+        \end{scope}
         \IfValueT{#1}{
             \stepcounter{cgfigure}
             \node[anchor=south west, inner sep=0pt, outer sep=0pt] at ($ (current page.south west) + (\CGMarginWidth, \CGMarginWidth) $) {
