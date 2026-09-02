@@ -26,9 +26,8 @@
 
 \newcounter{cgfigure}
 
-\makeatletter
-% Helper for standard inline images
-\DeclareDocumentCommand{\CG@RenderImage}{ m m o }{
+% Internal Helpers (No @ to avoid catcode issues)
+\DeclareDocumentCommand{\CGRenderImageInternal}{ m m o }{
     \IfFileExists{#2}{
         \includegraphics[width=#1]{#2}
     }{
@@ -43,8 +42,7 @@
     }
 }
 
-% Helper for absolute-positioned clipped images
-\DeclareDocumentCommand{\CG@RenderClippedImage}{ m m m }{
+\DeclareDocumentCommand{\CGRenderClippedImageInternal}{ m m m }{
     \IfFileExists{#3}{
         \adjustbox{width=#1, min height=#2}{\includegraphics{#3}}
     }{
@@ -53,7 +51,6 @@
         \end{tcolorbox}
     }
 }
-\makeatother
 
 \DeclareDocumentCommand{\CGObsBox}{ m }{
     \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp corners]
@@ -73,7 +70,7 @@
     \begin{tikzpicture}[remember picture, overlay]
         \clip (current page.north west) rectangle ($ (current page.north east) + (0, -\CGZoneBannerHeight) $);
         \node[anchor=center, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (0.5\paperwidth, -0.5\CGZoneBannerHeight) $) {
-            \CG@RenderClippedImage{\paperwidth}{\CGZoneBannerHeight}{#2}
+            \CGRenderClippedImageInternal{\paperwidth}{\CGZoneBannerHeight}{#2}
         };
         \fill[brand_color] ($ (current page.north west) + (0, -\CGZoneBannerHeight + 8mm) $) rectangle ($ (current page.north west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 8mm) $);
         \node[anchor=west, text=white, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
@@ -115,7 +112,7 @@
 
 \DeclareDocumentCommand{\CGTopoImage}{ o m }{
      \vspace{2mm}\noindent
-     \CG@RenderImage{\textwidth}{#2}[#1]
+     \CGRenderImageInternal{\textwidth}{#2}[#1]
      \par\vspace{\CGVerticalSpacingDefault}
 }
 
@@ -130,7 +127,7 @@
     \begin{tikzpicture}[remember picture, overlay]
         \clip (current page.north west) rectangle (current page.south east);
         \node[anchor=center, inner sep=0pt, outer sep=0pt] at (current page.center) {
-            \CG@RenderClippedImage{\paperwidth}{\paperheight}{#2}
+            \CGRenderClippedImageInternal{\paperwidth}{\paperheight}{#2}
         };
         \IfValueT{#1}{
             \stepcounter{cgfigure}
@@ -147,7 +144,7 @@
 \DeclareDocumentCommand{\CGHalfWidthImage}{ o m }{
      \vspace{2mm}\noindent
      \begin{minipage}{0.48\textwidth}
-         \CG@RenderImage{\linewidth}{#2}[#1]
+         \CGRenderImageInternal{\linewidth}{#2}[#1]
      \end{minipage}
      \par\vspace{\CGVerticalSpacingDefault}
 }
@@ -160,7 +157,7 @@
     \end{minipage}\hfill
     \begin{minipage}[t]{0.48\linewidth}
         \vspace{0pt}%
-        \CG@RenderImage{\linewidth}{#2}[#1]
+        \CGRenderImageInternal{\linewidth}{#2}[#1]
     \end{minipage}
     \par\vspace{\CGVerticalSpacingDefault}
 }
