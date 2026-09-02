@@ -1,0 +1,30 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cg-backmatter}[2026/09/02 Backmatter Management]
+
+\RequirePackage{xparse}
+\RequirePackage{multicol}
+\RequirePackage{cg-theme}
+
+\DeclareDocumentCommand{\CGBackmatterChapter}{ O{1} m +m }{%
+    \clearpage
+    \CGCloseCols
+    \phantomsection
+    \addcontentsline{toc}{section}{#2}
+    \CGSetHeaderRight{#2}
+    
+    \vspace*{2em}\noindent
+    {\color{brand_color}\CGSectorTitleFont #2}\par\vspace{1.5em}
+    
+    \ifnum#1>1
+        \begin{multicols}{#1}
+        {\CGBodyFont #3}
+        \end{multicols}
+    \else
+        {\CGBodyFont #3}
+    \fi
+}
+
+\DeclareDocumentCommand{\CGPrintAlphaList}{}{\directlua{cg.print_alpha()}}
+\DeclareDocumentCommand{\CGPrintGradeList}{}{\directlua{cg.print_grade()}}
+
+\endinput
