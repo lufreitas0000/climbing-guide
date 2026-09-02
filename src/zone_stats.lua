@@ -23,26 +23,22 @@ function ZoneStats.get_chart_string(target_zone, routes, get_val_func)
     end
 
     local tiers = {"guide_cyan", "guide_green", "guide_yellow", "guide_orange", "guide_red", "guide_purple", "guide_gray"}
-    
     local labels = {
         guide_cyan = "\\makebox[0pt][r]{$\\leq$~}IV", 
-        guide_green = "V", 
-        guide_yellow = "VI", 
-        guide_orange = "VII", 
-        guide_red = "VIII", 
-        guide_purple = "\\makebox[0pt][r]{$\\geq$~}IX", 
-        guide_gray = "?"
+        guide_green = "V", guide_yellow = "VI", guide_orange = "VII", guide_red = "VIII", 
+        guide_purple = "\\makebox[0pt][r]{$\\geq$~}IX", guide_gray = "?"
     }
     
-    local out = "\\begin{tikzpicture}[baseline=0pt]\n"
-    out = out .. "\\draw[help lines, color=gray!30, dashed] (0,0) -- (7.0, 0);\n"
+    local out = "\\begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=4pt, left=4mm, right=4mm, top=4mm, bottom=4mm]\n"
+    out = out .. "\\begin{center}\n\\begin{tikzpicture}[baseline=0pt]\n"
+    out = out .. "\\draw[help lines, color=gray!40, dashed] (0,0) -- (7.0, 0);\n"
     
     local bar_width = 0.6
     local bar_spacing = 0.9
     local start_x = 0.5
     local unit_scale = 0.08
-
     local x = start_x
+
     for _, tier in ipairs(tiers) do
         local count = counts[tier]
         local h = count * unit_scale
@@ -55,12 +51,11 @@ function ZoneStats.get_chart_string(target_zone, routes, get_val_func)
         else
             out = out .. string.format("\\node[above, font=\\tiny, text=gray] at (%.2f, %.2f) {0};\n", x + (bar_width / 2), h)
         end
-        
         out = out .. string.format("\\node[below, font=\\tiny\\sffamily] at (%.2f, -0.05) {%s};\n", x + (bar_width / 2), labels[tier])
         x = x + bar_spacing
     end
     
-    out = out .. "\\end{tikzpicture}"
+    out = out .. "\\end{tikzpicture}\n\\end{center}\n\\end{tcolorbox}"
     return out
 end
 
