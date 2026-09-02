@@ -1,39 +1,51 @@
 \documentclass[11pt]{article}
 \usepackage{climbingguide}
-
 \begin{document}
-
 \CGOverlayImage[Testando a legenda com opacidade de 50\% sobre a imagem de bleed completo, garantindo que não vaze das margens de A5.]{example-image-a.jpg}
 
 \CGZoneHeader{example-image-b.jpg}{ZONA TESTE V1.6}
+% Test: Zone Stats rendering
+\CGTextSingleColumn{Estatísticas de vias da zona}{}
+\noindent\CGZoneStats{ZONA TESTE V1.6}
+\vspace{2em}
 
 \CGSectorHeader{guide_red}{SETOR ESTRELADO}
-
 \begin{CGSectorRoutes}
     \CGRoute{VIA NORMAL}{5sup}{10m}{Móvel}{João e Maria}[Esta via não possui estrelas, apenas observações clássicas.]
     \CGRoute{VIA BOA}{6sup}{15m}{Fixa}{Luiza}[\CGstar1 Uma via legal, vale a pena entrar.]
     \CGRoute{VIA MUITO BOA}{7a}{20m}{Mista}{Carlos}[\CGstar2 Clássica do setor com aderência técnica.]
     \CGRoute{VIA IMPERDÍVEL}{8a}{25m}{Fixa}{Ana}[\CGstar3 A melhor via de todas! Proteções longe, mas seguras.]
-    \CGRoute{VIA DE TEXTO LONGO}{7c}{12m}{Móvel}{José}[\CGstar2 Esta é uma via com um texto de observação bastante longo para podermos verificar o comportamento do recuo da estrela na margem esquerda. A segunda e a terceira linha de texto devem estar perfeitamente alinhadas com a primeira linha de texto, enquanto as estrelas permanecem flutuando na margem esquerda.]
+    \CGRoute{VIA DE TEXTO LONGO}{7c}{12m}{Móvel}{José}[\CGstar2 Esta é uma via com um texto de observação bastante longo para podermos verificar o comportamento do recuo da estrela na margem esquerda.]
 \end{CGSectorRoutes}
 
 \CGSectorHeader{guide_green}{SETOR COM IMAGEM}
-
 \CGRouteImageRight[Croqui do setor com imagem à direita, forçando o empilhamento das rotas à esquerda.]{example-image-c.jpg}{
     \begin{CGSectorRoutes}
-        \CGRoute{FISSURA CURTA}{5}{10m}{Móvel}{Pedro}[\CGstar2 Esta é uma via com um texto de observação bastante longo para podermos verificar o comportamento do recuo da estrela na margem esquerda. A segunda e a terceira linha de texto devem estar perfeitamente alinhadas com a primeira linha de texto, enquanto as estrelas permanecem flutuando na margem esquerda.]
-        \CGRoute{PLACA DE AGARRA}{6}{15m}{Móvel}{Maria}[\CGstar2 Esta é uma via com um texto de observação bastante longo para podermos verificar o comportamento do recuo da estrela na margem esquerda. A segunda e a terceira linha de texto devem estar perfeitamente alinhadas com a primeira linha de texto, enquanto as estrelas permanecem flutuando na margem esquerda.]
-        \CGRoute{TETO DE NEGATIVO}{7a}{12m}{Fixa}{Rafael}[\CGstar2 Esta é uma via com um texto de observação bastante longo para podermos verificar o comportamento do recuo da estrela na margem esquerda. A segunda e a terceira linha de texto devem estar perfeitamente alinhadas com a primeira linha de texto, enquanto as estrelas permanecem flutuando na margem esquerda.]
+        \CGRoute{FISSURA CURTA}{5}{10m}{Móvel}{Pedro}[\CGstar2 Observação longa de teste de layout e quebra.]
+        \CGRoute{PLACA DE AGARRA}{6}{15m}{Móvel}{Maria}[\CGstar2 Observação longa de teste de layout e quebra.]
+        \CGRoute{TETO DE NEGATIVO}{7a}{12m}{Fixa}{Rafael}[\CGstar2 Observação longa de teste de layout e quebra.]
     \end{CGSectorRoutes}
 }
 
 \clearpage
 \CGCloseCols
+
+% Test: Manual Summary Block Fallback
+\CGTextSingleColumn{Teste Isolado de Summary Blocks}{}
+\mbox{%
+    \DrawSummaryBlock{guide_cyan}{0}{0}%
+    \DrawSummaryBlock{guide_green}{0}{0}%
+    \DrawSummaryBlock{guide_yellow}{1}{3}%
+    \DrawSummaryBlock{guide_orange}{11}{9}%
+    \DrawSummaryBlock{guide_red}{2}{0}%
+    \DrawSummaryBlock{guide_purple}{0}{0}%
+    \DrawSummaryBlockSingle{guide_gray}{4}%
+}
+\vspace{1cm}
+
 \CGTextSingleColumn{Índice Alfabético}{}
 \CGPrintAlphaList
-
 \vspace{1cm}
 \CGTextSingleColumn{Índice por Dificuldade}{}
 \CGPrintGradeList
-
 \end{document}
