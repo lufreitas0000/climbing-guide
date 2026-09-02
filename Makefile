@@ -12,7 +12,7 @@ sanitize:
 	@./scripts/clean_nbsp.sh
 
 init-dirs:
-	@mkdir -p tests/tests_export production/production_exports export doc/export doc/tex
+	@mkdir -p tests/tests_export production/production_exports doc/doc_export doc/doc_tex
 
 check-fonts:
 	@echo "Auditing system fonts..."
@@ -58,12 +58,13 @@ production: sanitize init-dirs check-fonts test-lua
 
 clean:
 	@echo "Cleaning auxiliary build artifacts..."
-	@rm -rf production/production_exports/* tests/tests_export/* doc/export/* *.cgstats
+	@rm -rf production/production_exports/* tests/tests_export/* doc/doc_export/* *.cgstats
+	@rm -rf export/ tests/aux/ tests/log/ tests/pdf/ production/aux/ production/log/ production/pdf/
 
 docs: sanitize init-dirs check-fonts
 	@echo "Compiling doc/cg-documentation.tex..."
-	@$(TEX) $(FLAGS) --output-directory=doc/export doc/cg-documentation.tex
-	@$(TEX) $(FLAGS) --output-directory=doc/export doc/cg-documentation.tex
+	@$(TEX) $(FLAGS) --output-directory=doc/doc_export doc/cg-documentation.tex
+	@$(TEX) $(FLAGS) --output-directory=doc/doc_export doc/cg-documentation.tex
 
 compress:
 	@echo "Compressing PDF (sRGB, 300 DPI)..."
