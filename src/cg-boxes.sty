@@ -43,7 +43,7 @@
 
 \DeclareDocumentCommand{\CGRenderClippedImageInternal}{ m m m }{%
     \IfFileExists{#3}{%
-        \adjustbox{width=#1, min height=#2}{\includegraphics{#3}}%
+        \adjustbox{min width=#1, min height=#2}{\includegraphics{#3}}%
     }{%
         \begin{tcolorbox}[width=#1, height=#2, colback=gray!20, colframe=gray!50, valign=center, halign=center, sharp corners]
             \sffamily\footnotesize Imagem não encontrada: \detokenize{#3}
@@ -70,7 +70,7 @@
     \begin{tikzpicture}[remember picture, overlay]
         \begin{scope}
             \clip (current page.north west) rectangle ($ (current page.north east) + (0, -\CGZoneBannerHeight) $);
-            \node[anchor=north west, inner sep=0pt, outer sep=0pt] at (current page.north west) {
+            \node[anchor=center, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (0.5\paperwidth, -0.5\CGZoneBannerHeight) $) {
                 \CGRenderClippedImageInternal{\paperwidth}{\CGZoneBannerHeight}{#2}
             };
         \end{scope}
@@ -79,21 +79,21 @@
         \fill[brand_color] ($ (current page.north west) + (0, -\CGZoneBannerHeight + 15mm) $) rectangle ($ (current page.north west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 15mm) $);
         
         \node[anchor=west, text=white, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
-            \IfNoValueTF{#1}{%
-                \CGZoneTitleFont #3%
-            }{%
+            \IfValueTF{#1}{%
                 \begin{minipage}{0.75\textwidth}
-                    {\CGTitleFont\fontsize{14}{16}\selectfont #1}\\[2pt]
+                    {\color{white}\CGTitleFont\fontsize{14}{16}\selectfont #1}\\[2pt]
                     \CGZoneTitleFont #3
                 \end{minipage}%
+            }{%
+                \CGZoneTitleFont #3%
             }%
         };
     \end{tikzpicture}%
-    \par\vspace*{60.5mm}
+    \par\vspace*{\dimexpr\CGZoneBannerHeight - 1.5\baselineskip\relax}
     \ifcsname g_guide_stats_#3\endcsname
         \vspace{2mm}\noindent
         \csname g_guide_stats_#3\endcsname
-        \par\vspace{1mm}%
+        \par\vspace{-2mm}%
     \fi
 }
 
@@ -152,14 +152,14 @@
 }
 
 \DeclareDocumentCommand{\CGHalfWidthImage}{ o m }{%
-     \ifCGInCols\else\begin{multicols}{2}\CGInColstrue\fi
+     \ifCGInCols\else\begin{multicols*}{2}\CGInColstrue\fi
      \vspace{2mm}\noindent
      \CGRenderImageInternal{\linewidth}{#2}[#1]%
      \par\vspace{\CGVerticalSpacingDefault}
 }
 
 \DeclareDocumentCommand{\CGRouteImageRight}{ o m +m }{%
-    \ifCGInCols\else\begin{multicols}{2}\CGInColstrue\fi
+    \ifCGInCols\else\begin{multicols*}{2}\CGInColstrue\fi
     \vspace{2mm}\noindent
     #3\par
     \vfill\columnbreak
