@@ -32,9 +32,24 @@
         }
     }
 }
+\ExplSyntaxOff
+
+% Stateful Column Tracking
+\newif\ifCGInCols
+\CGInColsfalse
+
+\DeclareDocumentCommand{\CGCloseCols}{}{%
+    \ifCGInCols
+        \end{multicols}%
+        \CGInColsfalse
+    \fi
+}
 
 \AtEndDocument{
+    \CGCloseCols
+    \ExplSyntaxOn
     \guide_save_sector_summary:
+    \ExplSyntaxOff
     \directlua{cg.export_json("export/database.json")}
     \directlua{cg.export_text_lists("export/")}
     \directlua{cg.export_stats_aux("\luaescapestring{\jobname.cgstats}")}
@@ -44,6 +59,7 @@
     \InputIfFileExists{\jobname.cgstats}{}{}
 }
 
+\ExplSyntaxOn
 \NewDocumentCommand{\CGEvalGrade}{ m m }{
     \tl_set:Nn \l_guide_current_grade_color_tl {#1}
     \tl_if_empty:nTF {#2} {
@@ -54,6 +70,7 @@
 }
 
 \DeclareDocumentCommand{\CGSectorHeader}{ O{SETOR} m m }{
+    \CGCloseCols
     \guide_save_sector_summary:
     \int_gincr:N \g_guide_sector_int
     \tl_gset:Nn \g_guide_current_sector_name_tl {#3}
@@ -89,6 +106,10 @@
     } {
         \int_set:Nn \l_tmpb_int { #1 }
     }
+    % Prevent illegal multicols nesting if called inside \CGRouteImageRight
+    \ifCGInCols
+        \int_set:Nn \l_tmpb_int { 1 }
+    \fi
     \int_compare:nNnTF { \l_tmpb_int } > { 1 } {
         \begin{multicols}{\l_tmpb_int}
         #2
@@ -135,7 +156,6 @@
 }
 
 \DeclareDocumentCommand{\CGToday}{}{\directlua{cg.print_today()}}
-
 \ExplSyntaxOff
 \providecommand{\CGTotalRoutes}{?}
 \endinput
