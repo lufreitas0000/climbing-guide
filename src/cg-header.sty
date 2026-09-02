@@ -1,10 +1,9 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{cg-header}[2026/08/27 Header and Footer Management]
+\ProvidesPackage{cg-header}[2026/09/02 Header and Footer Management]
 
 \RequirePackage{fancyhdr}
 \RequirePackage{xparse}
-\RequirePackage{cg-fonts}
-\RequirePackage{cg-colors}
+\RequirePackage{cg-theme} % Replaced cg-fonts and cg-colors
 
 \ExplSyntaxOn
 \tl_new:N \g_guide_header_left_tl
