@@ -51,12 +51,12 @@
     \CGCloseCols
     \clearpage
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#3}}")}
-    
+
     \phantomsection
     \addcontentsline{toc}{part}{#3}
     \CGSetHeaderLeft{#3}
     \CGSetHeaderRight{}
-    
+
     \noindent\rule{0pt}{0pt}
     \begin{tikzpicture}[remember picture, overlay]
         \begin{scope}
@@ -65,10 +65,10 @@
                 \CGRenderClippedImageInternal{\paperwidth}{\CGZoneBannerHeight}{#2}
             };
         \end{scope}
-        
+
         \fill[white] (current page.north west) ++(0, -\CGZoneBannerHeight) rectangle (current page.south east);
         \fill[brand_color] ($ (current page.north west) + (0, -\CGZoneBannerHeight + 15mm) $) rectangle ($ (current page.north west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 15mm) $);
-        
+
         \node[anchor=west, text=white, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
             \begin{minipage}{0.75\textwidth}
                 \IfValueT{#1}{{\color{white}\CGTitleFont\fontsize{14}{16}\selectfont #1}\\[2pt]}
@@ -201,7 +201,7 @@
         \sbox1{{\CGRouteNameFont #3}}%
         \dimen0=\dimexpr\linewidth-\wd0\relax
         \ifdim\wd1>\dimen0
-            \ifdim\wd1>\dimexpr 1.35\dimen0\relax
+            \ifdim\wd1>\dimexpr 1.65\dimen0\relax
                 {\CGRouteNameFont #3}\hfill\usebox0
             \else
                 \resizebox{\dimen0}{\ht1}{\usebox1}\usebox0
@@ -209,8 +209,8 @@
         \else
             \usebox1\usebox0
         \fi
-        \par{\CGSetterFont #7} #8
-    \end{minipage}\par\vspace{3mm}
+        \par{\textcolor{text_body}{\CGSetterFont #7}} #8
+    \end{minipage}\par\vspace{1mm}
 }
 
 \DeclareDocumentCommand{\CGTextSingleColumn}{ m +m }{%
