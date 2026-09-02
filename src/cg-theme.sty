@@ -1,5 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{cg-theme}[2026/09/02 Theme and Geometry]
+
 \RequirePackage{xcolor}
 \RequirePackage{fontspec}
 \RequirePackage{geometry}
@@ -22,6 +23,7 @@
 \definecolor{cg_yellow_soft}{HTML}{F9DC5C}
 \definecolor{cg_sage}{HTML}{87A96B}
 \definecolor{cg_indigo}{HTML}{4B6B94}
+\definecolor{cg_obs_gray}{HTML}{666666}
 
 % Base Font Family Definitions
 \newfontfamily\CGTitleFont{Barlow Condensed}[Ligatures=TeX, UprightFont={* Regular}, BoldFont={* Bold},ItalicFont={* Regular},BoldItalicFont={* Bold}]
@@ -36,24 +38,32 @@
 \newcommand{\CGCoverSubtitleFont}{\CGTitleFont\fontsize{14}{18}\selectfont}
 \newcommand{\CGCoverTypeFont}{\CGTitleFont\fontsize{18}{22}\selectfont}
 \newcommand{\CGZoneTitleFont}{\CGCoverFont\fontsize{26}{28}\selectfont}
+
 \newcommand{\CGSectorLabelFont}{\CGTitleFont\fontsize{10}{12}\selectfont}
 \newcommand{\CGSectorTitleFont}{\CGTitleFont\fontsize{24}{28}\selectfont}
 \newcommand{\CGSectorHeaderLabelFont}{\CGTitleFont\fontsize{14}{16}\selectfont}
+
 \newcommand{\CGRouteNumberFont}{\CGTitleFont\bfseries\fontsize{12}{14}\selectfont}
 \newcommand{\CGRouteNameFont}{\CGTitleFont\bfseries\fontsize{12}{14}\selectfont}
 \newcommand{\CGGradeFont}{\CGItalicFont\fontsize{10}{12}\selectfont}
 \newcommand{\CGGearFont}{\CGItalicFont\fontsize{10}{12}\selectfont}
-\newcommand{\CGSetterFont}{\CGItalicFont\fontsize{9}{11}\selectfont}
-\newcommand{\CGObservationLabelFont}{\CGTitleFont\bfseries\fontsize{9}{11}\selectfont}
-\newcommand{\CGObservationFont}{\CGItalicFont\fontsize{9}{11}\selectfont}
+
+\newcommand{\CGSetterFont}{\CGItalicFont\bfseries\fontsize{9}{11}\selectfont}
+\newcommand{\CGObservationLabelFont}{\CGTitleFont\bfseries\fontsize{8}{10}\selectfont}
+\newcommand{\CGObservationFont}{\CGItalicFont\fontsize{8}{10}\selectfont}
+
 \newcommand{\CGBodyFont}{\CGBaseFont\fontsize{10}{14}\selectfont}
 \newcommand{\CGColumnTitleFont}{\CGTitleFont\fontsize{18}{22}\selectfont}
+
 \newcommand{\CGFrontmatterTocTitleFont}{\CGTitleFont\fontsize{32}{36}\selectfont}
 \newcommand{\CGFrontmatterPartFont}{\CGTitleFont\fontsize{12}{14}\selectfont}
 \newcommand{\CGFrontmatterSecFont}{\CGBaseFont\fontsize{10}{12}\selectfont}
+
 \newcommand{\CGSidebarTitleFont}{\CGTitleFont\fontsize{28}{32}\selectfont}
 \newcommand{\CGIndexTitleFont}{\CGTitleFont\fontsize{32}{36}\selectfont}
+
 \newcommand{\CGSummaryNumberFont}{\CGItalicFont\fontsize{11}{13}\selectfont}
+
 \newcommand{\CGListRouteNameFont}{\CGBaseFont\bfseries\fontsize{10}{12}\selectfont}
 \newcommand{\CGListSectorFont}{\CGBaseFont\fontsize{9}{11}\selectfont}
 \newcommand{\CGListGradeFont}{\CGBaseFont\itshape\fontsize{10}{12}\selectfont}
@@ -65,6 +75,7 @@
   paperwidth=150mm, paperheight=210mm, margin=10mm,
   top=11mm, bottom=15mm, headheight=15pt, headsep=6mm, twoside
 }
+
 \setlength{\columnsep}{4mm}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0pt}
