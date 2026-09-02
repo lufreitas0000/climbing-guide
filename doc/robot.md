@@ -204,3 +204,19 @@ The project enforces an absolute decoupling between the presentation layer (\LaT
 **Issue 2:** `pgfkeys` parser failure and layout distortion in image rendering.
 * **Root Cause:** `cg-boxes.sty` and `cg-macros.sty` were entirely wrapped in `\ExplSyntaxOn`. LaTeX3 strips all normal spaces, forcing the use of `~` for spacing. Key-value parsers like `pgfkeys` (used by TikZ and tcolorbox) rely heavily on exact string matching including spaces (e.g., `min width`). The injected tildes were rejected by `pgfkeys`, silently discarding configuration options and dumping unformatted, unscaled images.
 * **Resolution:** Decoupled data from presentation. All TikZ drawing macros are now explicitly defined in `\ExplSyntaxOff` blocks. `\ExplSyntaxOn` is reserved solely for parsing state (e.g., regex extraction of star ratings) which it then passes downstream to the safe LaTeX2e drawing macros.
+
+### Session: V1.8 Architecture Fix - Catcode Mismatches and expl3 Space Stripping
+
+**Issue 1:** Fatal Error `! Undefined control sequence. \__hook enddocument ...eCols \ExplSyntaxOn \guide _save_sector_summary: \Exp...`.
+* **Root Cause:** A catcode execution timeline mismatch. We placed `\ExplSyntaxOn` inside the `\AtEndDocument` kernel hook. LaTeX tokenizes and locks the catcodes of a hook payload when it is *declared*, not when it executes. Because the document was in standard LaTeX2e mode at declaration time, the underscore `_` was parsed as a math subscript, causing the internal expl3 macro `\guide_save_sector_summary:` to fragment into `\guide` and `_save...`, fatally crashing the compiler and halting cache generation.
+* **Resolution:** Created a secure LaTeX2e wrapper command (`\CGSaveSectorSummaryInternal`) scoped inside an active `\ExplSyntaxOn` block. The wrapper securely inherits the correct catcodes and is cleanly executed by the `\AtEndDocument` hook.
+
+**Issue 2:** Missing `.cgstats` cache files leading to empty Zone Stats distributions.
+* **Root Cause:** Due to the fatal crash evaluated in Issue 1, the `\AtEndDocument` hook failed execution entirely, meaning the backend Lua `cg.export_stats_aux` function was never called. Without the cache file, `\CGZoneStats` had no data to render.
+* **Resolution:** Fixing the catcode crash automatically reinstated the two-pass caching pipeline.
+
+**Issue 3:** Missing graphics fallback silently failing inside `\CGZoneHeader` and `\CGOverlayImage`.
+* **Root Cause:** If a user requested a non-existent image (e.g., `header-falso.jpg`), `\CGRenderClippedImageInternal` generated a fallback `tcolorbox`. However, `\CGZoneHeader` already encapsulates its geometry inside a parent TikZ `\node`. `tcolorbox` utilizes its own `tikzpicture` environment under the hood. Nesting `tikzpicture`s natively corrupts bounding boxes and causes silent rendering failures.
+* **Resolution:** Replaced the `tcolorbox` fallback logic strictly for absolute-positioned headers/overlays with native TikZ `\fill` rectangles (`opacity=0.8`) to guarantee a robust, pure structural overlay.
+
+**Enhancement:** Enforced `\clearpage` prior to `\CGSectorHeader` generation. Mathematical logic dictates that if a user opens a new Sector, it securely flushes floats and establishes itself firmly at the absolute top margin of the succeeding page.
