@@ -186,8 +186,8 @@
 \DeclareDocumentCommand{\CGDrawObservation}{ m m }{%
     \par\vspace{1pt}\noindent
     {%
-        \setlength{\baselineskip}{10pt}%
-        \textcolor{text_body}{\CGObservationFont
+        \setlength{\baselineskip}{9.5pt}%
+        \textcolor{cg_obs_gray}{\CGObservationFont
         \ifx\relax#1\relax\else\makebox[0pt][r]{\makebox[\CGRouteNumberWidth][c]{#1}}\fi
         #2}\par
     }%
@@ -201,8 +201,8 @@
         \sbox1{{\CGRouteNameFont #3}}%
         \dimen0=\dimexpr\linewidth-\wd0\relax
         \ifdim\wd1>\dimen0
-            \ifdim\wd1>\dimexpr 1.15\dimen0\relax
-                {\CGRouteNameFont #3}\usebox0
+            \ifdim\wd1>\dimexpr 1.35\dimen0\relax
+                {\CGRouteNameFont #3}\hfill\usebox0
             \else
                 \resizebox{\dimen0}{\ht1}{\usebox1}\usebox0
             \fi
