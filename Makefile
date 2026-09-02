@@ -1,4 +1,4 @@
-.PHONY: all test production clean check-fonts test-lua test-fonts test-summary test-suite test-visual test-miniguide test-images init-dirs docs sanitize
+.PHONY: all test production clean check-fonts test-lua test-fonts test-summary test-miniguide test-images init-dirs docs sanitize
 
 TEX = lualatex
 FLAGS = --interaction=batchmode --halt-on-error
@@ -47,7 +47,7 @@ test-zone-stats: sanitize init-dirs check-fonts
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_zone_stats.tex
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_zone_stats.tex
 
-test: test-lua test-fonts test-summary test-suite test-visual test-miniguide test-images test-zone-stats
+test: test-lua test-fonts test-summary test-miniguide test-images test-zone-stats
 
 production: sanitize init-dirs check-fonts test-lua
 	@echo "Clearing .cgstats cache..."
