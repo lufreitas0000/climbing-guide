@@ -4,29 +4,29 @@
 
 \begin{document}
 
-% Zone 1: Landscape Cropping
-\CGZoneHeader[TESTE V1.8]{example-image-16x10.jpg}{ZONA DE PAISAGEM}
-\CGSectorHeader{guide_cyan}{SETOR TESTE DE CROQUI DIREITO}
+% Zone 1: Landscape Cropping and Right-aligned Topo
+\CGZoneHeader[TESTE DE CORTE]{example-image-a.jpg}{ZONA PAISAGEM}
+\CGSectorHeader{guide_cyan}{SETOR ALFA}
 
-\CGRouteImageRight[Croqui cortado proporcionalmente no lado direito.]{example-image-a.jpg}{
+\CGRouteImageRight[Croqui testando a proporção de 48\% à direita da página.]{example-image-b.jpg}{
     \begin{CGSectorRoutes}
-        \CGRoute{FISSURA}{5}{10m}{Móvel}{Pedro}[\CGstar1 Observação curta.]
-        \CGRoute{PLACA}{6}{15m}{Móvel}{Maria}[\CGstar2 Aderência.]
+        \CGRoute{FISSURA NORMAL}{5}{10m}{Móvel}{Pedro}[\CGstar1 Observação simples para preencher bloco.]
+        \CGRoute{PLACA}{6}{15m}{Fixa}{Maria}[\CGstar2 Aderência.]
     \end{CGSectorRoutes}
 }
 
 % Zone 2: Portrait Overlay
-\CGOverlayImage[Legenda testando a opacidade em imagem retrato.]{example-image-9x16.jpg}
+\CGOverlayImage[Legenda testando a opacidade de 50\% e a ancoragem no canto inferior esquerdo da tela.]{example-image-c.jpg}
 
-% Zone 3: Arbitrary Shapes
-\CGZoneHeader{example-image-b.jpg}{ZONA ARBITRÁRIA}
-\CGSectorHeader{guide_orange}{SETOR MULTIPLAS IMAGENS}
+% Zone 3: Arbitrary Aspect Ratios
+\CGZoneHeader{example-image.jpg}{ZONA ARBITRÁRIA}
+\CGSectorHeader{guide_orange}{SETOR BETA}
 
-\CGHalfWidthImage[Imagem isolada em meia página (48\%)]{example-image-golden.jpg}
-\CGFullWidthImage[Imagem cobrindo toda a largura (100\%)]{example-image-c.jpg}
+\CGHalfWidthImage[Imagem isolada em meia página (48\%) com legenda.]{example-image-golden.jpg}
+\CGFullWidthImage[Imagem cobrindo toda a largura da coluna de texto (100\%).]{example-image-16x10.jpg}
 
 \begin{CGSectorRoutes}
-    \CGRoute{FISSURA LONGA}{7a}{12m}{Fixa}{Rafael}[\CGstar3 Clássica do setor com aderência técnica.]
+    \CGRoute{VIA LONGA}{7a}{30m}{Mista}{Rafael}[\CGstar3 Clássica do setor com aderência e cruxs bem protegidos.]
 \end{CGSectorRoutes}
 
 \end{document}
