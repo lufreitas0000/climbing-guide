@@ -1,4 +1,4 @@
-.PHONY: all test production clean check-fonts test-lua test-fonts test-summary test-miniguide test-images init-dirs docs sanitize
+.PHONY: all test production clean check-fonts test-lua test-fonts test-suite test-visual test-miniguide test-images init-dirs docs sanitize
 
 TEX = lualatex
 FLAGS = --interaction=batchmode --halt-on-error
@@ -27,33 +27,38 @@ test-fonts: sanitize init-dirs check-fonts
 	@echo "Compiling test_fonts.tex..."
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_fonts.tex
 
-test-summary: sanitize init-dirs check-fonts
-	@echo "Compiling test_summary.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_summary.tex
-	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_summary.tex
+test-suite: sanitize init-dirs check-fonts test-lua
+	@echo "Compiling test_suite.tex..."
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_suite.tex
+	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_suite.tex
+
+test-visual: sanitize init-dirs check-fonts
+	@echo "Compiling test_visual.tex..."
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_visual.tex
+	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_visual.tex
 
 test-miniguide: sanitize init-dirs check-fonts
 	@echo "Compiling test_miniguide.tex..."
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_miniguide.tex
+	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_miniguide.tex
 
 test-images: sanitize init-dirs check-fonts
 	@echo "Compiling test_images.tex..."
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_images.tex
+	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_images.tex
 
-test-zone-stats: sanitize init-dirs check-fonts
-	@echo "Compiling test_zone_stats.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_zone_stats.tex
-	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_zone_stats.tex
-
-test: test-lua test-fonts test-summary test-miniguide test-images test-zone-stats
+test: test-lua test-fonts test-suite test-visual test-miniguide test-images
 
 production: sanitize init-dirs check-fonts test-lua
 	@echo "Clearing .cgstats cache..."
 	@rm -f production/production_exports/*.cgstats tests/tests_export/*.cgstats *.cgstats
 	@echo "Compiling serra_do_cuo.tex..."
 	@$(TEX) $(FLAGS) --output-directory=production/production_exports production/serra_do_cuo.tex
+	@mv *.cgstats production/production_exports/ 2>/dev/null || true
 	@$(TEX) $(FLAGS) --output-directory=production/production_exports production/serra_do_cuo.tex
 
 clean:
