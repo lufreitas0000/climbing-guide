@@ -1,0 +1,257 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cg-components}[2026/09/02 UI Components and Layouts]
+\RequirePackage{xparse}
+\RequirePackage{multicol}
+\RequirePackage{tikz}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usetikzlibrary{calc, positioning, shapes.geometric}
+\RequirePackage{adjustbox}
+
+\ifdefined\CGSummaryBoxSize\relax\else\newlength{\CGSummaryBoxSize}\setlength{\CGSummaryBoxSize}{0.8cm}\fi
+\ifdefined\CGZoneBannerHeight\relax\else\newlength{\CGZoneBannerHeight}\setlength{\CGZoneBannerHeight}{62.5mm}\fi
+\ifdefined\CGMarginWidth\relax\else\newlength{\CGMarginWidth}\setlength{\CGMarginWidth}{15mm}\fi
+\ifdefined\CGVerticalSpacingDefault\relax\else\newlength{\CGVerticalSpacingDefault}\setlength{\CGVerticalSpacingDefault}{4mm}\fi
+
+\newcounter{cgfigure}
+
+% --- Fixed: Native hbox fallback (fcolorbox) preventing nested TikZ corruption ---
+\DeclareDocumentCommand{\CGRenderClippedImageInternal}{ m m m }{%
+    \IfFileExists{#3}{%
+        \adjustbox{width=#1, min height=#2}{\includegraphics{#3}}%
+    }{%
+        \fcolorbox{gray!50}{gray!5}{%
+            \begin{minipage}[c][#2][c]{\dimexpr#1-2\fboxsep-2\fboxrule\relax}%
+                \centering\sffamily\footnotesize\color{gray}Imagem n\~ao encontrada: \detokenize{#3}%
+            \end{minipage}%
+        }%
+    }%
+}
+
+\DeclareDocumentCommand{\CGRenderImageInternal}{ m m o }{%
+    \IfFileExists{#2}{%
+        \includegraphics[width=#1]{#2}%
+    }{%
+        \fcolorbox{gray!50}{gray!5}{%
+            \begin{minipage}[c][3cm][c]{\dimexpr#1-2\fboxsep-2\fboxrule\relax}%
+                \centering\sffamily\footnotesize\color{gray}Imagem n\~ao encontrada: \detokenize{#2}%
+            \end{minipage}%
+        }%
+    }%
+    \IfValueT{#3}{%
+        \par\vspace{2pt}\noindent\stepcounter{cgfigure}%
+        {\CGItalicFont\textcolor{brand_color}{\textbf{Figura \thecgfigure:}} #3}%
+    }%
+}
+
+\DeclareDocumentCommand{\CGObsBox}{ m }{%
+    \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp corners]
+        \color{text_body}\CGBodyFont #1
+    \end{tcolorbox}
+}
+
+% --- Fixed: Symmetrical text constraint and explicit color wrapping ---
+\DeclareDocumentCommand{\CGZoneHeader}{ o m m }{%
+    \CGCloseCols
+    \clearpage
+    \directlua{cg.set_zone("\luaescapestring{\unexpanded{#3}}")}
+    \phantomsection
+    \addcontentsline{toc}{part}{#3}
+    \CGSetHeaderLeft{#3}
+    \CGSetHeaderRight{}
+    
+    \noindent\rule{0pt}{0pt}
+    \begin{tikzpicture}[remember picture, overlay]
+        \begin{scope}
+            \clip (current page.north west) rectangle ($ (current page.north east) + (0, -\CGZoneBannerHeight) $);
+            \node[anchor=center, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (0.5\paperwidth, -0.5\CGZoneBannerHeight) $) {
+                \CGRenderClippedImageInternal{\paperwidth}{\CGZoneBannerHeight}{#2}
+            };
+        \end{scope}
+        
+        \fill[white] (current page.north west) ++(0, -\CGZoneBannerHeight) rectangle (current page.south east);
+        \fill[brand_color] ($ (current page.north west) + (0, -\CGZoneBannerHeight + 15mm) $) rectangle ($ (current page.north west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 15mm) $);
+        
+        \node[anchor=west, text=white, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
+            \begin{minipage}{0.75\textwidth}
+                \IfValueT{#1}{{\color{white}\CGTitleFont\fontsize{14}{16}\selectfont #1}\\[2pt]}
+                {\color{white}\CGZoneTitleFont #3}
+            \end{minipage}
+        };
+    \end{tikzpicture}%
+    \par\vspace*{\dimexpr\CGZoneBannerHeight - 1.5\baselineskip\relax}
+    \vspace{2mm}\noindent
+    \CGZoneStats{#3}%
+    \par\vspace{1mm}%
+}
+
+\DeclareDocumentCommand{\DrawSummaryBlock}{ m m m }{%
+    \begin{tikzpicture}[baseline=0pt]%
+        \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
+        \fill[#1] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
+        \fill[#1!60!black] (0,0) -- (\CGSummaryBoxSize,0) -- (\CGSummaryBoxSize,\CGSummaryBoxSize) -- cycle;
+        \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.33*\CGSummaryBoxSize, 0.67*\CGSummaryBoxSize) {#2};
+        \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.67*\CGSummaryBoxSize, 0.33*\CGSummaryBoxSize) {#3};
+    \end{tikzpicture}%
+}
+
+\DeclareDocumentCommand{\DrawSummaryBlockSingle}{ m m }{%
+    \begin{tikzpicture}[baseline=0pt]%
+        \useasboundingbox (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
+        \fill[#1!80!black] (0,0) rectangle (\CGSummaryBoxSize,\CGSummaryBoxSize);
+        \node[text=white, font=\CGSummaryNumberFont, anchor=center] at (0.5*\CGSummaryBoxSize, 0.5*\CGSummaryBoxSize) {#2};
+    \end{tikzpicture}%
+}
+
+\DeclareDocumentCommand{\CGTopoImage}{ o m }{%
+     \CGCloseCols\vspace{2mm}\noindent
+     \CGRenderImageInternal{\textwidth}{#2}[#1]%
+     \par\vspace{\CGVerticalSpacingDefault}
+}
+\DeclareDocumentCommand{\CGFullWidthImage}{ o m }{%
+    \CGCloseCols\CGTopoImage[#1]{#2}
+}
+\DeclareDocumentCommand{\CGOverlayImage}{ o m }{%
+    \CGCloseCols\clearpage\thispagestyle{empty}\noindent\rule{0pt}{0pt}
+    \begin{tikzpicture}[remember picture, overlay]
+        \begin{scope}
+            \clip (current page.north west) rectangle (current page.south east);
+            \node[anchor=center, inner sep=0pt, outer sep=0pt] at (current page.center) {
+                \CGRenderClippedImageInternal{\paperwidth}{\paperheight}{#2}
+            };
+        \end{scope}
+        \IfValueT{#1}{
+            \stepcounter{cgfigure}
+            \node[anchor=south west, inner sep=0pt, outer sep=0pt] at ($ (current page.south west) + (\CGMarginWidth, \CGMarginWidth) $) {
+                \begin{tcolorbox}[colback=black, opacityback=0.5, colframe=black, opacityframe=0.5, boxrule=0pt, arc=0pt, width=\dimexpr\paperwidth-2\CGMarginWidth\relax, fontupper=\color{white}\CGItalicFont, sharp corners]
+                    \textbf{Figura \thecgfigure:} #1
+                \end{tcolorbox}
+            };
+        }
+    \end{tikzpicture}%
+    \clearpage
+}
+\DeclareDocumentCommand{\CGHalfWidthImage}{ o m }{%
+     \ifCGInCols\else\begin{multicols*}{2}\CGInColstrue\fi
+     \vspace{2mm}\noindent
+     \CGRenderImageInternal{\linewidth}{#2}[#1]%
+     \par\vspace{\CGVerticalSpacingDefault}
+}
+\DeclareDocumentCommand{\CGRouteImageRight}{ o m +m }{%
+    \ifCGInCols\else\begin{multicols*}{2}\CGInColstrue\fi
+    \vspace{2mm}\noindent
+    #3\par\vfill\columnbreak\noindent
+    \CGRenderImageInternal{\linewidth}{#2}[#1]%
+    \par\vspace{\CGVerticalSpacingDefault}
+}
+
+% ========================================================
+% LaTeX2e Renderers (Pure Frontend, No expl3 syntax conflicts)
+% ========================================================
+\DeclareDocumentCommand{\CGDrawStars}{ m }{%
+    \begin{tikzpicture}[baseline=-0.6ex]
+        \foreach \i in {1,...,#1} {
+            \node[star, star points=5, star point ratio=2.25, fill=cg_yellow_soft, inner sep=0pt, minimum size=0.8em] at (\i*0.8em-0.8em, 0) {};
+        }
+    \end{tikzpicture}%
+}
+
+\DeclareDocumentCommand{\CGDrawRouteBadge}{ m m }{%
+    \begin{minipage}[t]{\CGRouteNumberWidth}
+        \vspace{0pt}
+        \begin{tikzpicture}[baseline=(current bounding box.north)]
+            \fill[#1] (0,0) rectangle (\CGRouteBadgeSize, -\CGRouteBadgeSize);
+            \node[text=white, font=\CGRouteNumberFont, anchor=center] at (0.5*\CGRouteBadgeSize, -0.5*\CGRouteBadgeSize) {#2};
+        \end{tikzpicture}
+    \end{minipage}%
+}
+
+\DeclareDocumentCommand{\CGDrawSectorHeader}{ m m m m }{%
+    \vspace{\CGSectorHeaderSpaceBefore}\noindent
+    \begin{tcolorbox}[enhanced, boxrule=0pt, frame hidden, interior hidden, borderline west={3mm}{0pt}{#2}, left=4mm, right=0mm, top=0mm, bottom=0mm, sharp corners]
+        #1
+        \begin{minipage}[b]{0.45\linewidth}
+            \adjustbox{max width=\linewidth}{\CGSectorTitleFont #3}
+        \end{minipage}%
+        \begin{minipage}[b]{0.55\linewidth}
+            \raggedleft #4
+        \end{minipage}
+    \end{tcolorbox}
+    \vspace{\CGSectorHeaderSpaceAfter}
+}
+
+\DeclareDocumentCommand{\CGObs}{}{%
+    \textcolor{brand_color}{\CGObservationLabelFont Obs:~}%
+}
+\DeclareDocumentCommand{\obs}{}{\CGObs}
+\DeclareDocumentCommand{\Obs}{}{\CGObs}
+\DeclareDocumentCommand{\CGstar}{ m }{}
+
+\DeclareDocumentCommand{\CGDrawObservation}{ m m }{%
+    \par\vspace{1pt}
+    \noindent
+    {%
+        \setlength{\baselineskip}{10pt}%
+        \textcolor{text_body}{\CGObservationFont
+        \ifx\relax#1\relax\else
+            \makebox[0pt][r]{\makebox[\CGRouteNumberWidth][c]{#1}}%
+        \fi
+        #2}\par
+    }%
+}
+
+\DeclareDocumentCommand{\CGDrawRoute}{ m m m m m m m m }{%
+    \noindent
+    \CGDrawRouteBadge { #1 } { #2 }
+    \begin{minipage}[t]{\dimexpr\linewidth-\CGRouteNumberWidth\relax}
+        \vspace{0pt}\raggedright\setlength{\baselineskip}{13pt}
+        \sbox0{\hspace{0.5em}{\CGGradeFont #4} \textcolor{guide_gray}{|} {\CGGradeFont #5} \ifx\relax#6\relax\else {\CGGradeFont (#6)}\fi}%
+        \sbox1{{\CGRouteNameFont #3}}%
+        \dimen0=\dimexpr\linewidth-\wd0\relax
+        \ifdim\wd1>\dimen0
+            \resizebox{\dimen0}{\ht1}{\usebox1}%
+        \else
+            \usebox1
+        \fi
+        \usebox0\par
+        {\CGSetterFont #7}
+        #8
+    \end{minipage}\par\vspace{3mm}
+}
+
+\DeclareDocumentCommand{\CGTextSingleColumn}{ m +m }{%
+    \ifx\relax#1\relax\else {\color{brand_color}\CGColumnTitleFont #1}\par\vspace{2pt} \fi
+    {\CGBodyFont #2}\par\vspace{\CGVerticalSpacingDefault}
+}
+
+\DeclareDocumentCommand{\CGDoubleTextSection}{ m +m m +m }{%
+    \begin{multicols}{2}
+        \ifx\relax#1\relax\else {\color{brand_color}\CGColumnTitleFont #1}\par\vspace{2pt} \fi
+        {\CGBodyFont #2}\par
+        \columnbreak
+        \ifx\relax#3\relax\else {\color{brand_color}\CGColumnTitleFont #3}\par\vspace{2pt} \fi
+        {\CGBodyFont #4}\par
+    \end{multicols}
+}
+\endinput
+\usetikzlibrary{shapes.geometric}
+
+\directlua{cg = require("climbingguide")}
+
+\ExplSyntaxOn
+\DeclareDocumentCommand{\CGListStar}{ m }{
+    \begin{tikzpicture}[baseline=-0.6ex]
+        \foreach~\i~in~{1,...,#1}~{
+            \node[star, star~points=5, star~point~ratio=2.25, fill=cg_yellow_soft, inner~sep=0pt, minimum~size=0.65em] at (\i*0.7em-0.7em, 0) {};
+        }
+    \end{tikzpicture}
+}
+\ExplSyntaxOff
+
+\NewDocumentCommand{\CGPrintAlphaList}{}{
+    \directlua{cg.print_alpha()}
+}
+\NewDocumentCommand{\CGPrintGradeList}{}{
+    \directlua{cg.print_grade()}
+}
+\endinput

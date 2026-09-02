@@ -1,5 +1,27 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{cg-fonts}[2026/08/27 Fonts]
+\ProvidesPackage{cg-theme}[2026/09/02 Theme and Geometry]
+\RequirePackage{xcolor}
+
+% Primary Brand & Neutral Tiers
+\definecolor{brand_color}{HTML}{BE1E2D}
+\definecolor{text_body}{HTML}{2D2D2D}
+\definecolor{bg_beige}{HTML}{EFECE6}
+
+% Grade Scale Tier Colors
+\definecolor{guide_cyan}{HTML}{00AEEF}
+\definecolor{guide_green}{HTML}{009640}
+\definecolor{guide_yellow}{HTML}{F29400}
+\definecolor{guide_orange}{HTML}{F05A28}
+\definecolor{guide_red}{HTML}{BE1E2D}
+\definecolor{guide_purple}{HTML}{92278F}
+\definecolor{guide_gray}{HTML}{3A3A3C}
+
+% Extended Accent Palette (V1.1 Enhancements)
+\definecolor{cg_yellow_soft}{HTML}{F9DC5C}
+\definecolor{cg_sage}{HTML}{87A96B}
+\definecolor{cg_indigo}{HTML}{4B6B94}
+
+\endinput
 \RequirePackage{fontspec}
 
 % Base Font Family Definitions
@@ -38,4 +60,36 @@
 \newcommand{\CGListGradeFont}{\CGBaseFont\itshape\fontsize{10}{12}\selectfont}
 
 \renewcommand{\familydefault}{\sfdefault}
+\endinput
+\RequirePackage{geometry}
+
+\geometry{
+  paperwidth=150mm, paperheight=210mm, margin=10mm,
+  top=11mm, bottom=15mm, headheight=15pt, headsep=6mm, twoside
+}
+\setlength{\columnsep}{4mm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{15pt}
+\tolerance=2000
+\hbadness=1999
+
+% Centralized Layout Dimensions
+\newlength{\CGSummaryBoxSize}
+\setlength{\CGSummaryBoxSize}{0.8cm} % Size of the grade summary colored squares
+\newlength{\CGMarginWidth}
+\setlength{\CGMarginWidth}{15mm} % Absolute left margin offset for full-bleed elements
+\newlength{\CGRouteBadgeSize}
+\setlength{\CGRouteBadgeSize}{6mm} % Dimensions of the route number color badge
+\newlength{\CGRouteNumberWidth}
+\setlength{\CGRouteNumberWidth}{8mm} % Minipage width for the route number column
+\newlength{\CGZoneBannerHeight}
+\setlength{\CGZoneBannerHeight}{62.5mm} % Clip height for the zone cover image banner
+\newlength{\CGVerticalSpacingDefault}
+\setlength{\CGVerticalSpacingDefault}{4mm} % Standard vertical spacing after blocks
+\newlength{\CGSectorHeaderSpaceBefore}
+\setlength{\CGSectorHeaderSpaceBefore}{2em} % Spacing before a sector header
+\newlength{\CGSectorHeaderSpaceAfter}
+\setlength{\CGSectorHeaderSpaceAfter}{1em} % Spacing after a sector header
+
 \endinput

@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{climbingguide}[2026/08/27 Climbing Guide Core]
+\ProvidesPackage{climbingguide}[2026/09/02 Climbing Guide Core]
 
 \RequirePackage{xcolor}
 \RequirePackage{graphicx}
@@ -9,38 +9,25 @@
 \RequirePackage{array}
 \RequirePackage{mwe}
 \RequirePackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=brand_color!60,
-    urlcolor=brand_color!60,
-    citecolor=brand_color!60
-}
+\hypersetup{colorlinks=true, linkcolor=brand_color!60, urlcolor=brand_color!60, citecolor=brand_color!60}
 
-\RequirePackage{cg-colors}
-\RequirePackage{cg-fonts}
-\RequirePackage{cg-geometry}
-\RequirePackage{cg-header}
-\RequirePackage{cg-api}
-\RequirePackage{cg-macros}
-\RequirePackage{cg-boxes}
-\RequirePackage{cg-lists}
-\RequirePackage{cg-frontmatter}
+% --- Consolidated Domain Modules ---
+\RequirePackage{cg-theme}       % Design tokens, fonts, geometry
+\RequirePackage{cg-header}      % Headers and Footers
+\RequirePackage{cg-components}  % UI Boxes, Macros, and Lists
+\RequirePackage{cg-frontmatter} % ToC and covers
+\RequirePackage{cg-engine}      % Lua-LaTeX Bridge and State (expl3 isolated)
 
-% --- Automated Formatting Tolerances & Character Patches ---
-% 1. Global LuaTeX Input Buffer Interception for U+00A0
-% This intercepts the file stream BEFORE tokenization, replacing UTF-8 bytes 194 160 with a standard space.
+% --- Global LuaTeX Input Buffer Interception ---
 \directlua{
   luatexbase.add_to_callback('process_input_buffer', function(line)
     return line:gsub(string.char(194, 160), ' ')
   end, 'sanitize_nbsp')
 }
 
-% 2. Override strict boundary checks to allow dynamic block compilation
-\hfuzz=500pt
-\vfuzz=500pt
-\hbadness=10000
-\vbadness=10000
-\tolerance=2000
-\emergencystretch=20pt
+% --- Global Tolerances ---
+\hfuzz=500pt \vfuzz=500pt
+\hbadness=10000 \vbadness=10000
+\tolerance=2000 \emergencystretch=20pt
 
 \endinput
