@@ -33,11 +33,12 @@
 }
 
 \DeclareDocumentCommand{\CGZoneHeader}{ o m m }{
+    \clearpage
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#3}}")}
-    
+
     \phantomsection
     \addcontentsline{toc}{part}{#3}
-    
+
     \CGSetHeaderLeft{#3}
     \CGSetHeaderRight{}
 
@@ -61,7 +62,7 @@
         };
     \end{tikzpicture}
     \vspace*{60.5mm}
-    
+
     \cs_if_exist:cT { g_guide_stats_#3 } {
         \vspace{2mm}\noindent
         \use:c { g_guide_stats_#3 }
@@ -104,6 +105,7 @@
 
 \DeclareDocumentCommand{\CGOverlayImage}{ o m }{
     \clearpage
+    \mbox{}%
     \begin{tikzpicture}[remember~picture, overlay]
         \clip (current~page.north~west) rectangle (current~page.south~east);
         \node[anchor=center, inner~sep=0pt] at (current~page.center) {
