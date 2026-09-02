@@ -1,11 +1,12 @@
 local TXT = {}
 local Sorter = require("route_sorter")
+local Sanitizer = require("sanitize_tex")
 
 local function pad(val)
     if val == nil or string.match(tostring(val), "^%s*$") then
         return "N/A"
     end
-    return tostring(val)
+    return Sanitizer.unescape_tex(tostring(val))
 end
 
 local function write_list(filepath, sorted_routes)
@@ -25,7 +26,7 @@ end
 function TXT.export(output_dir, routes, grade_eval_func)
     local sorted_alpha = Sorter.sort_by_alpha(routes)
     local sorted_grade = Sorter.sort_by_grade(routes, grade_eval_func)
-
+    
     write_list(output_dir .. "list_alpha.txt", sorted_alpha)
     write_list(output_dir .. "list_grade.txt", sorted_grade)
 end
