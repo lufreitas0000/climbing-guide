@@ -149,3 +149,32 @@ The project enforces an absolute decoupling between the presentation layer (\LaT
         <Description>Roman numerals (IV and IX) in the \CGZoneStats TikZ chart are mathematically centered by prepending the \leq and \geq operators inside zero-width right-aligned TeX boxes (\makebox[0pt][r]{...}), preventing visual skewing in the generated bar graphs.</Description>
     </Enhancement>
 </VersionSpec>
+
+## 2. Troubleshooting History & Architecture Decisions
+
+### Session: Zone Header & Overlay Image Layout Resolution
+
+**Issue:** \CGZoneHeader failed to render graphics/text, and \CGOverlayImage displayed high-resolution raw images at massive scale (hyper-zoomed) while breaking page flows.
+
+**Attempt 1: Layout Flush & Box Injection**
+* Action: Injected \clearpage and \mbox{} to force horizontal mode and synchronize absolute page coordinates before TikZ evaluation.
+* Failure: The scaling issue persisted. \includegraphics[min width=\paperwidth, min height=\paperheight] fails to downscale high-resolution images because their raw dimensions already exceed the minimum constraints.
+
+**Attempt 2: TikZFill Integration**
+* Action: Attempted to replace manual clipping with \fill [fill image={...}] using the tikzfill.image library to emulate CSS object-fit: cover.
+* Failure: Compilation halted with pgfkeys error: "I do not know the key '/tikz/fill image'". The library was loaded implicitly via tcolorbox but not explicitly declared in \usetikzlibrary, causing a namespace scope failure.
+
+**Attempt 3: tcolorbox Watermarks & ExplSyntaxOn Conflict**
+* Action: Attempted to use native tcolorbox skins with watermark zoom=1.0 and explicitly imported the fill.image library.
+* Failure: Compilation halted with Error 1. The cg-boxes.sty file was wrapped in \ExplSyntaxOn. In LaTeX3 syntax, standard spaces are ignored, forcing the use of ~ (e.g., watermark~zoom=1.0). The pgfkeys parser interprets keys literally and rejected the tilde characters as invalid syntax, silently discarding the formatting instructions and outputting massive unscaled images. Furthermore, the \DrawSummaryBlock macro was accidentally overwritten during testing.
+
+**Final Resolution: Pure LaTeX2e & Adjustbox Mathematical Cropping**
+* Action: Completely removed the \ExplSyntaxOn scope from cg-boxes.sty, substituting expl3 condition checks with native LaTeX2e \ifcsname. This resolved all pgfkeys space tokenization conflicts.
+* Action: Restored the \DrawSummaryBlock macro.
+* Action: Abandoned tikzfill and tcolorbox watermarks entirely. Implemented deterministic CSS object-fit: cover logic using adjustbox bounded by a strict tikzpicture clip path.
+* Implementation: 
+  \clip (current page.north west) rectangle (current page.south east);
+  \node[anchor=center] at (current page.center) {
+      \adjustbox{width=\paperwidth, min height=\paperheight}{\includegraphics{...}}
+  };
+* Result: The image is mathematically forced to match the paper width first. If the resulting scaled height is less than the paper height, the min height parameter triggers further scaling. The outer \clip trims the excess overflow, rendering perfectly centered, distortion-free full-bleed graphics regardless of the source image's native resolution.
