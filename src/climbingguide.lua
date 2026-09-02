@@ -76,7 +76,6 @@ local function calc_free_grade(text)
         local v2 = parse_grade(g2)
         if v1 > 0 and v2 > 0 then return (v1 + v2) / 2.0 end
     end
-
     local max_f = 0
     for token in string.gmatch(text, "[a-z0-9]+") do
         if not string.match(token, "^[eda]%d+") then
@@ -90,15 +89,13 @@ end
 function M.get_val(g)
     local g_low = string.lower(g)
     if string.match(g_low, "proj") or string.match(g_low, "^%s*%%%?%s*$") or string.match(g_low, "^%?+$") then return 999 end
-
     local tmp_plus = string.gsub(g_low, "a%d+%+", "")
     if string.match(tmp_plus, "%+") then error("Invalid format: '+' only allowed in artificial grades (" .. g .. ")") end
-    if string.match(g_low, "%d+[°ºo]?[ivx]+") then error("Invalid format: Missing space after general grade (" .. g .. ")") end
+    if string.match(g_low, "%d+[ o]?[ivx]+") then error("Invalid format: Missing space after general grade (" .. g .. ")") end
     if string.match(g_low, "[ivx%d]%s+[abc]%f[%W]") or string.match(g_low, "[ivx%d]%s+sup%f[%W]") then error("Invalid format: Space not allowed between base grade and suffix (" .. g .. ")") end
 
-    g_low = string.gsub(g_low, "%d+[°ºo]", " ")
+    g_low = string.gsub(g_low, "%d+[ o]", " ")
     local outside = string.gsub(g_low, "%(.-%)", " ")
-
     local val_out = calc_free_grade(outside)
     if val_out > 0 then return val_out end
 
@@ -109,7 +106,6 @@ function M.get_val(g)
         if val > max_art then max_art = val end
     end
     if max_art > 0 then return max_art end
-
     return 999
 end
 
@@ -119,11 +115,10 @@ function M.eval_tex(g)
         tex.sprint("\\CGEvalGrade{guide_gray}{gray}")
         return
     end
-
     local is_top = (math.abs((max_val % 1) - 0.5) < 0.01 or math.abs((max_val % 1) - 0.6) < 0.01)
+    
     local color = "guide_gray"
     local base = "gray"
-
     if max_val > 0 and max_val < 5 then color, base = "guide_cyan", "cyan"
     elseif max_val >= 5 and max_val < 6 then color, base = "guide_green", "green"
     elseif max_val >= 6 and max_val < 7 then color, base = "guide_yellow", "yellow"
@@ -134,7 +129,7 @@ function M.eval_tex(g)
 
     if base ~= "gray" and not is_top then color = color .. "!60!black" end
     local top_str = is_top and "_top" or "_bot"
-
+    
     if base ~= "gray" then
         tex.sprint("\\CGEvalGrade{" .. color .. "}{" .. base .. top_str .. "}")
     else
@@ -163,7 +158,9 @@ function M.print_grade()
 end
 
 function M.render_zone_stats(target_zone)
-    tex.sprint(ZoneStats.get_chart_string(target_zone, M.routes, M.get_val))
+    local z = Sanitizer.strip_tex_macros(target_zone)
+    local safe_z = string.gsub(z, "[^%w]", "_")
+    tex.sprint("\\cs_if_exist:cTF { g_guide_stats_" .. safe_z .. " } { \\use:c { g_guide_stats_" .. safe_z .. " } } { \\textsl{Gráfico~da~zona~disponível~na~próxima~compilação...} }")
 end
 
 function M.export_stats_aux(filepath)
@@ -174,18 +171,15 @@ function M.export_stats_aux(filepath)
             z_stats[z] = true
         end
     end
-
     local f = io.open(filepath, "w")
     if f then
         f:write(string.format("\\gdef\\CGTotalRoutes{%d}\n", #M.routes))
-
         f:write("\\expandafter\\gdef\\csname CGGlobalChart\\endcsname{" .. ZoneStats.get_chart_string("Global", M.routes, M.get_val) .. "}\n")
-
         for z, _ in pairs(z_stats) do
+            local safe_z = string.gsub(z, "[^%w]", "_")
             local chart_tikz = ZoneStats.get_chart_string(z, M.routes, M.get_val)
-            f:write(string.format("\\expandafter\\gdef\\csname g_guide_stats_%s\\endcsname{%s}\n", z, chart_tikz))
+            f:write(string.format("\\expandafter\\gdef\\csname g_guide_stats_%s\\endcsname{%s}\n", safe_z, chart_tikz))
         end
-
         f:close()
     end
 end
