@@ -24,7 +24,7 @@ function M.register_route(id, name, grade, length, gear, setter, obs)
     local len_s = Sanitizer.strip_tex_macros(length)
     local gear_s = Sanitizer.strip_tex_macros(gear)
     local setter_s = Sanitizer.strip_tex_macros(setter)
-    
+
     local stars = 0
     local star_match = string.match(obs or "", "\\CGstar%s*[{]?([1-3])[}]?")
     if star_match then
@@ -116,7 +116,7 @@ function M.eval_tex(g)
         return
     end
     local is_top = (math.abs((max_val % 1) - 0.5) < 0.01 or math.abs((max_val % 1) - 0.6) < 0.01)
-    
+
     local color = "guide_gray"
     local base = "gray"
     if max_val > 0 and max_val < 5 then color, base = "guide_cyan", "cyan"
@@ -129,7 +129,7 @@ function M.eval_tex(g)
 
     if base ~= "gray" and not is_top then color = color .. "!60!black" end
     local top_str = is_top and "_top" or "_bot"
-    
+
     if base ~= "gray" then
         tex.sprint("\\CGEvalGrade{" .. color .. "}{" .. base .. top_str .. "}")
     else
@@ -160,7 +160,7 @@ end
 function M.render_zone_stats(target_zone)
     local z = Sanitizer.strip_tex_macros(target_zone)
     local safe_z = string.gsub(z, "[^%w]", "_")
-    tex.sprint("\\cs_if_exist:cTF { g_guide_stats_" .. safe_z .. " } { \\use:c { g_guide_stats_" .. safe_z .. " } } { \\textsl{Gráfico~da~zona~disponível~na~próxima~compilação...} }")
+    tex.sprint("\\CGRenderZoneStatsInternal{" .. safe_z .. "}")
 end
 
 function M.export_stats_aux(filepath)
