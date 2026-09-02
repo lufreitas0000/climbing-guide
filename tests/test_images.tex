@@ -1,32 +1,72 @@
-\documentclass[11pt]{article}
+\documentclass{article}
 \usepackage{climbingguide}
 \usepackage{mwe}
 
 \begin{document}
 
-% Zone 1: Landscape Cropping and Right-aligned Topo
-\CGZoneHeader[TESTE DE CORTE]{example-image-a.jpg}{ZONA PAISAGEM}
-\CGSectorHeader{guide_cyan}{SETOR ALFA}
+% ==============================================
+% ZONA 1: TESTE DE CORTE E OVERLAYS
+% ==============================================
+\CGZoneHeader[TESTE DE CORTE (1/4)]{example-image-a.jpg}{ZONA DE IMAGENS GRANDES}
 
-\CGRouteImageRight[Croqui testando a proporção de 48\% à direita da página.]{example-image-b.jpg}{
-    \begin{CGSectorRoutes}
-        \CGRoute{FISSURA NORMAL}{5}{10m}{Móvel}{Pedro}[\CGstar1 Observação simples para preencher bloco.]
-        \CGRoute{PLACA}{6}{15m}{Fixa}{Maria}[\CGstar2 Aderência.]
+\CGSectorHeader[SETOR]{guide_red}{SETOR OVERLAYS}
+
+\begin{CGSectorRoutes}
+\CGRoute{FISSURA NORMAL}{5}{10m}{Móvel}{Pedro}[\CGstar{1} Teste de quebra para imagens muito altas]
+\end{CGSectorRoutes}
+
+\CGOverlayImage[Testando overlay com proporção 1x1 (deve croppar nas laterais)]{example-image-1x1.jpg}
+\CGOverlayImage[Testando overlay com proporção 16x9 (deve croppar no topo/fundo)]{example-image-16x9.jpg}
+\CGOverlayImage[Testando overlay com proporção Golden]{example-image-golden.jpg}
+\CGOverlayImage{example-image-b.jpg}
+
+% ==============================================
+% ZONA 2: TESTE FULL WIDTH
+% ==============================================
+\CGZoneHeader[TESTE LARGURA (2/4)]{example-image-b.jpg}{ZONA FULL WIDTH}
+
+\CGSectorHeader[SETOR]{guide_green}{SETOR LARGURA TOTAL}
+
+\CGFullWidthImage[Imagem full width 16x10]{example-image-16x10.jpg}
+\CGFullWidthImage[Imagem full width 16x9]{example-image-16x9.jpg}
+\CGFullWidthImage[Imagem full width 1x1]{example-image-1x1.jpg}
+
+\begin{CGSectorRoutes}
+\CGRoute{VIA LONGA}{7a}{30m}{Mista}{Rafael}[\CGstar{3} Clássica do setor]
+\CGRoute{VIA CURTA}{4}{10m}{Fixa}{Maria}
+\end{CGSectorRoutes}
+
+% ==============================================
+% ZONA 3: TESTE HALF WIDTH E RIGHT ALIGN
+% ==============================================
+\CGZoneHeader[TESTE METADE (3/4)]{example-image-c.jpg}{ZONA HALF WIDTH}
+
+\CGSectorHeader[SETOR]{guide_cyan}{SETOR METADE DIREITA}
+
+\CGHalfWidthImage[Imagem alinhada à esquerda com 48\% (Proporção A)]{example-image-a.jpg}
+\CGHalfWidthImage[Imagem alinhada à esquerda com 48\% (Proporção B)]{example-image-b.jpg}
+
+\CGRouteImageRight[Croqui testando a proporção de 48\% à direita da página com rotas.]{example-image-c.jpg}{
+    \begin{CGSectorRoutes}[1]
+    \CGRoute{FENDINHA}{3}{10m}{Móvel}{João}
+    \CGRoute{AGARRINHA}{5}{15m}{Fixa}{Ana}
+    \CGRoute{TETO}{8a}{20m}{Fixa}{Carlos}[\CGstar{2} Crux de resistência]
     \end{CGSectorRoutes}
 }
 
-% Zone 2: Portrait Overlay
-\CGOverlayImage[Legenda testando a opacidade de 50\% e a ancoragem no canto inferior esquerdo da tela.]{example-image-c.jpg}
+% ==============================================
+% ZONA 4: TESTE TOPO IMAGES E MISSING
+% ==============================================
+\CGZoneHeader[TESTE TOPO (4/4)]{example-image.jpg}{ZONA DE TOPOS E ERROS}
 
-% Zone 3: Arbitrary Aspect Ratios
-\CGZoneHeader{example-image.jpg}{ZONA ARBITRÁRIA}
-\CGSectorHeader{guide_orange}{SETOR BETA}
+\CGSectorHeader[SETOR]{guide_orange}{SETOR TOPOS}
 
-\CGHalfWidthImage[Imagem isolada em meia página (48\%) com legenda.]{example-image-golden.jpg}
-\CGFullWidthImage[Imagem cobrindo toda a largura da coluna de texto (100\%).]{example-image-16x10.jpg}
+\CGTopoImage[Topo com imagem Golden]{example-image-golden.jpg}
+\CGTopoImage[Topo com imagem 1x1]{example-image-1x1.jpg}
 
-\begin{CGSectorRoutes}
-    \CGRoute{VIA LONGA}{7a}{30m}{Mista}{Rafael}[\CGstar3 Clássica do setor com aderência e cruxs bem protegidos.]
-\end{CGSectorRoutes}
+\CGFullWidthImage[Testando imagem não existente (Deve renderizar placeholder)]{imagem-nao-existe.jpg}
+\CGOverlayImage[Testando overlay não existente]{overlay-falso.png}
+\CGZoneHeader[TESTE]{header-falso.jpg}{ZONA FAKE}
+\CGHalfWidthImage[Half width falso]{half-falso.jpg}
 
 \end{document}
