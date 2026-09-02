@@ -5,6 +5,7 @@
 \tcbuselibrary{skins, breakable}
 \RequirePackage{tikz}
 \usetikzlibrary{calc, positioning, shapes.geometric}
+\RequirePackage{adjustbox}
 
 \ifdefined\CGSummaryBoxSize\relax\else
   \newlength{\CGSummaryBoxSize}
@@ -25,9 +26,19 @@
 
 \newcounter{cgfigure}
 
+% Isolate expl3 syntax strictly to the Lua variable lookup
 \ExplSyntaxOn
+\DeclareDocumentCommand{\CGCheckStats}{ m }{
+    \cs_if_exist:cT { g_guide_stats_#1 } {
+        \vspace{2mm}\noindent
+        \use:c { g_guide_stats_#1 }
+        \par\vspace{4mm}
+    }
+}
+\ExplSyntaxOff
+
 \DeclareDocumentCommand{\CGObsBox}{ m }{
-    \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp~corners]
+    \begin{tcolorbox}[colback=bg_beige, colframe=bg_beige, boxrule=0pt, arc=0pt, left=4mm, right=4mm, top=3mm, bottom=3mm, width=\linewidth, sharp corners]
         \color{text_body}\CGBodyFont #1
     \end{tcolorbox}
 }
@@ -43,15 +54,18 @@
     \CGSetHeaderRight{}
 
     \noindent\rule{0pt}{0pt}% Force absolute origin sync
-    \begin{tikzpicture}[remember~picture, overlay]
-        \node[anchor=north~west, inner~sep=0pt] at (current~page.north~west) {
-            \begin{tcolorbox}[blanker, width=\paperwidth, height=\CGZoneBannerHeight, watermark~graphics={#2}, watermark~zoom=1.0]
-            \end{tcolorbox}
+    \begin{tikzpicture}[remember picture, overlay]
+        % 1. Clip the precise boundary of the top banner
+        \clip (current page.north west) rectangle ($ (current page.north east) + (0, -\CGZoneBannerHeight) $);
+        
+        % 2. Anchor the scaled image dead center. Adjustbox handles object-fit: cover
+        \node[anchor=center, inner sep=0pt] at ($ (current page.north west) + (0.5\paperwidth, -0.5\CGZoneBannerHeight) $) {
+            \adjustbox{min width=\paperwidth, min height=\CGZoneBannerHeight, keepaspectratio}{\includegraphics{#2}}
         };
 
-        \fill[brand_color] ($ (current~page.north~west) + (0, -\CGZoneBannerHeight + 8mm) $) rectangle ($ (current~page.north~west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 8mm) $);
+        \fill[brand_color] ($ (current page.north west) + (0, -\CGZoneBannerHeight + 8mm) $) rectangle ($ (current page.north west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 8mm) $);
 
-        \node[anchor=west, text=white, inner~sep=0pt] at ($ (current~page.north~west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
+        \node[anchor=west, text=white, inner sep=0pt] at ($ (current page.north west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
             \IfValueTF{#1}{
                 \begin{minipage}{0.75\textwidth}
                     {\CGTitleFont\fontsize{14}{16}\selectfont #1}\\[2pt]
@@ -64,11 +78,7 @@
     \end{tikzpicture}%
     \par\vspace*{60.5mm}
 
-    \cs_if_exist:cT { g_guide_stats_#3 } {
-        \vspace{2mm}\noindent
-        \use:c { g_guide_stats_#3 }
-        \par\vspace{4mm}
-    }
+    \CGCheckStats{#3}
 }
 
 \DeclareDocumentCommand{\DrawSummaryBlock}{ m m m }{
@@ -95,7 +105,7 @@
      \IfValueT{#1}{
          \par\vspace{2pt}\noindent
          \stepcounter{cgfigure}
-         {\CGItalicFont\textcolor{brand_color}{Figura~{\thecgfigure}:}~#1}
+         {\CGItalicFont\textcolor{brand_color}{Figura \thecgfigure:} #1}
      }
      \par\vspace{\CGVerticalSpacingDefault}
 }
@@ -108,16 +118,20 @@
     \clearpage
     \thispagestyle{empty}
     \noindent\rule{0pt}{0pt}% Force TeX into horizontal mode to secure absolute page coordinates
-    \begin{tikzpicture}[remember~picture, overlay]
-        \node[anchor=north~west, inner~sep=0pt] at (current~page.north~west) {
-            \begin{tcolorbox}[blanker, width=\paperwidth, height=\paperheight, watermark~graphics={#2}, watermark~zoom=1.0]
-            \end{tcolorbox}
+    \begin{tikzpicture}[remember picture, overlay]
+        % 1. Clip to the full A5 page
+        \clip (current page.north west) rectangle (current page.south east);
+        
+        % 2. Anchor the scaled image dead center. Adjustbox handles object-fit: cover
+        \node[anchor=center, inner sep=0pt] at (current page.center) {
+            \adjustbox{min width=\paperwidth, min height=\paperheight, keepaspectratio}{\includegraphics{#2}}
         };
+        
         \IfValueT{#1}{
             \stepcounter{cgfigure}
-            \node[anchor=south~west, inner~sep=0pt] at ($ (current~page.south~west) + (\CGMarginWidth, \CGMarginWidth) $) {
-                \begin{tcolorbox}[colback=black, opacityback=0.3, colframe=black, opacityframe=0.3, boxrule=0pt, arc=0pt, width=\dimexpr\paperwidth-2\CGMarginWidth\relax, fontupper=\color{white}\CGItalicFont, sharp~corners]
-                    \textbf{Figura~{\thecgfigure}:}~#1
+            \node[anchor=south west, inner sep=0pt] at ($ (current page.south west) + (\CGMarginWidth, \CGMarginWidth) $) {
+                \begin{tcolorbox}[colback=black, opacityback=0.3, colframe=black, opacityframe=0.3, boxrule=0pt, arc=0pt, width=\dimexpr\paperwidth-2\CGMarginWidth\relax, fontupper=\color{white}\CGItalicFont, sharp corners]
+                    \textbf{Figura \thecgfigure:} #1
                 \end{tcolorbox}
             };
         }
@@ -132,7 +146,7 @@
          \IfValueT{#1}{
              \par\vspace{2pt}\noindent
              \stepcounter{cgfigure}
-             {\CGItalicFont\textcolor{brand_color}{Figura~{\thecgfigure}:}~#1}
+             {\CGItalicFont\textcolor{brand_color}{Figura \thecgfigure:} #1}
          }
      \end{minipage}
      \par\vspace{\CGVerticalSpacingDefault}
@@ -150,10 +164,8 @@
         \IfValueT{#1}{
             \par\vspace{2pt}\noindent
             \stepcounter{cgfigure}
-            {\CGItalicFont\textcolor{brand_color}{Figura~{\thecgfigure}:}~#1}
+            {\CGItalicFont\textcolor{brand_color}{Figura \thecgfigure:} #1}
         }
     \end{minipage}
     \par\vspace{\CGVerticalSpacingDefault}
 }
-\ExplSyntaxOff
-\endinput
