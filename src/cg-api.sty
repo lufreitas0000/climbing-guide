@@ -1,6 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{cg-api}[2026/08/27 API State Management]
-
+\ProvidesPackage{cg-api}[2026/09/02 API State Management]
+\RequirePackage{xparse}
 \directlua{cg = require("climbingguide")}
 
 \ExplSyntaxOn
@@ -32,16 +32,110 @@
         }
     }
 }
+
 \AtEndDocument{
     \guide_save_sector_summary:
     \directlua{cg.export_json("export/database.json")}
     \directlua{cg.export_text_lists("export/")}
+    \directlua{cg.export_stats_aux("\luaescapestring{\jobname.cgstats}")}
+}
+
+\AtBeginDocument{
+    \InputIfFileExists{\jobname.cgstats}{}{}
 }
 
 \NewDocumentCommand{\CGEvalGrade}{ m m }{
     \tl_set:Nn \l_guide_current_grade_color_tl {#1}
-    \tl_if_empty:nF {#2} { \int_gincr:c {g_guide_#2_int} }
+    \tl_if_empty:nTF {#2} {
+        \int_gincr:N \g_guide_gray_int
+    } {
+        \cs_if_exist:cT {g_guide_#2_int} { \int_gincr:c {g_guide_#2_int} }
+    }
 }
+
+\DeclareDocumentCommand{\CGSectorHeader}{ O{SETOR} m m }{
+    \guide_save_sector_summary:
+    \int_gincr:N \g_guide_sector_int
+    \tl_gset:Nn \g_guide_current_sector_name_tl {#3}
+    \directlua{cg.set_sector("\luaescapestring{\unexpanded{#3}}")}
+    
+    \phantomsection
+    \addcontentsline{toc}{section}{#3}
+    \CGSetHeaderRight{#3}
+
+    \int_gzero:N \g_guide_cyan_top_int \int_gzero:N \g_guide_cyan_bot_int
+    \int_gzero:N \g_guide_green_top_int \int_gzero:N \g_guide_green_bot_int
+    \int_gzero:N \g_guide_yellow_top_int \int_gzero:N \g_guide_yellow_bot_int
+    \int_gzero:N \g_guide_orange_top_int \int_gzero:N \g_guide_orange_bot_int
+    \int_gzero:N \g_guide_red_top_int \int_gzero:N \g_guide_red_bot_int
+    \int_gzero:N \g_guide_purple_top_int \int_gzero:N \g_guide_purple_bot_int
+    \int_gzero:N \g_guide_gray_int
+
+    \tl_set:Nn \l_tmpa_tl { \tl_if_empty:nF {#1} { {\color{#2}\CGSectorHeaderLabelFont #1}\\[2pt] } }
+    \tl_set:Nn \l_tmpb_tl {
+        \cs_if_exist:cT { GuideSectorSummary \int_use:N \g_guide_sector_int } {
+            \use:c { GuideSectorSummary \int_use:N \g_guide_sector_int }
+        }
+    }
+    
+    \CGDrawSectorHeader { \l_tmpa_tl } {#2} {#3} { \l_tmpb_tl }
+}
+
+\DeclareDocumentEnvironment{CGSectorRoutes}{ O{} +b }{
+    \regex_count:nnN { \c{CGRoute} } { #2 } \l_tmpa_int
+    \int_set:Nn \l_tmpb_int { 1 }
+    \tl_if_empty:nTF { #1 } {
+        \int_compare:nNnT { \l_tmpa_int } > { 8 } { \int_set:Nn \l_tmpb_int { 2 } }
+    } {
+        \int_set:Nn \l_tmpb_int { #1 }
+    }
+    \int_compare:nNnTF { \l_tmpb_int } > { 1 } {
+        \begin{multicols}{\l_tmpb_int}
+        #2
+        \end{multicols}
+    } {
+        #2
+    }
+}{}
+
+\DeclareDocumentCommand{\CGObservationText}{ m }{
+    \regex_extract_once:nnNTF { \A \s* \c{CGstar} \s* (?:\cB.)? \s* ([1-3]) \s* (?:\cE.)? \s* (.*) \Z } { #1 } \l_tmpa_seq
+    {
+        \tl_set:Nx \l_tmpa_tl { \seq_item:Nn \l_tmpa_seq { 2 } }
+        \tl_set:Nn \l_tmpb_tl { \CGDrawStars { \l_tmpa_tl } }
+        \tl_set:Nx \l_tmpc_tl { \seq_item:Nn \l_tmpa_seq { 3 } }
+        \CGDrawObservation { \l_tmpb_tl } { \l_tmpc_tl }
+    }
+    {
+        \CGDrawObservation {} { #1 }
+    }
+}
+
+\DeclareDocumentCommand{\CGRoute}{ m m m m m o }{
+    \int_gincr:N \g_guide_route_int
+    \IfValueTF{#6}{
+        \directlua{cg.register_route("\int_use:N \g_guide_route_int", "\luaescapestring{\unexpanded{#1}}", "\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}", "\luaescapestring{\unexpanded{#4}}", "\luaescapestring{\unexpanded{#5}}", "\luaescapestring{\unexpanded{#6}}")}
+    }{
+        \directlua{cg.register_route("\int_use:N \g_guide_route_int", "\luaescapestring{\unexpanded{#1}}", "\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}", "\luaescapestring{\unexpanded{#4}}", "\luaescapestring{\unexpanded{#5}}", "")}
+    }
+    \directlua{cg.eval_tex("\luaescapestring{\unexpanded{#2}}")}
+
+    \tl_set:Nn \l_tmpa_tl {}
+    \IfValueT{#6}{ \tl_set:Nn \l_tmpa_tl { \CGObservationText{#6} } }
+    
+    \CGDrawRoute { \l_guide_current_grade_color_tl } { \int_use:N \g_guide_route_int } { #1 } { #2 } { #3 } { #4 } { #5 } { \l_tmpa_tl }
+}
+
+\DeclareDocumentCommand{\CGZoneStats}{ m }{
+    \str_if_eq:nnTF {#1} {Global} {
+        \cs_if_exist:NTF \CGGlobalChart { \CGGlobalChart } { \textsl{Gráfico~global~disponível~na~próxima~compilação...} }
+    } {
+        \directlua{cg.render_zone_stats("\luaescapestring{\unexpanded{#1}}")}
+    }
+}
+
+\DeclareDocumentCommand{\CGToday}{}{\directlua{cg.print_today()}}
+
 \ExplSyntaxOff
 \providecommand{\CGTotalRoutes}{?}
 \endinput
