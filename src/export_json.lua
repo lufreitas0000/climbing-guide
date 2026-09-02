@@ -1,8 +1,12 @@
 local Serializer = {}
+local Sanitizer = require("sanitize_tex")
 
 -- Public function to allow strict TDD validation of the sanitization rules
 function Serializer.escape_string(str)
     if type(str) ~= "string" then return "" end
+    
+    -- 0. Transform LaTeX-safe escapes to API plain text
+    str = Sanitizer.unescape_tex(str)
     
     -- 1. Escape JSON structural characters
     str = string.gsub(str, "\\", "\\\\")
@@ -33,11 +37,11 @@ function Serializer.export(filepath, routes)
         f:write('    "gear": "' .. Serializer.escape_string(r.gear) .. '",\n')
         f:write('    "setter": "' .. Serializer.escape_string(r.setter) .. '"\n')
         
-        if i < #routes then 
-            f:write('  },\n') 
-        else 
-            f:write('  }\n') 
-        end
+        if i < #routes then
+             f:write('  },\n')
+         else
+             f:write('  }\n')
+         end
     end
     f:write("]\n")
     
