@@ -80,7 +80,7 @@
     \int_gincr:N \g_guide_sector_int
     \tl_gset:Nn \g_guide_current_sector_name_tl {#3}
     \directlua{cg.set_sector("\luaescapestring{\unexpanded{#3}}")}
-    
+
     \phantomsection
     \addcontentsline{toc}{section}{#3}
     \CGSetHeaderRight{#3}
@@ -93,13 +93,13 @@
     \int_gzero:N \g_guide_purple_top_int \int_gzero:N \g_guide_purple_bot_int
     \int_gzero:N \g_guide_gray_int
 
-    \tl_set:Nn \l_tmpa_tl { \tl_if_empty:nF {#1} { {\color{#2}\CGSectorHeaderLabelFont #1}\\[2pt] } }
+    \tl_set:Nn \l_tmpa_tl { \tl_if_empty:nF {#1} { {\color{#2}\CGSectorHeaderLabelFont ~ #1}\\[2pt] } }
     \tl_set:Nn \l_tmpb_tl {
         \cs_if_exist:cT { GuideSectorSummary \int_use:N \g_guide_sector_int } {
             \use:c { GuideSectorSummary \int_use:N \g_guide_sector_int }
         }
     }
-    
+
     \CGDrawSectorHeader { \l_tmpa_tl } {#2} {#3} { \l_tmpb_tl }
 }
 
@@ -147,7 +147,7 @@
 
     \tl_set:Nn \l_tmpa_tl {}
     \IfValueT{#6}{ \tl_set:Nn \l_tmpa_tl { \CGObservationText{#6} } }
-    
+
     \CGDrawRoute { \l_guide_current_grade_color_tl } { \int_use:N \g_guide_route_int } { #1 } { #2 } { #3 } { #4 } { #5 } { \l_tmpa_tl }
 }
 
