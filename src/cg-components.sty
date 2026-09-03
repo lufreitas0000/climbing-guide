@@ -55,8 +55,7 @@
 }
 
 \cs_new:Npn \guide_inject_zone_qr: {
-    \tl_if_empty:NTF \g_guide_pending_qr_url_tl
-    { }
+    \tl_if_empty:NF \g_guide_pending_qr_url_tl
     {
         \begin{tikzpicture}[remember~picture, overlay]
         \edef\qrfilename{\directlua{cg.register_qr("\luaescapestring{\g_guide_pending_qr_url_tl}", "\luaescapestring{\g_guide_pending_qr_info_tl}")}}
