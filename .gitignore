@@ -11,6 +11,10 @@
 .*.lb
 *.synctex.gz
 
+# latexmk - VS code extension
+*.fdb_latexmk
+*.fls
+
 # Compiled documents
 *.pdf
 

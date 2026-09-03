@@ -1,5 +1,13 @@
 {
+    "latex-workshop.intellisense.package.enabled": true,
     "latex-workshop.intellisense.package.dirs": [
         "${workspaceFolder}/.vscode"
-    ]
+    ],
+    "latex-workshop.intellisense.package.extra": [
+        "climbingguide"
+    ],
+    "latex-workshop.latex.env": {
+        "TEXINPUTS": "${workspaceFolder}/src//:",
+        "LUAINPUTS": "${workspaceFolder}/src//:"
+    }
 }
