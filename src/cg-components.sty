@@ -37,11 +37,16 @@
 
 \DeclareDocumentCommand{\CGQRCode}{ o m m }{
     \edef\qrfilename{\directlua{cg.register_qr("\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}")}}
-    \IfValueTF{#1}{
-        \href{#2}{\CGRenderQRCodeInternal{\qrfilename}{#1}}
-    }{
-        \href{#2}{\CGRenderQRCodeInternal{\qrfilename}{}}
-    }
+    \begingroup
+    \hypersetup{urlcolor=black}%
+    \textcolor{black}{%
+        \IfValueTF{#1}{%
+            \href{#2}{\CGRenderQRCodeInternal{\qrfilename}{#1}}%
+        }{%
+            \href{#2}{\CGRenderQRCodeInternal{\qrfilename}{}}%
+        }%
+    }%
+    \endgroup
 }
 
 \DeclareDocumentCommand{\CGAddQRCodeToZoneHeader}{ m m }{
@@ -53,7 +58,10 @@
     \tl_if_empty:NF \g_guide_pending_qr_url_tl {
         \edef\qrfilename{\directlua{cg.register_qr("\luaescapestring{\g_guide_pending_qr_url_tl}", "\luaescapestring{\g_guide_pending_qr_info_tl}")}}
         \node[anchor=north~east, inner~sep=0pt, outer~sep=0pt] at ($ (current~page.north~east) + (-\CGMarginWidth, -\CGMarginWidth) $) {
-            \href{\g_guide_pending_qr_url_tl}{\CGRenderQRCodeInternal{\qrfilename}{}}
+            \begingroup
+            \hypersetup{urlcolor=black}%
+            \textcolor{black}{\href{\g_guide_pending_qr_url_tl}{\CGRenderQRCodeInternal{\qrfilename}{}}}%
+            \endgroup
         };
         \tl_gclear:N \g_guide_pending_qr_url_tl
         \tl_gclear:N \g_guide_pending_qr_info_tl
@@ -127,7 +135,7 @@
                 {\color{white}\CGZoneTitleFont #3}
             \end{minipage}
         };
-        
+
         \CGInjectZoneQR
     \end{tikzpicture}%
     \par\vspace*{\dimexpr\CGZoneBannerHeight - 1.5\baselineskip\relax}
