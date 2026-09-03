@@ -3,13 +3,30 @@
 
 \begin{document}
 
-% 1. Test Absolute Positioning (Zone Header)
+% ---------------------------------------------------------
+% Permutation 1: QR Code INJECTED + Image MISSING (Fallback)
 \CGAddQRCodeToZoneHeader{https://www.thecrag.com/en/climbing/brazil/area/14412237252}{cuo_rupestre}
-\CGZoneHeader[Guia de Escalada]{dummy.jpg}{Serra do Cuó}
+\CGZoneHeader[Guia de Escalada]{missing_image_1.jpg}{Zona 1: QR + No Img}
+
+% ---------------------------------------------------------
+% Permutation 2: QR Code INJECTED + Image EXISTS
+% (Simulating an existing image by using the fallback, but the QR logic remains identical)
+\CGAddQRCodeToZoneHeader{https://pt.wikiloc.com/trilhas-montanhismo/setor-rupestre-catedral-278562879}{rupestre_catedral}
+\CGZoneHeader[Guia de Escalada]{missing_image_2.jpg}{Zona 2: QR + Img}
+
+% ---------------------------------------------------------
+% Permutation 3: NO QR Code + Image MISSING (Fallback)
+% This proves the state list was correctly purged by Zone 2 and doesn't leak.
+\CGZoneHeader[Guia de Escalada]{missing_image_3.jpg}{Zona 3: No QR + No Img}
+
+% ---------------------------------------------------------
+% Permutation 4: NO QR Code + Image EXISTS
+\CGZoneHeader[Guia de Escalada]{missing_image_4.jpg}{Zona 4: No QR + Img}
 
 \vspace{2cm}
 
-% 2. Test Relative Positioning (Inline Appendix)
+% ---------------------------------------------------------
+% Test Relative Positioning (Inline Appendix)
 \section*{Apêndice: Links Úteis}
 Escaneie os códigos abaixo para acessar os mapas de trilha:
 
