@@ -11,6 +11,57 @@
 
 \newcounter{cgfigure}
 
+% --- QR Code Infrastructure ---
+\ExplSyntaxOn
+\DeclareDocumentCommand{\CGRenderQRCodeInternal}{ m m }{
+    \begin{minipage}[t]{18mm}
+        \centering
+        \IfFileExists{production/production_assets/production_qrcodes/#1}{
+            \adjustbox{width=18mm, height=18mm}{\includegraphics{production/production_assets/production_qrcodes/#1}}
+        }{
+            \IfFileExists{tests/tests_assets/tests_qrcodes/#1}{
+                \adjustbox{width=18mm, height=18mm}{\includegraphics{tests/tests_assets/tests_qrcodes/#1}}
+            }{
+                \fcolorbox{gray!50}{gray!5}{
+                    \begin{minipage}[c][18mm][c]{\dimexpr 18mm-2\fboxsep-2\fboxrule\relax}
+                    \end{minipage}
+                }
+            }
+        }
+        \tl_if_empty:nF {#2} {
+            \par\vspace{2pt}
+            {\CGQRCodeCaptionFont #2\par}
+        }
+    \end{minipage}
+}
+
+\DeclareDocumentCommand{\CGQRCode}{ o m m }{
+    \edef\qrfilename{\directlua{cg.register_qr("\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}")}}
+    \IfValueTF{#1}{
+        \href{#2}{\CGRenderQRCodeInternal{\qrfilename}{#1}}
+    }{
+        \href{#2}{\CGRenderQRCodeInternal{\qrfilename}{}}
+    }
+}
+
+\DeclareDocumentCommand{\CGAddQRCodeToZoneHeader}{ m m }{
+    \tl_gset:Nn \g_guide_pending_qr_url_tl { #1 }
+    \tl_gset:Nn \g_guide_pending_qr_info_tl { #2 }
+}
+
+\cs_new:Npn \guide_inject_zone_qr: {
+    \tl_if_empty:NF \g_guide_pending_qr_url_tl {
+        \edef\qrfilename{\directlua{cg.register_qr("\luaescapestring{\g_guide_pending_qr_url_tl}", "\luaescapestring{\g_guide_pending_qr_info_tl}")}}
+        \node[anchor=north~east, inner~sep=0pt, outer~sep=0pt] at ($ (current~page.north~east) + (-\CGMarginWidth, -\CGMarginWidth) $) {
+            \href{\g_guide_pending_qr_url_tl}{\CGRenderQRCodeInternal{\qrfilename}{}}
+        };
+        \tl_gclear:N \g_guide_pending_qr_url_tl
+        \tl_gclear:N \g_guide_pending_qr_info_tl
+    }
+}
+\ExplSyntaxOff
+% ------------------------------
+
 % Native hbox fallbacks to prevent nested TikZ corruption
 \DeclareDocumentCommand{\CGRenderClippedImageInternal}{ m m m }{%
     \IfFileExists{#3}{%
@@ -75,6 +126,8 @@
                 {\color{white}\CGZoneTitleFont #3}
             \end{minipage}
         };
+        
+        \ExplSyntaxOn\guide_inject_zone_qr:\ExplSyntaxOff
     \end{tikzpicture}%
     \par\vspace*{\dimexpr\CGZoneBannerHeight - 1.5\baselineskip\relax}
     \vspace{2mm}\noindent
@@ -234,6 +287,5 @@
         }
     \end{tikzpicture}%
 }
-
 
 \endinput
