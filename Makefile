@@ -52,7 +52,7 @@ test-qr: sanitize init-dirs check-fonts test-lua
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_qr.tex
 	@echo "Generating QR Codes (Test)..."
 	@scripts/python/.venv/bin/python scripts/python/generate_qrcodes.py --manifest export/qrcodes_manifest.json --outdir tests/tests_assets/tests_qrcodes
-	@echo "Compiling test_qr.tex (Pass 2 - PDF Injection)..."
+	@echo "Compiling test_qr.tex (Pass 2 - PNG Injection)..."
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_qr.tex
 
 test: test-lua test-fonts test-summary test-suite test-visual test-miniguide test-images test-zone-stats test-qr
