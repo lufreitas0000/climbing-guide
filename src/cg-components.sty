@@ -1,14 +1,21 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{cg-components}[2026/09/02 UI Components and Layouts]
-
 \RequirePackage{xparse}
 \RequirePackage{multicol}
+
+% --- LuaTeX Positional Binding Fix for TikZ ---
+\RequirePackage{ifluatex}
+\ifluatex
+  \ifdefined\pdfsavepos\else\let\pdfsavepos\savepos\fi
+  \ifdefined\pdflastxpos\else\let\pdflastxpos\lastxpos\fi
+  \ifdefined\pdflastypos\else\let\pdflastypos\lastypos\fi
+\fi
+
 \RequirePackage{tikz}
 \RequirePackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
 \usetikzlibrary{calc, positioning, shapes.geometric}
 \RequirePackage{adjustbox}
-
 \newcounter{cgfigure}
 
 % --- QR Code Infrastructure ---
@@ -34,7 +41,6 @@
         }
     \end{minipage}
 }
-
 \DeclareDocumentCommand{\CGQRCode}{ o m m }{
     \edef\qrfilename{\directlua{cg.register_qr("\luaescapestring{\unexpanded{#2}}", "\luaescapestring{\unexpanded{#3}}")}}
     \begingroup
@@ -48,12 +54,10 @@
     }%
     \endgroup
 }
-
 \DeclareDocumentCommand{\CGAddQRCodeToZoneHeader}{ m m }{
     \tl_gset:Nn \g_guide_pending_qr_url_tl { #1 }
     \tl_gset:Nn \g_guide_pending_qr_info_tl { #2 }
 }
-
 \cs_new:Npn \guide_inject_zone_qr: {
     \tl_if_empty:NF \g_guide_pending_qr_url_tl
     {
@@ -72,8 +76,8 @@
 }
 \DeclareDocumentCommand{\CGInjectZoneQR}{}{\guide_inject_zone_qr:}
 \ExplSyntaxOff
-% ------------------------------
 
+% ------------------------------
 % Native hbox fallbacks to prevent nested TikZ corruption
 \DeclareDocumentCommand{\CGRenderClippedImageInternal}{ m m m }{%
     \IfFileExists{#3}{%
@@ -114,12 +118,10 @@
     \CGCloseCols
     \clearpage
     \directlua{cg.set_zone("\luaescapestring{\unexpanded{#3}}")}
-
     \phantomsection
     \addcontentsline{toc}{part}{#3}
     \CGSetHeaderLeft{#3}
     \CGSetHeaderRight{}
-
     \noindent\rule{0pt}{0pt}
     \begin{tikzpicture}[remember picture, overlay]
         \begin{scope}
@@ -128,10 +130,8 @@
                 \CGRenderClippedImageInternal{\paperwidth}{\CGZoneBannerHeight}{#2}
             };
         \end{scope}
-
         \fill[white] (current page.north west) ++(0, -\CGZoneBannerHeight) rectangle (current page.south east);
         \fill[brand_color] ($ (current page.north west) + (0, -\CGZoneBannerHeight + 15mm) $) rectangle ($ (current page.north west) + (\CGMarginWidth + 0.75\textwidth, -\CGZoneBannerHeight - 15mm) $);
-
         \node[anchor=west, text=white, inner sep=0pt, outer sep=0pt] at ($ (current page.north west) + (\CGMarginWidth, -\CGZoneBannerHeight) $) {
             \begin{minipage}{0.75\textwidth}
                 \IfValueT{#1}{{\color{white}\CGTitleFont\fontsize{14}{16}\selectfont #1}\\[2pt]}
@@ -298,5 +298,4 @@
         }
     \end{tikzpicture}%
 }
-
 \endinput
