@@ -7,9 +7,27 @@
         "climbingguide"
     ],
     "latex-workshop.latex.env": {
-        "TEXINPUTS": "${workspaceFolder}/src//:",
-        "LUAINPUTS": "${workspaceFolder}/src//:"
+        "TEXINPUTS": "./src//:../src//:../../src//:",
+        "LUAINPUTS": "./src//:../src//:../../src//:"
     },
+    "latex-workshop.latex.tools": [
+        {
+            "name": "lualatexmk",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-lualatex",
+                "-outdir=%OUTDIR%",
+                "%DOC%"
+            ],
+            "env": {
+                "TEXINPUTS": "./src//:../src//:../../src//:",
+                "LUAINPUTS": "./src//:../src//:../../src//:"
+            }
+        }
+    ],
     "latex-workshop.intellisense.command.user": {
         "CGZoneHeader": "CGZoneHeader[${1:label}]{${2:path}}{${3:name}}",
         "CGSectorHeader": "CGSectorHeader[${1:label}]{${2:color}}{${3:name}}",
