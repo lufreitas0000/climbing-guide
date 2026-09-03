@@ -1,0 +1,21 @@
+\documentclass{article}
+\usepackage{climbingguide}
+
+\begin{document}
+
+% 1. Test Absolute Positioning (Zone Header)
+\CGAddQRCodeToZoneHeader{https://www.thecrag.com/en/climbing/brazil/area/14412237252}{cuo_rupestre}
+\CGZoneHeader[Guia de Escalada]{dummy.jpg}{Serra do Cuó}
+
+\vspace{2cm}
+
+% 2. Test Relative Positioning (Inline Appendix)
+\section*{Apêndice: Links Úteis}
+Escaneie os códigos abaixo para acessar os mapas de trilha:
+
+\vspace{1cm}
+\begin{center}
+    \CGQRCode[Trilha Setor Catedral]{https://pt.wikiloc.com/trilhas-montanhismo/setor-rupestre-catedral-278562879}{rupestre_catedral}
+\end{center}
+
+\end{document}

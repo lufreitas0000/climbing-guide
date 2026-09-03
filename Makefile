@@ -45,7 +45,7 @@ test-images: sanitize init-dirs check-fonts
 	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_images.tex
 
-test: test-lua test-fonts test-suite test-miniguide test-images
+test: test-lua test-fonts test-suite test-miniguide test-images test-qr
 
 production: sanitize init-dirs check-fonts test-lua
 	@echo "Clearing .cgstats cache..."
@@ -53,6 +53,8 @@ production: sanitize init-dirs check-fonts test-lua
 	@echo "Compiling serra_do_cuo.tex..."
 	@$(TEX) $(FLAGS) --output-directory=production/production_exports production/serra_do_cuo.tex
 	@mv *.cgstats production/production_exports/ 2>/dev/null || true
+	@echo "Generating QR Codes (Production)..."
+	@scripts/python/.venv/bin/python scripts/python/generate_qrcodes.py --manifest export/qrcodes_manifest.json --outdir production/production_assets/production_qrcodes
 	@$(TEX) $(FLAGS) --output-directory=production/production_exports production/serra_do_cuo.tex
 
 clean:
@@ -72,3 +74,11 @@ compress:
 	-dProcessColorModel=/DeviceRGB -dColorConversionStrategy=/sRGB \
 	-sOutputFile=production/production_exports/serra_do_cuo_optimized.pdf production/production_exports/serra_do_cuo.pdf
 	@echo "Compression complete!"
+
+test-qr: sanitize init-dirs check-fonts test-lua
+	@echo "Compiling test_qr.tex (Pass 1 - Manifest Generation)..."
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_qr.tex
+	@echo "Generating QR Codes (Test)..."
+	@scripts/python/.venv/bin/python scripts/python/generate_qrcodes.py --manifest export/qrcodes_manifest.json --outdir tests/tests_assets/tests_qrcodes
+	@echo "Compiling test_qr.tex (Pass 2 - PDF Injection)..."
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_qr.tex
