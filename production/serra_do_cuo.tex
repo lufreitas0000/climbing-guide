@@ -20,23 +20,17 @@
 }
 \clearpage
 
-\input{production/frontmatter.tex}
+\input{production_tex/frontmatter.tex}
 
 % --- Zone Ingestion ---
-\input{production/zones/zona_baixa.tex}
-\input{production/zones/paraiso.tex}
-\input{production/zones/catedral.tex}
-\input{production/zones/talhado_dos_americanos.tex}
+\input{production_tex/zones/zona_baixa.tex}
+\input{production_tex/zones/paraiso.tex}
+\input{production_tex/zones/catedral.tex}
+\input{production_tex/zones/talhado_dos_americanos.tex}
 
 % --- Deferred Index Rendering ---
-\clearpage
-\CGTitleFont\Large Listagem Alfabética\par\vspace{2mm}
-\CGBaseFont\normalsize
-\CGPrintAlphaList
 
-\clearpage
-\CGTitleFont\Large Listagem por Dificuldade\par\vspace{2mm}
-\CGBaseFont\normalsize
-\CGPrintGradeList
+\input{production_tex/endmatter.tex}
+
 
 \end{document}
