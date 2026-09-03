@@ -1,4 +1,4 @@
-.PHONY: all test production clean check-fonts test-lua test-fonts test-suite test-miniguide test-images init-dirs docs sanitize
+.PHONY: all test production clean check-fonts test-lua test-fonts test-summary test-suite test-visual test-miniguide test-images test-zone-stats test-qr init-dirs docs sanitize
 
 TEX = lualatex
 FLAGS = --interaction=batchmode --halt-on-error
@@ -27,34 +27,45 @@ test-fonts: sanitize init-dirs check-fonts
 	@echo "Compiling test_fonts.tex..."
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_fonts.tex
 
-test-suite: sanitize init-dirs check-fonts test-lua
-	@echo "Compiling test_suite.tex..."
-	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_suite.tex
-	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
-	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_suite.tex
+test-summary: sanitize init-dirs check-fonts
+	@echo "Compiling test_summary.tex..."
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_summary.tex
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_summary.tex
 
 test-miniguide: sanitize init-dirs check-fonts
 	@echo "Compiling test_miniguide.tex..."
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_miniguide.tex
-	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_miniguide.tex
 
 test-images: sanitize init-dirs check-fonts
 	@echo "Compiling test_images.tex..."
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_images.tex
-	@mv *.cgstats tests/tests_export/ 2>/dev/null || true
 	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_images.tex
 
-test: test-lua test-fonts test-suite test-miniguide test-images test-qr
+test-zone-stats: sanitize init-dirs check-fonts
+	@echo "Compiling test_zone_stats.tex..."
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_zone_stats.tex
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_zone_stats.tex
+
+test-qr: sanitize init-dirs check-fonts test-lua
+	@echo "Compiling test_qr.tex (Pass 1 - Manifest Generation)..."
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_qr.tex
+	@echo "Generating QR Codes (Test)..."
+	@scripts/python/.venv/bin/python scripts/python/generate_qrcodes.py --manifest export/qrcodes_manifest.json --outdir tests/tests_assets/tests_qrcodes
+	@echo "Compiling test_qr.tex (Pass 2 - PDF Injection)..."
+	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_qr.tex
+
+test: test-lua test-fonts test-summary test-suite test-visual test-miniguide test-images test-zone-stats test-qr
 
 production: sanitize init-dirs check-fonts test-lua
 	@echo "Clearing .cgstats cache..."
 	@rm -f production/production_exports/*.cgstats tests/tests_export/*.cgstats *.cgstats
-	@echo "Compiling serra_do_cuo.tex..."
+	@echo "Compiling serra_do_cuo.tex (Pass 1)..."
 	@$(TEX) $(FLAGS) --output-directory=production/production_exports production/serra_do_cuo.tex
 	@mv *.cgstats production/production_exports/ 2>/dev/null || true
 	@echo "Generating QR Codes (Production)..."
 	@scripts/python/.venv/bin/python scripts/python/generate_qrcodes.py --manifest export/qrcodes_manifest.json --outdir production/production_assets/production_qrcodes
+	@echo "Compiling serra_do_cuo.tex (Pass 2)..."
 	@$(TEX) $(FLAGS) --output-directory=production/production_exports production/serra_do_cuo.tex
 
 clean:
@@ -74,11 +85,3 @@ compress:
 	-dProcessColorModel=/DeviceRGB -dColorConversionStrategy=/sRGB \
 	-sOutputFile=production/production_exports/serra_do_cuo_optimized.pdf production/production_exports/serra_do_cuo.pdf
 	@echo "Compression complete!"
-
-test-qr: sanitize init-dirs check-fonts test-lua
-	@echo "Compiling test_qr.tex (Pass 1 - Manifest Generation)..."
-	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_qr.tex
-	@echo "Generating QR Codes (Test)..."
-	@scripts/python/.venv/bin/python scripts/python/generate_qrcodes.py --manifest export/qrcodes_manifest.json --outdir tests/tests_assets/tests_qrcodes
-	@echo "Compiling test_qr.tex (Pass 2 - PDF Injection)..."
-	@$(TEX) $(FLAGS) --output-directory=tests/tests_export tests/test_qr.tex
