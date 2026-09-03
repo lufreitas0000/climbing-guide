@@ -258,7 +258,7 @@
 }
 
 \DeclareDocumentCommand{\CGDrawRoute}{ m m m m m m m m }{%
-    \noindent\CGDrawRouteBadge { #1 } { #2 }
+    \noindent\CGDrawRouteBadge { #1 } { #2 }%
     \begin{minipage}[t]{\dimexpr\linewidth-\CGRouteNumberWidth\relax}
         \vspace{0pt}\raggedright\setlength{\baselineskip}{13pt}
         \sbox0{\hspace{0.5em}{\CGGradeFont #4} \textcolor{guide_gray}{|} {\CGGradeFont #5} \ifx\relax#6\relax\else {\CGGradeFont (#6)}\fi}%
@@ -274,7 +274,7 @@
             \usebox1\usebox0
         \fi
         \par{\textcolor{text_body}{\CGSetterFont #7}} #8
-    \end{minipage}\par\vspace{1mm}
+    \end{minipage}\par\vspace{1mm}%
 }
 
 \DeclareDocumentCommand{\CGTextSingleColumn}{ m +m }{%
