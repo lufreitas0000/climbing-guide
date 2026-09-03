@@ -29,7 +29,6 @@
 \end{CGSectorRoutes}
 \ExplSyntaxOff
 
-
 \clearpage
 
 \CGZoneHeader[ZONA 2]{example-image-a.jpg}{ZONA DE TESTE 2}
@@ -37,19 +36,25 @@
 
 \CGSectorHeader{guide_red}{Nomes longos em coluna dupla }
 \begin{CGSectorRoutes}[2]
-    % 1. Special Characters Test (Validating Lua JSON/TXT export safety)
+    % 1. Special Characters Test
     \CGRoute{Fenda 100\% \& \$10}{6sup}{20m}{Móvel}{Caçador\_de\_Mitos}[\CGstar3 Atenção à laca \#1 e à proteção em fenda profunda.]
 
-    % 2. String Overflow: Route Name & Setter (Validating minipage bounds)
+    % 2. String Overflow
     \CGRoute{Esta é uma via com um nome propositalmente longo e exagerado para forçar a quebra de linha no layout}{7a}{15m}{Mista}{Um conquistador com um nome gigantesco que também deve quebrar de forma graciosa na coluna}[Uma observação curta de teste.]
 
-    % 3. String Overflow: Observation Block (Validating hanging indents)
-    \CGRoute{Resistência de Materiais}{8a}{35m}{Livre}{Autor Anônimo}[\CGstar2 Esta observação contém um volume massivo de texto. O objetivo é testar o recuo do bloco de notas em relação ao selo de graduação numérico. Se a macro \LaTeX\ estiver bem encapsulada, o texto respeitará a margem direita da página e manterá o alinhamento esquerdo paralelo ao nome da via, sem invadir o espaço do badge colorido à esquerda.]
+    % 3. String Overflow Observation Block
+    \CGRoute{Resistência de Materiais}{8a}{35m}{Livre}{Autor Anônimo}[\CGstar2 Esta observação contém um volume massivo de texto. O objetivo é testar o recuo do bloco de notas.]
 \end{CGSectorRoutes}
 
 \clearpage
 
 \CGZoneHeader[ZONA 3]{example-image-a.jpg}{ZONA DE TESTE 3}
+
+\CGSectorHeader{guide_green}{Testes de Graduação e Regex}
+\begin{CGSectorRoutes}
+    \CGRoute{Falsa Concatenada}{3 IVsup}{20m}{Fixa}{Testador}
+    \CGRoute{Grau Misto Seguro}{6 VIIb E2}{35m}{Mista}{Testador}
+\end{CGSectorRoutes}
 
 \clearpage
 \clearpage
