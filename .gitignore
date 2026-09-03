@@ -14,6 +14,7 @@
 # latexmk - VS code extension
 *.fdb_latexmk
 *.fls
+*.bak
 
 # Compiled documents
 *.pdf

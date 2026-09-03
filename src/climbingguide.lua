@@ -191,8 +191,6 @@ function M.export_stats_aux(filepath)
     end
 end
 
-return M
-
 function M.register_qr(url, info)
     QRManager.register(url, info)
 end
@@ -200,3 +198,5 @@ end
 function M.export_qr_manifest(filepath)
     QRManager.export_manifest(filepath)
 end
+
+return M

@@ -59,6 +59,7 @@
         \tl_gclear:N \g_guide_pending_qr_info_tl
     }
 }
+\DeclareDocumentCommand{\CGInjectZoneQR}{}{\guide_inject_zone_qr:}
 \ExplSyntaxOff
 % ------------------------------
 
@@ -127,7 +128,7 @@
             \end{minipage}
         };
         
-        \ExplSyntaxOn\guide_inject_zone_qr:\ExplSyntaxOff
+        \CGInjectZoneQR
     \end{tikzpicture}%
     \par\vspace*{\dimexpr\CGZoneBannerHeight - 1.5\baselineskip\relax}
     \vspace{2mm}\noindent
