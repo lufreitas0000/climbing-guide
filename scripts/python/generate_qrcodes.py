@@ -29,9 +29,10 @@ def main():
         
         # Idempotency check: only generate if the file does not exist
         if not os.path.exists(filepath):
-            # Level 'q' enforces 25% Error Correction
+            # error='q' enforces 25% Error Correction.
+            # scale=10 increases the base vector coordinates to prevent PDF.js anti-aliasing gaps.
             qr = segno.make(entry['url'], error='q')
-            qr.save(filepath)
+            qr.save(filepath, scale=10)
             generated_count += 1
             
     skipped = len(registry) - generated_count
