@@ -55,7 +55,10 @@
 }
 
 \cs_new:Npn \guide_inject_zone_qr: {
-    \tl_if_empty:NF \g_guide_pending_qr_url_tl {
+    \tl_if_empty:NTF \g_guide_pending_qr_url_tl
+    { }
+    {
+        \begin{tikzpicture}[remember~picture, overlay]
         \edef\qrfilename{\directlua{cg.register_qr("\luaescapestring{\g_guide_pending_qr_url_tl}", "\luaescapestring{\g_guide_pending_qr_info_tl}")}}
         \node[anchor=north~east, inner~sep=0pt, outer~sep=0pt, fill=white] at ($ (current~page.north~east) + (-\CGMarginWidth, -\CGMarginWidth) $) {
             \begingroup
@@ -63,6 +66,7 @@
             \textcolor{black}{\href{\g_guide_pending_qr_url_tl}{\CGRenderQRCodeInternal{\qrfilename}{}}}%
             \endgroup
         };
+        \end{tikzpicture}
         \tl_gclear:N \g_guide_pending_qr_url_tl
         \tl_gclear:N \g_guide_pending_qr_info_tl
     }
@@ -135,9 +139,8 @@
                 {\color{white}\CGZoneTitleFont #3}
             \end{minipage}
         };
-
-        \CGInjectZoneQR
     \end{tikzpicture}%
+    \CGInjectZoneQR
     \par\vspace*{\dimexpr\CGZoneBannerHeight - 1.5\baselineskip\relax}
     \vspace{2mm}\noindent
     \CGZoneStats{#3}%
