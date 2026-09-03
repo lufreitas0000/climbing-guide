@@ -20,7 +20,7 @@ function QR.register(url, info)
     if not id then id = djb2_hash(url) end
     
     local safe_info = string.gsub(info, "[^%w_]", "_")
-    local filename = string.format("%s_%s_%s.pdf", provider, safe_info, id)
+    local filename = string.format("%s_%s_%s.png", provider, safe_info, id)
     
     -- Register state for manifest generation
     table.insert(QR.registry, {
