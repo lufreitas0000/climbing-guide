@@ -104,7 +104,7 @@ function M.get_val(g)
     if string.match(g_low, "proj") or string.match(g_low, "^%s*%%%?%s*$") or string.match(g_low, "^%?+$") then return 999 end
     local tmp_plus = string.gsub(g_low, "a%d+%+", "")
     if string.match(tmp_plus, "%+") then error("Invalid format: '+' only allowed in artificial grades (" .. g .. ")") end
-    if string.match(g_low, "%d+[ o]?[ivx]+") then error("Invalid format: Missing space after general grade (" .. g .. ")") end
+    if string.match(g_low, "%d+[o]?[ivx]+") then error("Invalid format: Missing space after general grade (" .. g .. ")") end
     if string.match(g_low, "[ivx%d]%s+[abc]%f[%W]") or string.match(g_low, "[ivx%d]%s+sup%f[%W]") then error("Invalid format: Space not allowed between base grade and suffix (" .. g .. ")") end
 
     g_low = string.gsub(g_low, "%d+[ o]", " ")
