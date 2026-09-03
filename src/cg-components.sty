@@ -57,7 +57,7 @@
 \cs_new:Npn \guide_inject_zone_qr: {
     \tl_if_empty:NF \g_guide_pending_qr_url_tl {
         \edef\qrfilename{\directlua{cg.register_qr("\luaescapestring{\g_guide_pending_qr_url_tl}", "\luaescapestring{\g_guide_pending_qr_info_tl}")}}
-        \node[anchor=north~east, inner~sep=0pt, outer~sep=0pt] at ($ (current~page.north~east) + (-\CGMarginWidth, -\CGMarginWidth) $) {
+        \node[anchor=north~east, inner~sep=0pt, outer~sep=0pt, fill=white] at ($ (current~page.north~east) + (-\CGMarginWidth, -\CGMarginWidth) $) {
             \begingroup
             \hypersetup{urlcolor=black}%
             \textcolor{black}{\href{\g_guide_pending_qr_url_tl}{\CGRenderQRCodeInternal{\qrfilename}{}}}%
