@@ -9,5 +9,15 @@
     "latex-workshop.latex.env": {
         "TEXINPUTS": "${workspaceFolder}/src//:",
         "LUAINPUTS": "${workspaceFolder}/src//:"
+    },
+    "latex-workshop.intellisense.command.user": {
+        "CGZoneHeader": "CGZoneHeader[${1:label}]{${2:path}}{${3:name}}",
+        "CGSectorHeader": "CGSectorHeader[${1:label}]{${2:color}}{${3:name}}",
+        "CGRoute": "CGRoute{${1:name}}{${2:grade}}{${3:length}}{${4:gear}}{${5:setter}}[${6:obs}]",
+        "CGFullWidthImage": "CGFullWidthImage[${1:caption}]{${2:path}}",
+        "CGHalfWidthImage": "CGHalfWidthImage[${1:caption}]{${2:path}}",
+        "CGRouteImageRight": "CGRouteImageRight[${1:caption}]{${2:path}}{${3:routes_env}}",
+        "CGZoneStats": "CGZoneStats{${1:zone_name}}",
+        "CGBackmatterChapter": "CGBackmatterChapter[${1:cols}]{${2:title}}{${3:body}}"
     }
 }
