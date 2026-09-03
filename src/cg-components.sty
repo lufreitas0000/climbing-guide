@@ -223,7 +223,7 @@
         \vspace{0pt}
         \begin{tikzpicture}[baseline={([yshift=-1.5ex]current bounding box.north)}]
             \fill[#1] (0,0) rectangle (\CGRouteBadgeSize, -\CGRouteBadgeSize);
-            \node[text=white, font=\CGRouteNumberFont, anchor=center] at (0.5*\CGRouteBadgeSize, -0.5*\CGRouteBadgeSize) {#2};
+            \node[text=white, anchor=center, inner sep=0pt] at (0.5*\CGRouteBadgeSize, -0.5*\CGRouteBadgeSize) {\adjustbox{max width=0.85\CGRouteBadgeSize, max height=0.85\CGRouteBadgeSize}{\CGRouteNumberFont #2}};
         \end{tikzpicture}
     \end{minipage}%
 }
