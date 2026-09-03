@@ -10,6 +10,7 @@ local Sanitizer = require("sanitize_tex")
 local TXT = require("export_txt")
 local ZoneStats = require("zone_stats")
 local CGDate = require("cg_date")
+local QRManager = require("qr_manager")
 
 local romans = {"xii", "viii", "vii", "iii", "xi", "ix", "vi", "iv", "ii", "x", "v", "i"}
 local roman_map = { xii=12, xi=11, x=10, ix=9, viii=8, vii=7, vi=6, v=5, iv=4, iii=3, ii=2, i=1 }
@@ -191,3 +192,11 @@ function M.export_stats_aux(filepath)
 end
 
 return M
+
+function M.register_qr(url, info)
+    QRManager.register(url, info)
+end
+
+function M.export_qr_manifest(filepath)
+    QRManager.export_manifest(filepath)
+end
