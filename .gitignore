@@ -28,3 +28,12 @@ doc/export/
 *.png
 *.cgstats
 *.cgstats
+
+# QR Code generated assets
+production/production_assets/production_qrcodes/*.pdf
+tests/tests_assets/tests_qrcodes/*.pdf
+export/qrcodes_manifest.json
+
+# Python Virtual Environment
+scripts/python/.venv/
+__pycache__/
