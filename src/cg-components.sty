@@ -221,7 +221,7 @@
 \DeclareDocumentCommand{\CGDrawRouteBadge}{ m m }{%
     \begin{minipage}[t]{\CGRouteNumberWidth}
         \vspace{0pt}
-        \begin{tikzpicture}[baseline=(current bounding box.north)]
+        \begin{tikzpicture}[baseline={([yshift=-1.5ex]current bounding box.north)}]
             \fill[#1] (0,0) rectangle (\CGRouteBadgeSize, -\CGRouteBadgeSize);
             \node[text=white, font=\CGRouteNumberFont, anchor=center] at (0.5*\CGRouteBadgeSize, -0.5*\CGRouteBadgeSize) {#2};
         \end{tikzpicture}
