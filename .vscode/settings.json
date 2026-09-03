@@ -12,22 +12,39 @@
     },
     "latex-workshop.latex.tools": [
         {
-            "name": "lualatexmk",
-            "command": "latexmk",
-            "args": [
-                "-synctex=1",
-                "-interaction=nonstopmode",
-                "-file-line-error",
-                "-lualatex",
-                "-outdir=%OUTDIR%",
-                "%DOC%"
-            ],
-            "env": {
-                "TEXINPUTS": "./src//:../src//:../../src//:",
-                "LUAINPUTS": "./src//:../src//:../../src//:"
-            }
+            "name": "make test-qr",
+            "command": "make",
+            "args": ["test-qr"],
+            "env": {}
+        },
+        {
+            "name": "make production",
+            "command": "make",
+            "args": ["production"],
+            "env": {}
+        },
+        {
+            "name": "make all",
+            "command": "make",
+            "args": ["all"],
+            "env": {}
         }
     ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "Compile: Test QR (make test-qr)",
+            "tools": ["make test-qr"]
+        },
+        {
+            "name": "Compile: Production (make production)",
+            "tools": ["make production"]
+        },
+        {
+            "name": "Compile: All Tests (make all)",
+            "tools": ["make all"]
+        }
+    ],
+    "latex-workshop.latex.recipe.default": "Compile: Test QR (make test-qr)",
     "latex-workshop.intellisense.command.user": {
         "CGZoneHeader": "CGZoneHeader[${1:label}]{${2:path}}{${3:name}}",
         "CGSectorHeader": "CGSectorHeader[${1:label}]{${2:color}}{${3:name}}",
