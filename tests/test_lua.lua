@@ -16,7 +16,10 @@ local function run_tests()
         { grade = "A0", expected = 20.0 },
         { grade = "7c/8a", expected = 7.85 },
         { grade = "Proj", expected = 999.0 },
-        { grade = "5° VIIb", expected = 7.4 }
+        { grade = "5° VIIb", expected = 7.4 },
+        { grade = "3 IVsup", expected = 4.5 },
+        { grade = "4 V", expected = 5.0 },
+        { grade = "6 VIIb", expected = 7.4 }
     }
     for _, case in ipairs(cases) do
         local result = cg.get_val(case.grade)
@@ -27,7 +30,7 @@ local function run_tests()
     end
 
     print("\n--- Exception Handling Assertions ---")
-    local error_cases = { "VIIb+", "5VIIb", "VII b", "4 sup" }
+    local error_cases = { "VIIb+", "5VIIb", "VII b", "4 sup", "3IV", "3oIV", "5VIIa" }
     for _, bad_grade in ipairs(error_cases) do
         local status, err = pcall(cg.get_val, bad_grade)
         if status then
