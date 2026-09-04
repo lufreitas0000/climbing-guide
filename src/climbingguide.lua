@@ -140,7 +140,7 @@ function M.eval_tex(g)
     elseif max_val >= 9 and max_val < 20 then color, base = "guide_purple", "purple"
     end
 
-    if base ~= "gray" and not is_top then color = color .. "!60!black" end
+    if base ~= "gray" and not is_top then color = color .. "!80!black" end
     local top_str = is_top and "_top" or "_bot"
 
     if base ~= "gray" then
